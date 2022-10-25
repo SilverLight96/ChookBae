@@ -7,7 +7,7 @@ import axios from "axios"
 function MatchPage() {
 
     const thStyle={
-        width: '100px',
+        width: '100em',
         height: 'auto',
     }
 
@@ -19,8 +19,8 @@ function MatchPage() {
     }
 
     const btnStyle={
-        width: '100px',
-        height: '50px',
+        width: '10em',
+        height: '5em',
     }
     //const [matches, setMatches] = useState([])
     const header = [

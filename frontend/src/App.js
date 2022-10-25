@@ -7,6 +7,8 @@ import MainPage from './Routes/MainPage';
 import LoginPage from './Routes/LoginPage';
 import SignUpPage from './Routes/SignUpPage';
 import MatchPage from './Routes/MatchPage';
+import MatchCountryDetail from './Routes/MatchCountryDetail'
+import MatchDateDetail from './Routes/MatchDateDetail'
 
 
 function App() {
@@ -15,6 +17,9 @@ function App() {
     <Routes>
         <Route path="" element={<MainPage/>}/>
         <Route path="/Match" element={<MatchPage type='country'/>}/>
+        <Route path="/Match/Country" element={<MatchCountryDetail/>}/>
+        <Route path="/Match/Date" element={<MatchDateDetail/>}/>
+
     </Routes> 
   </BrowserRouter>
   );
