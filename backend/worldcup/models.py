@@ -12,12 +12,18 @@ class User(models.Model):
     login_date = models.DateField()
     login_count = models.IntegerField()
 
+    class Meta:
+            db_table='user'
+
 class Point(models.Model):
     id = models.AutoField(primary_key=True)
     user_id = models.ForeignKey(User, models.DO_NOTHING, db_column='user_id')
     point = models.IntegerField()
     info = models.CharField(max_length=200)
     time = models.DateTimeField()
+
+    class Meta:
+            db_table='point'
 
 class Venue(models.Model):
     id = models.IntegerField(primary_key=True)
@@ -26,6 +32,9 @@ class Venue(models.Model):
     address = models.CharField(max_length=200)
     capacity = models.IntegerField()
     opened_date = models.DateField()
+
+    class Meta:
+            db_table='venue'
 
 class Team(models.Model):
     id = models.IntegerField(primary_key=True)
@@ -41,6 +50,9 @@ class Team(models.Model):
     goal_diff = models.IntegerField()
     manager = models.CharField(max_length=200)
 
+    class Meta:
+            db_table='team'
+
 class Match(models.Model):
     id = models.IntegerField(primary_key=True)
     match_name = models.CharField(max_length=200)
@@ -52,6 +64,9 @@ class Match(models.Model):
     venue_id = models.ForeignKey(Venue, models.DO_NOTHING, db_column='venue_id')
     team1_score = models.IntegerField(blank=True, null=True)
     team2_score = models.IntegerField(blank=True, null=True)
+
+    class Meta:
+            db_table='match'
 
 class Player(models.Model):
     id = models.IntegerField(primary_key=True)
@@ -73,10 +88,16 @@ class Player(models.Model):
     run_time = models.IntegerField()
     value = models.IntegerField()
 
+    class Meta:
+            db_table='player'
+
 class PlayerCard(models.Model):
     id = models.AutoField(primary_key=True)
     player_id = models.ForeignKey(Player, models.DO_NOTHING, db_column='player_id')
     user_id = models.ForeignKey(User, models.DO_NOTHING, db_column='user_id')
+
+    class Meta:
+            db_table='playercard'
 
 class Prediction(models.Model):
     id = models.AutoField(primary_key=True)
@@ -86,14 +107,23 @@ class Prediction(models.Model):
     user_point = models.IntegerField()
     predict = models.IntegerField()
 
-class Bet(models.Model):
+    class Meta:
+            db_table='prediction'
+
+class Bet(models.Model): 
     id = models.OneToOneField(Match, models.DO_NOTHING, primary_key=True)
     win = models.IntegerField()
     draw = models.IntegerField()
     loss = models.IntegerField()
+
+    class Meta:
+            db_table='bet'
 
 class EmailCert(models.Model):
     id = models.AutoField(primary_key=True)
     email = models.CharField(max_length=200)
     cert_num = models.CharField(max_length=200)
     cert_time = models.DateTimeField()
+
+    class Meta:
+            db_table='emailcert'
