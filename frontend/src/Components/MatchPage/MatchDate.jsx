@@ -2,7 +2,6 @@ import React, { useRef, useState, useMemo } from "react";
 import styled from "styled-components";
 import { Route, Link, useLocation } from 'react-router-dom';
 
-
 function MatchDate(props) {
     const thStyle={
         width: '100em',
@@ -58,6 +57,7 @@ function MatchDate(props) {
     }
     console.log(dataProps);
     return (
+        <>
         <table style={tableStyle}>
             <tbody>
                 <tr style={trStyle}>
@@ -77,6 +77,7 @@ function MatchDate(props) {
                 </tr>
             </tbody>
         </table>
+        </>
             )
 }
 

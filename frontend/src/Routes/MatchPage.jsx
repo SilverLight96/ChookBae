@@ -2,6 +2,8 @@ import React, { useState } from "react";
 import styled from "styled-components";
 import MatchCountry from "../Components/MatchPage/MatchCountry"
 import MatchDate from "../Components/MatchPage/MatchDate"
+import Calendar from 'react-calendar';
+import 'react-calendar/dist/Calendar.css';
 import axios from "axios"
 
 function MatchPage() {
@@ -35,6 +37,7 @@ function MatchPage() {
         'team1_score',
         'team2_score',
     ]
+    const [value, onChange] = useState(new Date());
 
     const Tableheader = () => {
         return(
@@ -227,25 +230,30 @@ function MatchPage() {
     }
     else {
         return (
+            <>
             <div>
                 <Tableheader />
+                <div>
+                    <Calendar onChange={onChange} value={value} />
+                </div>
                 {dateMatches.map((match, index) => {
                     return (
                         <MatchDate
-                            id={match.id}
-                            pk={match.pk}
-                            match_name={match.match_name}
-                            match_type={match.match_type}
-                            team1_pk={match.team1_pk}
-                            team2_pk={match.team2_pk}
-                            start_time={match.start_time}
-                            venue_pk={match.venue_pk}
-                            team1_score={match.team1_score}
-                            team2_score={match.team2_score}
+                        id={match.id}
+                        pk={match.pk}
+                        match_name={match.match_name}
+                        match_type={match.match_type}
+                        team1_pk={match.team1_pk}
+                        team2_pk={match.team2_pk}
+                        start_time={match.start_time}
+                        venue_pk={match.venue_pk}
+                        team1_score={match.team1_score}
+                        team2_score={match.team2_score}
                         />
                     )
                 })}
             </div>
+            </>
         )
     }
 }
