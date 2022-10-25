@@ -2,7 +2,7 @@ import React from "react";
 import styled from "styled-components";
 
 function MainPage() {
-  return <ChookBae>Chook Bae! 축배에 오신것을 환영합니다!</ChookBae>;
+  return <ChookBae>Chook Bae! 축배에 오신것을 환영합니다!</ChookBae>
 }
 
 export default MainPage;

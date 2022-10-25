@@ -6,6 +6,7 @@ import { BrowserRouter,Route, Routes } from "react-router-dom";
 import MainPage from './Routes/MainPage';
 import LoginPage from './Routes/LoginPage';
 import SignUpPage from './Routes/SignUpPage';
+import MatchPage from './Routes/MatchPage';
 
 
 function App() {
@@ -13,6 +14,7 @@ function App() {
     <BrowserRouter>    
     <Routes>
         <Route path="" element={<MainPage/>}/>
+        <Route path="/Match" element={<MatchPage type='country'/>}/>
     </Routes> 
   </BrowserRouter>
   );
