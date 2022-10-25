@@ -50,14 +50,15 @@ function MatchDate(props) {
         props.team1_score,
         props.team2_score,
     ]
-
-    const dataProps = []
+    console.log(props);
+    const dataProps = [props.date]
     for (let i=0; i<data.length; i++){
         dataProps.push(`${header[i]}: ${data[i]}`)
     }
-    console.log(dataProps);
+
     return (
         <>
+        <h1>{props.valueMoment}</h1>
         <table style={tableStyle}>
             <tbody>
                 <tr style={trStyle}>

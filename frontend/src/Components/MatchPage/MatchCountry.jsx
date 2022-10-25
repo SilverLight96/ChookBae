@@ -56,7 +56,6 @@ function MatchCountry(props) {
     for (let i=0; i<data.length; i++){
         dataProps.push(`${header[i]}: ${data[i]}`)
     }
-    console.log(dataProps);
     return (
         <table style={tableStyle}>
             <tbody>
@@ -80,4 +79,4 @@ function MatchCountry(props) {
             )
 }
 
-export default MatchCountry
+export default MatchCountry;

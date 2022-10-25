@@ -3,6 +3,7 @@ import styled from "styled-components";
 import MatchCountry from "../Components/MatchPage/MatchCountry"
 import MatchDate from "../Components/MatchPage/MatchDate"
 import Calendar from 'react-calendar';
+import moment from 'moment';
 import 'react-calendar/dist/Calendar.css';
 import axios from "axios"
 
@@ -38,6 +39,7 @@ function MatchPage() {
         'team2_score',
     ]
     const [value, onChange] = useState(new Date());
+    const valueMoment = moment(value).format("YYYY-MM-DD")
 
     const Tableheader = () => {
         return(
@@ -75,7 +77,7 @@ function MatchPage() {
             match_type: '이것도 잘 모름',
             team1_pk: '1',
             team2_pk: '2',
-            start_time: '08:00',
+            start_time: '2022-10-19',
             venue_pk: '1',
             team1_score: '99',
             team2_score: '0',
@@ -137,7 +139,7 @@ function MatchPage() {
             match_type: '이것도 잘 알고 있음',
             team1_pk: '3',
             team2_pk: '4',
-            start_time: '10:00',
+            start_time: '2022-10-19',
             venue_pk: '4',
             team1_score: '1089',
             team2_score: '12',
@@ -149,7 +151,7 @@ function MatchPage() {
             match_type: '이것도 잘 알고 있음',
             team1_pk: '3',
             team2_pk: '4',
-            start_time: '10:00',
+            start_time: '2022-10-20',
             venue_pk: '4',
             team1_score: '1089',
             team2_score: '12',
@@ -161,7 +163,7 @@ function MatchPage() {
             match_type: '이것도 잘 알고 있음',
             team1_pk: '3',
             team2_pk: '4',
-            start_time: '10:00',
+            start_time: '2022-10-21',
             venue_pk: '4',
             team1_score: '1089',
             team2_score: '12',
@@ -173,7 +175,7 @@ function MatchPage() {
             match_type: '이것도 잘 알고 있음',
             team1_pk: '3',
             team2_pk: '4',
-            start_time: '10:00',
+            start_time: '2022-10-22',
             venue_pk: '4',
             team1_score: '1089',
             team2_score: '12',
@@ -185,7 +187,7 @@ function MatchPage() {
             match_type: '이것도 잘 알고 있음',
             team1_pk: '3',
             team2_pk: '4',
-            start_time: '10:00',
+            start_time: '2022-10-23 ',
             venue_pk: '4',
             team1_score: '1089',
             team2_score: '12',
@@ -235,10 +237,15 @@ function MatchPage() {
                 <Tableheader />
                 <div>
                     <Calendar onChange={onChange} value={value} />
+                    <div className="text-gray-500 mt-4">
+                        {valueMoment} 
+                    </div>
                 </div>
                 {dateMatches.map((match, index) => {
                     return (
                         <MatchDate
+                        date={valueMoment}
+                        key={index}
                         id={match.id}
                         pk={match.pk}
                         match_name={match.match_name}
