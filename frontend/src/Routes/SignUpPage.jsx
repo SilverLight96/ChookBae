@@ -7,6 +7,7 @@ import debounce from "../utils/functions/debounce";
 import { userApis } from "../utils/apis/userApis";
 import { fetchData } from "../utils/apis/api";
 import { keyframes } from "styled-components";
+import logo from "../assets/ChookBae_logo.png";
 
 function SignUpPage() {
   const [userInfo, setUserInfo] = useState({
@@ -133,6 +134,9 @@ function SignUpPage() {
     <Wrapper>
       <LoginBox>
         <h2>Sign Up</h2>
+        <Logo>
+          <img src={logo} alt="로그인 페이지 로고" />
+        </Logo>
         <form onSubmit={handleSubmit(onValid)}>
           <UserBox>
             <Input
@@ -258,6 +262,14 @@ const Wrapper = styled.div`
   font-family: sans-serif;
 `;
 
+const Logo = styled.div`
+  margin: auto;
+  width: 30%;
+  > img {
+    width: 100%;
+  }
+`;
+
 const anim1 = keyframes`
    0% {
     left: -100%;
@@ -293,7 +305,7 @@ const anim4 = keyframes`
 
 const LoginBox = styled.div`
   position: absolute;
-  top: 50%;
+  top: 45%;
   left: 50%;
   width: 450px;
   padding: 40px;
@@ -308,6 +320,7 @@ const LoginBox = styled.div`
     padding: 0;
     color: #fff;
     text-align: center;
+    font-size: 30px;
   }
   > form {
     > button {
@@ -339,7 +352,7 @@ const LoginBox = styled.div`
           width: 100%;
           height: 2px;
           background: linear-gradient(90deg, transparent, #03e9f4);
-          animation: ${anim1} 1s linear infinite;
+          animation: ${anim1} 3s linear infinite;
         }
         :nth-child(2) {
           top: -100%;
@@ -347,8 +360,8 @@ const LoginBox = styled.div`
           width: 2px;
           height: 100%;
           background: linear-gradient(180deg, transparent, #03e9f4);
-          animation: ${anim2} 1s linear infinite;
-          animation-delay: 0.25s;
+          animation: ${anim2} 3s linear infinite;
+          animation-delay: 0.75s;
         }
         :nth-child(3) {
           bottom: 0;
@@ -356,8 +369,8 @@ const LoginBox = styled.div`
           width: 100%;
           height: 2px;
           background: linear-gradient(270deg, transparent, #03e9f4);
-          animation: ${anim3} 1s linear infinite;
-          animation-delay: 0.5s;
+          animation: ${anim3} 3s linear infinite;
+          animation-delay: 1.5s;
         }
         :nth-child(4) {
           bottom: -100%;
@@ -365,8 +378,8 @@ const LoginBox = styled.div`
           width: 2px;
           height: 100%;
           background: linear-gradient(360deg, transparent, #03e9f4);
-          animation: ${anim4} 1s linear infinite;
-          animation-delay: 0.75s;
+          animation: ${anim4} 3s linear infinite;
+          animation-delay: 2.25s;
         }
       }
     }
