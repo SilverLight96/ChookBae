@@ -79,7 +79,7 @@ class Player(models.Model):
     weight = models.IntegerField()
     height = models.IntegerField()
     team_id = models.ForeignKey(Team, models.DO_NOTHING, db_column='country_id')
-    current_team = models.CharField(max_length=200)
+    current_team = models.CharField(max_length=200, null=True)
     position = models.CharField(max_length=200)
     goal = models.IntegerField()
     assist = models.IntegerField()
