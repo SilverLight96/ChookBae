@@ -20,7 +20,7 @@ class Point(models.Model):
     user_id = models.ForeignKey(User, models.DO_NOTHING, db_column='user_id')
     point = models.IntegerField()
     info = models.CharField(max_length=200)
-    time = models.DateTimeField()
+    time = models.DateTimeField(auto_now_add=True)
 
     class Meta:
             db_table='point'
