@@ -16,6 +16,7 @@ function SignUpPage() {
   });
   const [isDuplicatedEmail, setIsDuplicatedEmail] = useState(true);
   const [duplicatedNickname, setDuplicatedNickname] = useState(false);
+  const [isAuthenticating, setIsAuthenticating] = useState(false);
 
   const {
     register,
@@ -51,6 +52,9 @@ function SignUpPage() {
     }
     setUserInfo((prev) => ({ ...prev, ...data }));
   };
+
+  // 닉네임 중복 검사
+
   const checkNickname = async (value) => {
     if (
       errors?.nickname?.type === "pattern" ||
@@ -106,9 +110,20 @@ function SignUpPage() {
     () => debounce((e) => debounceEmailChange(e.target.value), 500),
     []
   );
-
+  // 비밀번호 확인
   const password = useRef({});
   password.current = watch("password", "");
+
+  //이메일 인증
+  const certificateEmail = async (event) => {
+    event.preventDefault();
+    setIsAuthenticating(true);
+    if (errors.email) return;
+    const response = await fetchData.post(userApis.EMAIL_CERTIFICATE_API, {
+      email: watch().email,
+    });
+  };
+
   // 회원가입 전송 API
   // const register = async () => {
   //   return await fetchData.post(userApis.REGISTER, userInfo);
