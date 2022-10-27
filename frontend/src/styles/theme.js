@@ -7,6 +7,7 @@ const colors = {
     pointBlack: '#393838',
     subBlack: '#2F2B2B',
     mainBlue: '#2A3A4F',
+    pointBlue: '#0075FF',
     mainOrange: '#B74A40',   
     pointGray: '#5C5C5C',
     disabledGray: '#999999',

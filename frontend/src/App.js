@@ -1,6 +1,6 @@
 import React from "react";
 import styled from "styled-components";
-import { BrowserRouter,Route, Routes } from "react-router-dom";
+import { BrowserRouter,Route, Routes, Link } from "react-router-dom";
 
 //routes
 import MainPage from './Routes/MainPage';
@@ -12,13 +12,14 @@ import PredictionPage from "./Routes/PredictionPage";
 import PlayerGetPage from "./Routes/PlayerGetPage";
 import MatchInfoPage from "./Routes/MatchInfo";
 
+
 function App() {
   return (
     <BrowserRouter>    
     <NavBar/>
     <Routes>
         <Route path="" element={<MainPage/>}/>
-        <Route path="/profile" element={<ProfilePage/>}/>
+        <Route path="/profile/*" element={<ProfilePage/>}/>
         <Route path="/login" element={<LoginPage/>}/>
         <Route path="/signup" element={<SignUpPage/>}/>
         <Route path="/prediction" element={<PredictionPage/>}/>
