@@ -70,8 +70,7 @@ class Match(models.Model):
 
 class Player(models.Model):
     id = models.IntegerField(primary_key=True)
-    firstname = models.CharField(max_length=200)
-    lastname = models.CharField(max_length=200)
+    fullname = models.CharField(max_length=200)
     name_language = models.CharField(max_length=200)
     player_image = models.TextField(blank=True, null=True)
     number = models.IntegerField(blank=True, null=True)
