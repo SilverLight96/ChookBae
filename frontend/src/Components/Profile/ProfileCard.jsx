@@ -6,8 +6,12 @@ function ProfileCard() {
   return (
     <Wrapper>
       <ButtonConatiner>
-        <button>회원정보 수정</button>
-        <button>로그 아웃</button>
+        <Link to="/account">
+          <button>회원정보 수정</button>
+        </Link>
+        <Link>
+          <button>로그 아웃</button>
+        </Link>
       </ButtonConatiner>
       <ProfileImgContainer>
         <ProfileImg>
@@ -75,14 +79,16 @@ const ButtonConatiner = styled.div`
   position: absolute;
   top: 5px;
   right: 5px;
-  > button {
-    background-color: ${(props) => props.theme.colors.mainRed};
-    border-radius: 5px;
-    margin-left: 5px;
-    padding: 5px;
-    color: ${(props) => props.theme.colors.white};
-    :hover {
-      cursor: pointer;
+  > a {
+    > button {
+      background-color: ${(props) => props.theme.colors.mainRed};
+      border-radius: 5px;
+      margin-left: 5px;
+      padding: 5px;
+      color: ${(props) => props.theme.colors.white};
+      :hover {
+        cursor: pointer;
+      }
     }
   }
 `;

@@ -11,6 +11,7 @@ import NavBar from "./Components/common/NavBar";
 import PredictionPage from "./Routes/PredictionPage";
 import PlayerGetPage from "./Routes/PlayerGetPage";
 import MatchInfoPage from "./Routes/MatchInfo";
+import AccountPage from "./Routes/AccountPage";
 
 
 function App() {
@@ -20,6 +21,7 @@ function App() {
     <Routes>
         <Route path="" element={<MainPage/>}/>
         <Route path="/profile/*" element={<ProfilePage/>}/>
+        <Route path="/account" element={<AccountPage/>}/>
         <Route path="/login" element={<LoginPage/>}/>
         <Route path="/signup" element={<SignUpPage/>}/>
         <Route path="/prediction" element={<PredictionPage/>}/>
