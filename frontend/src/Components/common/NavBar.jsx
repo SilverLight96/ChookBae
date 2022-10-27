@@ -12,7 +12,7 @@ function NavBar() {
     <NabBody>
       <Link to="/matchinfo">
         <NavButton>
-          <FaClipboardList size="40px" />
+          <FaClipboardList size="40px" color="#E5E5E5" />
         </NavButton>
       </Link>
       <Link to="/prediction">
@@ -27,12 +27,12 @@ function NavBar() {
       </Link>
       <Link to="/playerget">
         <NavButton>
-          <GiCardRandom size="40px" />
+          <GiCardRandom size="40px" color="#E5E5E5" />
         </NavButton>
       </Link>
       <Link to="/profile">
         <NavButton>
-          <HiOutlineUserCircle size="45px" />
+          <HiOutlineUserCircle size="45px" color="#E5E5E5" />
         </NavButton>
       </Link>
     </NabBody>
@@ -42,6 +42,7 @@ function NavBar() {
 export default NavBar;
 
 const NabBody = styled.div`
+  z-index: 100;
   max-width: 860px;
   width: 100%;
   margin: auto;

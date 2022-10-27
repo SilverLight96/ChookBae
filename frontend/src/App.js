@@ -12,7 +12,6 @@ import PredictionPage from "./Routes/PredictionPage";
 import PlayerGetPage from "./Routes/PlayerGetPage";
 import MatchInfoPage from "./Routes/MatchInfo";
 
-
 function App() {
   return (
     <BrowserRouter>    
