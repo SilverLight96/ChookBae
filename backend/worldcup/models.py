@@ -57,8 +57,8 @@ class Match(models.Model):
     id = models.IntegerField(primary_key=True)
     match_name = models.CharField(max_length=200)
     match_type = models.CharField(max_length=200)
-    team1_id = models.ForeignKey(Team, models.DO_NOTHING, related_name='team1_id')
-    team2_id = models.ForeignKey(Team, models.DO_NOTHING, related_name='team2_id')
+    team1_id = models.ForeignKey(Team, models.DO_NOTHING, db_column='team1_id', related_name='team1_id')
+    team2_id = models.ForeignKey(Team, models.DO_NOTHING, db_column='team2_id', related_name='team2_id')
     start_date = models.DateField()
     start_time = models.TimeField()
     venue_id = models.ForeignKey(Venue, models.DO_NOTHING, db_column='venue_id')
@@ -102,7 +102,7 @@ class PlayerCard(models.Model):
 class Prediction(models.Model):
     id = models.AutoField(primary_key=True)
     match_id = models.ForeignKey(Match, models.DO_NOTHING, db_column='match_id')
-    bet_time = models.DateTimeField()
+    bet_time = models.DateTimeField(auto_now_add=True)
     user_id = models.ForeignKey(User, models.DO_NOTHING, db_column='user_id')
     user_point = models.IntegerField()
     predict = models.IntegerField()
@@ -111,10 +111,10 @@ class Prediction(models.Model):
             db_table='prediction'
 
 class Bet(models.Model): 
-    id = models.OneToOneField(Match, models.DO_NOTHING, primary_key=True)
+    id = models.OneToOneField(Match, models.DO_NOTHING, db_column='id',primary_key=True)
     win = models.IntegerField()
     draw = models.IntegerField()
-    loss = models.IntegerField()
+    lose = models.IntegerField()
 
     class Meta:
             db_table='bet'
