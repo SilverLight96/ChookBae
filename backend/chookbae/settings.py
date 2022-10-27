@@ -11,7 +11,7 @@ https://docs.djangoproject.com/en/3.2/ref/settings/
 """
 
 from pathlib import Path
-
+import db_setting
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -25,7 +25,7 @@ SECRET_KEY = 'django-insecure-9xx1qky5j(sc!m!-#8#befht@z68j8*=-0jiv#gheq(!fhy39+
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['k7a202.p.ssafy.io']
 
 
 # Application definition
@@ -35,6 +35,10 @@ INSTALLED_APPS = [
     'accounts',
     'rest_framework',
     
+    # 'django.contrib.sites',
+    # 'allauth.account',
+    # 'allauth.socialaccount',
+
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -42,6 +46,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
 ]
+SITE_ID = 1
 AUTH_USER_MODEL = 'accounts.User'
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -77,16 +82,8 @@ WSGI_APPLICATION = 'chookbae.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'chookbae',
-        'USER': 'root',
-        'PASSWORD': 'ch10bae24ook',
-        'HOST': 'k7a202.p.ssafy.io',
-        'PORT': '3306',
-    }
-}
+DATABASES = db_setting.DATABASES
+
 
 
 # Password validation
@@ -140,3 +137,15 @@ AUTHENTICATION_BACKENDS = {
     'allauth.account.auth_backends.AuthenticationBackend',
 }
 
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_HOST_USER = 'team960321@gmail.com'
+EMAIL_HOST_PASSWORD = 'fgyelfnvrwikhapq'
+EMAIL_USE_TLS = True
+EMAIL_PORT = 587
+DEFAULT_FROM_MAIL = EMAIL_HOST_USER
+ACCOUNT_CONFIRM_EMAIL_ON_GET = True
+ACCOUNT_EMAIL_VERIFICATION = 'mandatory'
+ACCOUNT_AUTHENTICATION_METHOD = 'email' #로그인 시 이메일로 로그인
+ACCOUNT_EMAIL_CONFIRMATION_EXPIRE_DAYS = 0.02 # 30분 경과시 비활성화
+ACCOUNT_EMAIL_SUBJECT_PREFIX = '[Chookbae]이메일 인증' # 이메일 제목 앞에 붙는 prefix
