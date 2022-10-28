@@ -8,6 +8,8 @@ import datetime
 from django.db import transaction
 from django.shortcuts import render
 from django.db.models import Q
+from rest_framework import status
+from rest_framework.response import Response
 from .models import User, Point, Venue, Team, Match, Player, PlayerCard, Prediction, Bet, EmailCert
 
 # Create your views here.
@@ -27,18 +29,19 @@ class matchpredict(APIView):
 
         match=Match.objects.get(id=match_pk)
         user=User.objects.get(id=1)
-
         if(user.points<point):
-                raise Exception('보유하고 있는 포인트보다 많습니다.')
-        try:   
+            return ('보유하고 있는 포인트를 확인해 주세요.')
+             
+        try:
             pre=Prediction.objects.get(match_id=match_pk,user_id=1)
-            raise Exception('이미 예측하셨습니다.')
+            return ('이미 예측을 완료한 경기입니다.')
+           
         except Prediction.DoesNotExist:
             user.points-=point
             user.save()
             po=Point.objects.create(user_id=user,point=point,info='경기 결과 예측 배팅')
             pred=Prediction.objects.create(user_point=point,predict=predict,match_id=match,user_id=user)
-            
+           
 
         try:  
             match_num=Bet.objects.get(id=match_pk)
@@ -55,25 +58,33 @@ class matchpredict(APIView):
             bet.lose+=point
 
         bet.save()
+        
+        return ('success')
             
     @swagger_auto_schema(operation_id="승부 예측", operation_description="승부 예측하기", request_body=param)
     def post(self, request, format=None):
         ingredient = self.get_object(request.data['match_pk'],request.data['point'],request.data['predict'])
-        #print(request.META.get('HTTP_ACCEPT'))
-        return Response({200: '배팅 성공'})
+
+        #print(request.META.get('HTTP_AUTHORIZATION'))
+        print(ingredient)
+        if (ingredient=='success'):
+            return Response(ingredient,status=status.HTTP_200_OK)
+        else :
+            return Response(ingredient,status=status.HTTP_400_BAD_REQUEST)
+        
 
 
 class predictinfo(APIView):
     id = openapi.Parameter('id', openapi.IN_PATH, description='match_id', required=True, type=openapi.TYPE_NUMBER)
-    @swagger_auto_schema(operation_id="유저의 승부 예측 여부를 조회", operation_description="제공 받은 토큰 값을 기준으로 유저를 파악하고 해당 유저가 승부 예측을 했는지 확인한다", manual_parameters=[id], responses={200: '조회 성공'})
+    @swagger_auto_schema(operation_id="유저의 승부 예측 여부를 조회", operation_description="제공 받은 토큰 값을 기준으로 유저를 파악하고 해당 유저가 승부 예측을 했는지 확인한다", manual_parameters=[id])
     def get(self, request, id):
         try:
             predict=Prediction.objects.get(match_id=id ,user_id=1)
-            return Response(True,"이미 예측을 하셨습니다.")
+            return Response({True}, status=status.HTTP_200_OK)
         except Prediction.DoesNotExist:
-            return Response(False,"예측을 하지 않았습니다")
+            return Response({False}, status=status.HTTP_200_OK)
         except Prediction.MultipleObjectsReturned:
-            return Response({False,'뭐하냐?'})
+            return Response({False}, status=status.HTTP_400_BAD_REQUEST)
 
 
 # AUTO 정산            
