@@ -25,6 +25,11 @@ function MatchPage() {
         width: '10em',
         height: '5em',
     }
+
+    const calendarStyle={
+        width: '100%',
+    }
+
     //const [matches, setMatches] = useState([])
     const header = [
         'id',
@@ -235,13 +240,14 @@ function MatchPage() {
             <>
             <div>
                 <Tableheader />
-                <div>
-                    <Calendar onChange={onChange} value={value} />
-                    <div className="text-gray-500 mt-4">
+                <StyledCalendar>
+                    <Calendar onChange={onChange} value={value} style={calendarStyle} />
+                    <div>
                         {valueMoment} 
                     </div>
-                </div>
+                </StyledCalendar>
                 {dateMatches.map((match, index) => {
+                    if (match.start_time === valueMoment) {
                     return (
                         <MatchDate
                         date={valueMoment}
@@ -258,7 +264,7 @@ function MatchPage() {
                         team2_score={match.team2_score}
                         />
                     )
-                })}
+                }})}
             </div>
             </>
         )
@@ -266,3 +272,31 @@ function MatchPage() {
 }
 
 export default MatchPage;
+
+const StyledCalendar = styled.div`
+    /* container styles */
+    margin: auto;
+    width: 100%;
+
+    /* calendar styles */
+    .react-calendar {
+        width: 100%;
+        margin-left: auto;
+        margin-right: auto;
+    }
+    /* navigation styles */
+    .react-calendar__navigation  {
+        display: flex;
+        .react-calendar__navigation__label {
+            width: 100%;
+        }
+
+        .react-calendar__navigation__arrow {
+
+        }
+    }
+    /* label styles */
+    .react-calendar__month-view__weekdays {
+        text-align: center;
+    }
+`
