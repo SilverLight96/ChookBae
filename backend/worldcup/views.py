@@ -4,6 +4,7 @@ from drf_yasg import openapi
 from drf_yasg.utils import swagger_auto_schema
 from django.http import Http404
 import datetime
+import operator
 from django.db import transaction
 from django.shortcuts import render
 from django.db.models import Q
@@ -117,4 +118,76 @@ def predictcalc():
             po=Point.objects.create(user_id=user,point=dang*pre.user_point,info='경기 예측 성공')
         
 
-   
+
+# 경기 정보 조회 (국가별) GET
+class MatchInfoByTeam(APIView):
+    country = openapi.Parameter('id', openapi.IN_PATH, description='team id', required=True, type=openapi.TYPE_NUMBER)
+    @swagger_auto_schema(operation_id="경기 정보 조회 (국가별)", operation_description="국가 고유번호로 경기 조회", manual_parameters=[id], responses={200: '조회 성공'})
+    def get(self, request, id):
+        games = []
+        homegame = Match.objects.filter(team1_id=id)
+        awaygame = Match.objects.filter(team2_id=id)
+        for hg in homegame:
+            games.append(hg.id)
+        for ag in awaygame:
+            games.append(ag.id)
+        
+        match_list = []
+        for g in sorted(games):
+            match = Match.objects.get(id=g)
+            curr_info = [match.id, match.start_date, match.start_time, match.venue_id.venue_name, match.venue_id.address,
+                        match.team1_id.country, match.team1_id.logo, match.team1_id.group, match.team2_id.country, match.team2_id.logo]
+            match_list.append(curr_info)
+        
+        return Response(match_list)
+
+
+# 경기 정보 조회 (날짜별) GET
+class MatchInfoByDate(APIView):
+    date = openapi.Parameter('id', openapi.IN_PATH, description='date in YYYYMMDD', required=True, type=openapi.TYPE_NUMBER)
+    @swagger_auto_schema(operation_id="경기 정보 조회 (날짜별)", operation_description="날짜 입력으로 경기 조회 (날짜양식: YYYYMMDD)", manual_parameters=[id], responses={200: '조회 성공'})
+    def get(self, request, id):
+        id=str(id)
+        match_date = datetime.datetime(int(id[:4]), int(id[4:6]), int(id[6:8]))   # 경기 시간을 datetime 포맷으로 변환
+                
+        match_list = []
+        games = Match.objects.filter(start_date=str(match_date)[:10])
+        for g in games:
+            match = Match.objects.get(id=g.id)
+            curr_info = [match.id, match.start_date, match.start_time, match.venue_id.venue_name, match.venue_id.address,
+                        match.team1_id.country, match.team1_id.logo, match.team1_id.group, match.team2_id.country, match.team2_id.logo]
+            match_list.append(curr_info)
+        
+        match_list = sorted(match_list, key=operator.itemgetter(2, 7))
+
+        return Response(match_list)
+
+
+# 경기 상세 정보 조회 GET
+class MatchDetail(APIView):
+    game = openapi.Parameter('id', openapi.IN_PATH, description='match id', required=True, type=openapi.TYPE_NUMBER)
+    @swagger_auto_schema(operation_id="경기 상세 정보 조회", operation_description="경기 고유번호로 상세 정보 조회", manual_parameters=[id], responses={200: '조회 성공'})
+    def get(self, request, id):
+        match = Match.objects.get(id=id)
+        match_detail = [match.id, match.start_date, match.start_time, match.venue_id.venue_name, match.venue_id.address,
+                        match.team1_id.id, match.team1_id.country, match.team1_id.logo, match.team1_id.group, match.team1_id.rank, match.team1_id.win, match.team1_id.draw, match.team1_id.loss,
+                        match.team1_id.points, match.team1_id.last_five, match.team1_id.goal_diff, match.team1_id.manager, match.team1_id.round,
+                        match.team2_id.id, match.team2_id.country, match.team2_id.logo, match.team2_id.group, match.team2_id.rank, match.team2_id.win, match.team2_id.draw, match.team2_id.loss,
+                        match.team2_id.points, match.team2_id.last_five, match.team2_id.goal_diff, match.team2_id.manager, match.team2_id.round]
+        
+        return Response(match_detail)
+
+
+# 팀 정보 조회 GET
+class TeamInfo(APIView):
+    team = openapi.Parameter('id', openapi.IN_PATH, description='team id', required=True, type=openapi.TYPE_NUMBER)
+    @swagger_auto_schema(operation_id="팀 정보 조회", operation_description="팀 고유번호로 정보 조회", manual_parameters=[id], responses={200: '조회 성공'})
+    def get(self, request, id):
+        team = Team.objects.get(id=id)
+        team_info = [[team.manager, 0, 0]]
+
+        players = Player.objects.filter(team_id=id)
+        for p in players:
+            team_info.append([p.fullname, p.position, p.number])
+        
+        return Response(team_info)
