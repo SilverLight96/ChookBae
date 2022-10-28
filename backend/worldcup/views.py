@@ -9,6 +9,7 @@ from django.shortcuts import render
 from django.db.models import Q
 from rest_framework import status
 from rest_framework.response import Response
+from .Serializers import CardSerializer
 from .models import User, Point, Venue, Team, Match, Player, PlayerCard, Prediction, Bet, EmailCert
 
 # Create your views here.
@@ -115,6 +116,46 @@ def predictcalc():
             user.points+=(dang*pre.user_point)
             user.save()
             po=Point.objects.create(user_id=user,point=dang*pre.user_point,info='경기 예측 성공')
-        
+
+#선수 뽑기 PUT
+class card(APIView):
+    param = openapi.Schema(type=openapi.TYPE_OBJECT, required=['team_id', 'gacha_count', 'point'],
+    properties={
+        'team_id': openapi.Schema(type=openapi.TYPE_NUMBER, description="국가 번호"),
+        'gacha_count': openapi.Schema(type=openapi.TYPE_NUMBER, description="가챠 횟수"),
+        'point': openapi.Schema(type=openapi.TYPE_NUMBER, description="소모 포인트"),
+        })
+
+    @transaction.atomic()
+    def get_object(self, team_id,gacha_count,point):
+        c_list=[]
+        user=User.objects.get(id=1)
+
+        if(user.points<point):
+            return ('보유하고 있는 포인트를 확인해 주세요.')
+
+        for i in range(gacha_count):
+            if(team_id > 0):
+                card=Player.objects.filter(team_id=team_id).order_by('?').first()
+            else :
+                card=Player.objects.order_by('?').first()     
+
+            new_card=PlayerCard.objects.create(player_id=card, user_id=user)
+            serializer = CardSerializer(card)
+            c_list.append(serializer.data)
+        user.points-=point
+        user.save()
+        po=Point.objects.create(user_id=user,point=point,info='선수 뽑기')
+
+        return (c_list)
+
+    @swagger_auto_schema(operation_id="카드 뽑기", operation_description="새로운 선수카드 뽑기", request_body=param)
+    def post(self, request, format=None):
+        gacha=self.get_object(request.data['team_id'],request.data['gacha_count'],request.data['point'])
+
+        if(gacha=='보유하고 있는 포인트를 확인해 주세요.'):
+            return Response(gacha,status=status.HTTP_400_BAD_REQUEST)
+        else:
+            return Response(gacha,status=status.HTTP_200_OK)
 
    
