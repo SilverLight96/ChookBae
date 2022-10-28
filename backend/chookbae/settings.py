@@ -12,7 +12,18 @@ https://docs.djangoproject.com/en/3.2/ref/settings/
 
 from pathlib import Path
 import db_setting
+import email_secret
+import environ
+
+env = environ.Env(
+    # set casting, default value
+    DEBUG=(bool, False)
+)
+
+# reading .env file
+environ.Env.read_env()
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
+
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 
@@ -25,8 +36,8 @@ SECRET_KEY = 'django-insecure-9xx1qky5j(sc!m!-#8#befht@z68j8*=-0jiv#gheq(!fhy39+
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['k7a202.p.ssafy.io']
-
+# ALLOWED_HOSTS = ['k7a202.p.ssafy.io']
+ALLOWED_HOSTS = []
 
 # Application definition
 
@@ -139,8 +150,8 @@ AUTHENTICATION_BACKENDS = {
 
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.gmail.com'
-EMAIL_HOST_USER = 'team960321@gmail.com'
-EMAIL_HOST_PASSWORD = 'fgyelfnvrwikhapq'
+EMAIL_HOST_USER = env('EMAIL_HOST_USER')
+EMAIL_HOST_PASSWORD = env('EMAIL_HOST_PASSWORD')
 EMAIL_USE_TLS = True
 EMAIL_PORT = 587
 DEFAULT_FROM_MAIL = EMAIL_HOST_USER
