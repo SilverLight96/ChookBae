@@ -1,5 +1,5 @@
 import requests
-import pprint
+import operator
 from datetime import datetime
 import pytz
 
@@ -42,15 +42,15 @@ for i in range(len(data['calendar']['matchdays'])):
         match_table.append(curr_match)
 
         venue_set.add(int(data['calendar']['matchdays'][i]['matches'][j]['matchVenue']['venueID']))     # 경기장 ID 담기 (중복제거)
-        team_set.add(int(data['calendar']['matchdays'][i]['matches'][j]['homeParticipant']['participantID']))     # 팀 ID 담기 (홈팀, 중복제거)
-        team_set.add(int(data['calendar']['matchdays'][i]['matches'][j]['awayParticipant']['participantID']))     # 팀 ID 담기 (원정팀, 중복제거)
+        team_set.add((int(data['calendar']['matchdays'][i]['matches'][j]['homeParticipant']['participantID']), data['calendar']['matchdays'][i]['matches'][j]['group']['groupName'][-1]))     # 팀 ID 담기 (홈팀, 중복제거)
+        team_set.add((int(data['calendar']['matchdays'][i]['matches'][j]['awayParticipant']['participantID']), data['calendar']['matchdays'][i]['matches'][j]['group']['groupName'][-1]))     # 팀 ID 담기 (원정팀, 중복제거)
 
-print('-'*30 + 'match table: \n',match_table)           # 경기 ID 전체 리스트
+print('-'*30 + 'match table: \n', match_table)           # 경기 ID 전체 리스트
 
 venue_list = list(venue_set)    # 경기장 ID 세트를 리스트로 변환
 # print(venue_list)               # 경기장 ID 전체 리스트
 
-team_list = list(team_set)      # 팀 ID 세트를 리스트로 변환
+team_list = sorted(list(team_set), key=operator.itemgetter(1, 0))      # 팀 ID 세트를 리스트로 변환
 # print(team_list)                # 팀 ID 전체 리스트
 
 
@@ -85,7 +85,7 @@ for t in team_list:
     # URL 및 요청변수 설정
     BASE_URL = 'https://api.statorium.com/api/v1/'
     path = 'teams/'
-    team_id = str(t) + '/'
+    team_id = str(t[0]) + '/'
     params = {
         'season_id' : '121',
         'apikey': '3206ad14af05a155025e2fefbc230679'
@@ -96,7 +96,7 @@ for t in team_list:
     data = response.json()
     team = data['team']
 
-    curr_team = [int(team['teamID']), team['teamName'], team['logo'], 'Group', 0, 0, 0, 0, 0, 0, '5 games', team['additionalInfo']['coach']]
+    curr_team = [int(team['teamID']), team['teamName'], team['logo'], t[1], 0, 0, 0, 0, 0, 0, '5 games', team['additionalInfo']['coach'], 0]
     team_table.append(curr_team)
 
     # 선수 ID 리스트에 담기
@@ -104,7 +104,6 @@ for t in team_list:
         player_list.append(int(team['players'][p]['playerID']))
 
 print('-'*30 + 'team table: \n', team_table)
-
 
 ############### 선수 정보 ###############
 ### 월드컵 API에서 제공하는 선수정보가 없는동안 해당 코드는 사용불가 (11월 2주쯤 API 업데이트 예정)
@@ -159,7 +158,7 @@ print('-'*30 + 'player table(tmp): \n', player_table_tmp)
 
 ###################################################################################################
 ######################################### DB에 데이터 넣기 #########################################
-'''
+
 ## 경기장 정보 DB에 넣기
 for row in venue_table:
     print(row[0])
@@ -186,8 +185,9 @@ for row in team_table:
     goal_diff_t = row[9]
     last_five_t = row[10]
     manager_t = row[11]
+    round_t = row[12]
     Team.objects.create(id=id_t, country=country_t, logo=logo_t, group=group_t, rank=rank_t, win=win_t, draw=draw_t, loss=loss_t,
-                            points=points_t, goal_diff=goal_diff_t, last_five=last_five_t, manager=manager_t)
+                            points=points_t, goal_diff=goal_diff_t, last_five=last_five_t, manager=manager_t, round=round_t)
 
 ## 경기 정보 DB에 넣기 (한국시간으로 변경 후 저장)
 for row in match_table:
@@ -222,7 +222,7 @@ for row in match_table:
     Match.objects.create(id=id_t, match_status=match_status_t, match_name=match_name_t, match_type=match_type_t,
                         team1_id=team1_id_pk, team2_id=team2_id_pk, start_date=start_date_t, start_time=start_time_t,
                         venue_id=venue_id_pk, team1_score=team1_score_t, team2_score=team2_score_t)
-'''
+
 ## 선수 정보 DB에 넣기
 for row in player_table_tmp:
     print(row[0])
