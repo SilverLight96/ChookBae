@@ -49,6 +49,7 @@ class Team(models.Model):
     last_five = models.CharField(max_length=200)
     goal_diff = models.IntegerField()
     manager = models.CharField(max_length=200, null=True)
+    round = models.IntegerField()
 
     class Meta:
             db_table='team'

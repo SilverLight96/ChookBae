@@ -3,7 +3,6 @@ from rest_framework.response import Response
 from drf_yasg import openapi
 from drf_yasg.utils import swagger_auto_schema
 from django.http import Http404
-import api_setting
 import datetime
 from django.db import transaction
 from django.shortcuts import render

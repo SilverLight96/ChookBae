@@ -2,6 +2,7 @@ import requests
 import operator
 from datetime import datetime
 import pytz
+import environ
 
 # DB에 데이터를 넣을때 필요한 모듈 및 코드
 import os
@@ -13,6 +14,11 @@ django.setup()
 from worldcup.models import *  # django.setup() 이후에 임포트해야 오류가 나지 않음
 
 
+api_code = environ.Env(
+    DEBUG=(bool, False)
+)
+environ.Env.read_env()
+
 
 ############### 경기 정보 + 필요한 리스트 추출 ###############
 # URL 및 요청변수 설정
@@ -20,7 +26,7 @@ BASE_URL = 'https://api.statorium.com/api/v1/'
 path = 'matches/'
 params = {
     'season_id' : '121',
-    'apikey': '3206ad14af05a155025e2fefbc230679'
+    'apikey': api_code('API_KEY')
     }
 
 # 결과를 받아서 json형식의 data변수로 저장
@@ -63,7 +69,7 @@ for v in venue_list:
     path = 'venues/'
     venue_id = str(v) + '/'
     params = {
-        'apikey': '3206ad14af05a155025e2fefbc230679'
+        'apikey': api_code('API_KEY')
         }
     
     # 결과를 받아서 json형식의 data변수로 저장
@@ -88,7 +94,7 @@ for t in team_list:
     team_id = str(t[0]) + '/'
     params = {
         'season_id' : '121',
-        'apikey': '3206ad14af05a155025e2fefbc230679'
+        'apikey': api_code('API_KEY')
         }
     
     # 결과를 받아서 json형식의 data변수로 저장
@@ -114,7 +120,7 @@ BASE_URL = 'https://api.statorium.com/api/v1/'
 path = 'teams/'
 params = {
     'season_id' : '1',
-    'apikey': '3206ad14af05a155025e2fefbc230679'
+    'apikey': api_code('API_KEY')
     }
 
 player_list_tmp = []
@@ -134,7 +140,7 @@ BASE_URL = 'https://api.statorium.com/api/v1/'
 path = 'players/'
 params = {
     'season_id' : '1',
-    'apikey': '3206ad14af05a155025e2fefbc230679'
+    'apikey': api_code('API_KEY')
     }
 
 player_table_tmp = []
