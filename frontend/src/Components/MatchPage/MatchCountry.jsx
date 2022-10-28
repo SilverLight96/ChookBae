@@ -50,6 +50,7 @@ function MatchCountry(props) {
         props.venue_pk,
         props.team1_score,
         props.team2_score,
+        props.team1_group,
     ]
 
     const dataProps = []

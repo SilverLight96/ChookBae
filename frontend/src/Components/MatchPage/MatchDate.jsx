@@ -45,10 +45,11 @@ function MatchDate(props) {
         props.match_type,
         props.team1_pk,
         props.team2_pk,
-        props.start_time,
+        // props.start_time,
         props.venue_pk,
         props.team1_score,
         props.team2_score,
+        props.team1_group,
     ]
     console.log(props);
     const dataProps = [props.date]
@@ -58,7 +59,7 @@ function MatchDate(props) {
 
     return (
         <>
-        <h1>{props.valueMoment}</h1>
+        {/* <h1>{props.date}</h1> */}
         <table style={tableStyle}>
             <tbody>
                 <tr style={trStyle}>

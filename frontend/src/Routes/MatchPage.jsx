@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import styled from "styled-components";
 import MatchCountry from "../Components/MatchPage/MatchCountry"
+import MatchCountryCard from "../Components/MatchPage/MatchCountryCard"
 import MatchDate from "../Components/MatchPage/MatchDate"
 import Calendar from 'react-calendar';
 import moment from 'moment';
@@ -46,6 +47,26 @@ function MatchPage() {
     const [value, onChange] = useState(new Date());
     const valueMoment = moment(value).format("YYYY-MM-DD")
 
+    const classifyGroup = () => {
+        const group = countryMatches.map((item) => {
+            return item.team1_group
+        })
+        const maxGroup = Math.max(...group)
+        const classifiedGroup = Array.from({length:maxGroup}, () => [])
+
+        for (let country of countryMatches) {
+            classifiedGroup[country.team1_group-1].push(Number(country.team1_pk))
+            classifiedGroup[country.team1_group-1].push(Number(country.team2_pk))
+        }
+        
+        for (let i=0; i<maxGroup; i++) {
+            let set = new Set(classifiedGroup[i])
+            classifiedGroup[i] = [...set]
+        }
+
+        return classifiedGroup
+    }
+
     const Tableheader = () => {
         return(
             <>
@@ -53,17 +74,6 @@ function MatchPage() {
                     <button style={btnStyle} onClick={changeCountry}>국가별</button>
                     <button style={btnStyle} onClick={changeDate}>날짜별</button>
                 </div>
-                <table>
-                    <thead>
-                        <tr>
-                            {header.map((elem, idx) => {
-                            return (
-                                <th style={thStyle} key={idx}>{elem}</th>
-                                    )
-                                })}
-                        </tr>
-                    </thead>
-                </table>
             </>
     )}
     const [type, setType] = useState(
@@ -77,126 +87,214 @@ function MatchPage() {
     }
     const [countryMatches, setcountryMatches] = useState([{
             id: '1',
-            pk: '8',
-            match_name: '잘 모름',
-            match_type: '이것도 잘 모름',
+            pk: '1',
+            match_name: 'a',
+            match_type: 'a',
             team1_pk: '1',
             team2_pk: '2',
-            start_time: '2022-10-19',
+            start_time: '2022-10-26',
             venue_pk: '1',
             team1_score: '99',
             team2_score: '0',
+            team1_group: '1',
         },
         {
-            id: '1',
-            pk: '8',
-            match_name: '잘 모름',
-            match_type: '이것도 잘 모름',
+            id: '2',
+            pk: '2',
+            match_name: 'b',
+            match_type: 'b',
             team1_pk: '1',
-            team2_pk: '2',
-            start_time: '08:00',
+            team2_pk: '3',
+            start_time: '2022-10-26',
             venue_pk: '1',
-            team1_score: '99',
+            team1_score: '97',
             team2_score: '0',
+            team1_group: '1',
         },
         {
-            id: '1',
-            pk: '8',
-            match_name: '잘 모름',
-            match_type: '이것도 잘 모름',
+            id: '3',
+            pk: '3',
+            match_name: 'c',
+            match_type: 'c',
             team1_pk: '1',
-            team2_pk: '2',
-            start_time: '08:00',
+            team2_pk: '4',
+            start_time: '2022-10-27',
             venue_pk: '1',
-            team1_score: '99',
+            team1_score: '94',
             team2_score: '0',
+            team1_group: '1',
         },
         {
-            id: '1',
-            pk: '8',
-            match_name: '잘 모름',
-            match_type: '이것도 잘 모름',
-            team1_pk: '1',
-            team2_pk: '2',
-            start_time: '08:00',
-            venue_pk: '1',
-            team1_score: '99',
+            id: '4',
+            pk: '4',
+            match_name: 'd',
+            match_type: 'd',
+            team1_pk: '2',
+            team2_pk: '3',
+            start_time: '2022-10-27',
+            venue_pk: '2',
+            team1_score: '54',
             team2_score: '0',
+            team1_group: '1',
         },
         {
-            id: '1',
-            pk: '8',
-            match_name: '잘 모름',
-            match_type: '이것도 잘 모름',
-            team1_pk: '1',
-            team2_pk: '2',
-            start_time: '08:00',
-            venue_pk: '1',
-            team1_score: '99',
+            id: '5',
+            pk: '5',
+            match_name: 'e',
+            match_type: 'e',
+            team1_pk: '2',
+            team2_pk: '4',
+            start_time: '2022-10-28',
+            venue_pk: '2',
+            team1_score: '13',
             team2_score: '0',
+            team1_group: '1',
+        },
+        {
+            id: '6',
+            pk: '6',
+            match_name: 'f',
+            match_type: 'f',
+            team1_pk: '3',
+            team2_pk: '4',
+            start_time: '2022-10-28',
+            venue_pk: '3',
+            team1_score: '14',
+            team2_score: '0',
+            team1_group: '1',
+        },
+        {
+            id: '7',
+            pk: '7',
+            match_name: 'g',
+            match_type: 'g',
+            team1_pk: '5',
+            team2_pk: '6',
+            start_time: '2022-10-28',
+            venue_pk: '5',
+            team1_score: '35',
+            team2_score: '14',
+            team1_group: '2',
+        },
+        {
+            id: '8',
+            pk: '8',
+            match_name: 'h',
+            match_type: 'h',
+            team1_pk: '5',
+            team2_pk: '7',
+            start_time: '2022-10-27',
+            venue_pk: '5',
+            team1_score: '76',
+            team2_score: '35',
+            team1_group: '2',
         },
     ]);
 
     const [dateMatches, setdateMatches] = useState([{
-            id: '2',
-            pk: '10',
-            match_name: '잘 알고 있음',
-            match_type: '이것도 잘 알고 있음',
-            team1_pk: '3',
-            team2_pk: '4',
-            start_time: '2022-10-19',
-            venue_pk: '4',
-            team1_score: '1089',
-            team2_score: '12',
-        },
-        {
-            id: '2',
-            pk: '10',
-            match_name: '잘 알고 있음',
-            match_type: '이것도 잘 알고 있음',
-            team1_pk: '3',
-            team2_pk: '4',
-            start_time: '2022-10-20',
-            venue_pk: '4',
-            team1_score: '1089',
-            team2_score: '12',
-        },
-        {
-            id: '2',
-            pk: '10',
-            match_name: '잘 알고 있음',
-            match_type: '이것도 잘 알고 있음',
-            team1_pk: '3',
-            team2_pk: '4',
-            start_time: '2022-10-21',
-            venue_pk: '4',
-            team1_score: '1089',
-            team2_score: '12',
-        },
-        {
-            id: '2',
-            pk: '10',
-            match_name: '잘 알고 있음',
-            match_type: '이것도 잘 알고 있음',
-            team1_pk: '3',
-            team2_pk: '4',
-            start_time: '2022-10-22',
-            venue_pk: '4',
-            team1_score: '1089',
-            team2_score: '12',
-        },
-        {
-            id: '2',
-            pk: '10',
-            match_name: '잘 알고 있음',
-            match_type: '이것도 잘 알고 있음',
-            team1_pk: '3',
-            team2_pk: '4',
-            start_time: '2022-10-23 ',
-            venue_pk: '4',
-            team1_score: '1089',
-            team2_score: '12',
-        },
+        id: '1',
+        pk: '1',
+        match_name: 'a',
+        match_type: 'a',
+        team1_pk: '1',
+        team2_pk: '2',
+        start_time: '2022-10-26',
+        venue_pk: '1',
+        team1_score: '99',
+        team2_score: '0',
+        team1_group: '1',
+    },
+    {
+        id: '2',
+        pk: '2',
+        match_name: 'b',
+        match_type: 'b',
+        team1_pk: '1',
+        team2_pk: '3',
+        start_time: '2022-10-26',
+        venue_pk: '1',
+        team1_score: '97',
+        team2_score: '0',
+        team1_group: '1',
+    },
+    {
+        id: '3',
+        pk: '3',
+        match_name: 'c',
+        match_type: 'c',
+        team1_pk: '1',
+        team2_pk: '4',
+        start_time: '2022-10-27',
+        venue_pk: '1',
+        team1_score: '94',
+        team2_score: '0',
+        team1_group: '1',
+    },
+    {
+        id: '4',
+        pk: '4',
+        match_name: 'd',
+        match_type: 'd',
+        team1_pk: '2',
+        team2_pk: '3',
+        start_time: '2022-10-27',
+        venue_pk: '2',
+        team1_score: '54',
+        team2_score: '0',
+        team1_group: '1',
+    },
+    {
+        id: '5',
+        pk: '5',
+        match_name: 'e',
+        match_type: 'e',
+        team1_pk: '2',
+        team2_pk: '4',
+        start_time: '2022-10-28',
+        venue_pk: '2',
+        team1_score: '13',
+        team2_score: '0',
+        team1_group: '1',
+    },
+    {
+        id: '6',
+        pk: '6',
+        match_name: 'f',
+        match_type: 'f',
+        team1_pk: '3',
+        team2_pk: '4',
+        start_time: '2022-10-28',
+        venue_pk: '3',
+        team1_score: '14',
+        team2_score: '0',
+        team1_group: '1',
+    },
+    {
+        id: '7',
+        pk: '7',
+        match_name: 'g',
+        match_type: 'g',
+        team1_pk: '5',
+        team2_pk: '6',
+        start_time: '2022-10-28',
+        venue_pk: '5',
+        team1_score: '35',
+        team2_score: '14',
+        team1_group: '2',
+    },
+    {
+        id: '8',
+        pk: '8',
+        match_name: 'h',
+        match_type: 'h',
+        team1_pk: '5',
+        team2_pk: '7',
+        start_time: '2022-10-27',
+        venue_pk: '5',
+        team1_score: '76',
+        team2_score: '35',
+        team1_group: '2',
+    },
     ]);
 
     // let url = 'https://example.com/';
@@ -210,29 +308,47 @@ function MatchPage() {
     // .get(axios_url)
     // .then(res => setMatches(res.data))
     // .catch(err => console.log(err))
+    const classified = classifyGroup(countryMatches)
 
     if (type ==='country'){
         return (
+            <>
             <div>
                 <Tableheader />
-                {countryMatches.map((match, index) => {
-                    return (
-                        <MatchCountry
-                            key={index}
-                            id={match.id}
-                            pk={match.pk}
-                            match_name={match.match_name}
-                            match_type={match.match_type}
-                            team1_pk={match.team1_pk}
-                            team2_pk={match.team2_pk}
-                            start_time={match.start_time}
-                            venue_pk={match.venue_pk}
-                            team1_score={match.team1_score}
-                            team2_score={match.team2_score}
-                    />
-                    )
-                })}
+                <div>
+                    <hr />
+                    {classified.map((group, index) => {
+                        return (
+                            <MatchCountryCard
+                                key={index}
+                                groupNum={index+1}
+                                groups = {group}
+                            />
+                        )
+                    })}
+                </div>
+                <div>
+                    {countryMatches.map((match, index) => {
+                        return (
+                            <MatchCountry
+                                key={index}
+                                id={match.id}
+                                pk={match.pk}
+                                match_name={match.match_name}
+                                match_type={match.match_type}
+                                team1_pk={match.team1_pk}
+                                team2_pk={match.team2_pk}
+                                start_time={match.start_time}
+                                venue_pk={match.venue_pk}
+                                team1_score={match.team1_score}
+                                team2_score={match.team2_score}
+                                team1_group={match.team1_group}
+                        />
+                        )
+                    })}
+                </div>
             </div>
+            </>
         )
     }
     else {
@@ -242,10 +358,8 @@ function MatchPage() {
                 <Tableheader />
                 <StyledCalendar>
                     <Calendar onChange={onChange} value={value} style={calendarStyle} />
-                    <div>
-                        {valueMoment} 
-                    </div>
                 </StyledCalendar>
+                <h1>{valueMoment}</h1>
                 {dateMatches.map((match, index) => {
                     if (match.start_time === valueMoment) {
                     return (
@@ -262,6 +376,7 @@ function MatchPage() {
                         venue_pk={match.venue_pk}
                         team1_score={match.team1_score}
                         team2_score={match.team2_score}
+                        team1_group={match.team1_group}
                         />
                     )
                 }})}
