@@ -159,7 +159,7 @@ print('-'*30 + 'player table(tmp): \n', player_table_tmp)
 
 ###################################################################################################
 ######################################### DB에 데이터 넣기 #########################################
-
+'''
 ## 경기장 정보 DB에 넣기
 for row in venue_table:
     print(row[0])
@@ -222,7 +222,7 @@ for row in match_table:
     Match.objects.create(id=id_t, match_status=match_status_t, match_name=match_name_t, match_type=match_type_t,
                         team1_id=team1_id_pk, team2_id=team2_id_pk, start_date=start_date_t, start_time=start_time_t,
                         venue_id=venue_id_pk, team1_score=team1_score_t, team2_score=team2_score_t)
-
+'''
 ## 선수 정보 DB에 넣기
 for row in player_table_tmp:
     print(row[0])
@@ -236,7 +236,7 @@ for row in player_table_tmp:
     height_t = row[7]
     # team_id_t = row[8]                            # 임시 선수 데이터에서는 사용 불가
     # team_id_pk = Team.objects.get(id=team_id_t)   # 임시 선수 데이터에서는 사용 불가
-    team_id_pk = int(row[8])                        # 임시 선수 데이터일때 대체 코드
+    team_id_pk = Team.objects.get(id=434) #int(row[8])                        # 임시 선수 데이터일때 대체 코드
     current_team_t = row[9]
     position_t = row[10]
     goal_t = row[11]
