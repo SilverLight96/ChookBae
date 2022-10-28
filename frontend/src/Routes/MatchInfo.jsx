@@ -1,15 +1,15 @@
 import React from "react";
 import styled from "styled-components";
 
-function PlayerGetPage() {
+function MatchInfoPage() {
   return (
     <Wrapper>
-      <ChookBae>선수 뽑기 페이지</ChookBae>
+      <ChookBae>경기 정보 페이지</ChookBae>
     </Wrapper>
   );
 }
 
-export default PlayerGetPage;
+export default MatchInfoPage;
 
 const Wrapper = styled.div`
   max-width: 860px;
