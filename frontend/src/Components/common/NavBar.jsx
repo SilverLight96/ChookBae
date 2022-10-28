@@ -10,7 +10,7 @@ import { GiCardRandom } from "react-icons/gi";
 function NavBar() {
   return (
     <NabBody>
-      <Link to="/matchinfo">
+      <Link to="/Match">
         <NavButton>
           <FaClipboardList size="40px" color="#E5E5E5" />
         </NavButton>
