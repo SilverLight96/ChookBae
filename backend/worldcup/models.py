@@ -72,14 +72,14 @@ class Match(models.Model):
 class Player(models.Model):
     id = models.IntegerField(primary_key=True)
     fullname = models.CharField(max_length=200)
-    name_language = models.CharField(max_length=200)
+    homename = models.CharField(max_length=200)
     player_image = models.TextField(blank=True, null=True)
     number = models.IntegerField(blank=True, null=True)
     birthday = models.CharField(max_length=200)
     weight = models.IntegerField()
     height = models.IntegerField()
     team_id = models.ForeignKey(Team, models.DO_NOTHING, db_column='country_id')
-    current_team = models.CharField(max_length=200, null=True)
+    current_team = models.CharField(max_length=200,null=True)
     position = models.CharField(max_length=200)
     goal = models.IntegerField()
     assist = models.IntegerField()
@@ -112,12 +112,13 @@ class Prediction(models.Model):
 
 class Bet(models.Model): 
     id = models.OneToOneField(Match, models.DO_NOTHING, primary_key=True)
-    win = models.IntegerField()
+    win = models.IntegerField(default=0)
     draw = models.IntegerField()
     loss = models.IntegerField()
 
     class Meta:
             db_table='bet'
+
 
 class EmailCert(models.Model):
     id = models.AutoField(primary_key=True)
