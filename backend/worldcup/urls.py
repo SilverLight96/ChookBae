@@ -4,5 +4,7 @@ from . import views
 app_name = 'worldcup'
 
 urlpatterns = [
-    #path('match/<int:id>/', views.MatchInfo.as_view()),
+    
+    path('predict', views.matchpredict.as_view()),
+     path('predict/<int:id>', views.predictinfo.as_view()),
 ]
