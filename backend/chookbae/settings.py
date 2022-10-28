@@ -35,12 +35,8 @@ INSTALLED_APPS = [
     'worldcup',
     'accounts',
     'rest_framework',
-    
-    # 'django.contrib.sites',
-    # 'allauth.account',
-    # 'allauth.socialaccount',
+    'django_apscheduler',
     'drf_yasg',
-
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',

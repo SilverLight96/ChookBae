@@ -6,4 +6,5 @@ app_name = 'worldcup'
 urlpatterns = [
     
     path('predict', views.matchpredict.as_view()),
+     path('predict/<int:id>', views.predictinfo.as_view()),
 ]
