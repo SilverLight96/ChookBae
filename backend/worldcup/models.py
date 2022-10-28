@@ -31,7 +31,7 @@ class Venue(models.Model):
     venue_image = models.TextField(blank=True, null=True)
     address = models.CharField(max_length=200)
     capacity = models.IntegerField()
-    opened_date = models.DateField()
+    opened_year = models.IntegerField()
 
     class Meta:
             db_table='venue'
@@ -48,13 +48,14 @@ class Team(models.Model):
     points = models.IntegerField()
     last_five = models.CharField(max_length=200)
     goal_diff = models.IntegerField()
-    manager = models.CharField(max_length=200)
+    manager = models.CharField(max_length=200, null=True)
 
     class Meta:
             db_table='team'
 
 class Match(models.Model):
     id = models.IntegerField(primary_key=True)
+    match_status = models.IntegerField()
     match_name = models.CharField(max_length=200)
     match_type = models.CharField(max_length=200)
     team1_id = models.ForeignKey(Team, models.DO_NOTHING, db_column='team1_id', related_name='team1_id')
@@ -70,16 +71,15 @@ class Match(models.Model):
 
 class Player(models.Model):
     id = models.IntegerField(primary_key=True)
-    firstname = models.CharField(max_length=200)
-    lastname = models.CharField(max_length=200)
-    name_language = models.CharField(max_length=200)
+    fullname = models.CharField(max_length=200)
+    homename = models.CharField(max_length=200)
     player_image = models.TextField(blank=True, null=True)
     number = models.IntegerField(blank=True, null=True)
     birthday = models.CharField(max_length=200)
     weight = models.IntegerField()
     height = models.IntegerField()
-    country_id = models.ForeignKey(Team, models.DO_NOTHING, db_column='country_id')
-    current_team = models.CharField(max_length=200)
+    team_id = models.ForeignKey(Team, models.DO_NOTHING, db_column='country_id')
+    current_team = models.CharField(max_length=200,null=True)
     position = models.CharField(max_length=200)
     goal = models.IntegerField()
     assist = models.IntegerField()
@@ -118,6 +118,7 @@ class Bet(models.Model):
 
     class Meta:
             db_table='bet'
+
 
 class EmailCert(models.Model):
     id = models.AutoField(primary_key=True)
