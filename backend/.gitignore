@@ -13,7 +13,6 @@ db_setting.py
 api_setting.py
 media
 
-db_setting.py
 email_secret.py
 
 # If your build process includes running collectstatic, then you probably don't need or want to include staticfiles/
