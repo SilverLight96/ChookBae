@@ -11,7 +11,7 @@ https://docs.djangoproject.com/en/3.2/ref/settings/
 """
 
 from pathlib import Path
-import db_setting
+from secret import db_setting
 # import environ
 import email_setting
 # env = environ.Env(
