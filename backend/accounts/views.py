@@ -1,5 +1,6 @@
 from django.shortcuts import get_object_or_404
 from django.contrib.auth import get_user_model
+from django.shortcuts import render, redirect
 from django.core.mail import EmailMessage
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import AllowAny, IsAuthenticated
@@ -110,8 +111,9 @@ def activate(request, uid64, token):
     if user is not None and account_activation_token.check_token(user, token):
         user.is_active = True #유저 권한 활성화
         user.save()
-        auth.login(request, user)
-        return Response(status=status.HTTP_200_OK)
+        # auth.login(request, user)
+        # return Response(status=status.HTTP_200_OK)
+        return redirect('https://k7a202.p.ssafy.io')
     else:
         return Response({'error: 이메일 인증 오류'}, status=status.HTTP_400_BAD_REQUEST)
 
