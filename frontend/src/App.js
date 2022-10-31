@@ -14,7 +14,7 @@ import NavBar from "./Components/common/NavBar";
 import PredictionPage from "./Routes/PredictionPage";
 import PlayerGetPage from "./Routes/PlayerGetPage";
 import AccountPage from "./Routes/AccountPage";
-
+import ActivatePage from "./Routes/ActivatePage";
 
 function App() {
   return (
@@ -31,6 +31,7 @@ function App() {
         <Route path="/signup" element={<SignUpPage/>}/>
         <Route path="/prediction" element={<PredictionPage/>}/>
         <Route path="/playerget" element={<PlayerGetPage/>}/>
+        <Route path="/v1/accounts/activate/*" element={<ActivatePage/>}/>
     </Routes> 
   </BrowserRouter>
   );
