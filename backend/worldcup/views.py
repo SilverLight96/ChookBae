@@ -304,7 +304,7 @@ class TeamInfo(APIView):
     @swagger_auto_schema(operation_id="팀 정보 조회", operation_description="팀 고유번호로 정보 조회", manual_parameters=[id], responses={200: '조회 성공'})
     def get(self, request, id):
         team = Team.objects.get(id=id)
-        team_info = [[team.manager, 0, 0]]
+        team_info = [["감독님", team.manager, 0, 0]]
 
         players = Player.objects.filter(team_id=id)
         for p in players:
