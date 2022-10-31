@@ -139,7 +139,24 @@ def login(request):
 
     # 토큰 생성
     token = jwt.encode({'id': user.id}, SECRET_KEY, algorithm='HS256')
-    return Response({token:'token'},status=status.HTTP_200_OK)
+    res = Response()
+    res.set_cookie(key='jwt',value=token,httponly=True)
+    res.data={
+        'jwt':token
+    }
+    return res
+
+
+# 토큰을 이용해 로그아웃
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def logout(request):
+    res = Response()
+    res.delete_cookie('jwt')
+    res.data = {
+        'message': '로그아웃 되었습니다.'
+    }
+    return Response(res, status=status.HTTP_200_OK)
 
 
 #회원정보수정
