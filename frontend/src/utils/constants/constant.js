@@ -35,3 +35,7 @@ export const REGISTER_MESSAGE = {
     REGISTER: '회원가입',
     LOGIN: '로그인',
   };
+
+  export const LOGIN_MESSAGE = {
+    FAILED_LOGIN: '아이디 또는 비밀번호를 확인해주세요.',
+  };
