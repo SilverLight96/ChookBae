@@ -1,16 +1,16 @@
-import {atom} from "recoil";
+// import {atom} from "recoil";
 
-const authAtom = atom({
-  key: 'auth',
-  // get initial state from local storage to enable user to stay logged in
-  default: JSON.parse(localStorage.getItem('user'))
-});
+// const authAtom = atom({
+//   key: 'auth',
+//   // get initial state from local storage to enable user to stay logged in
+//   default: JSON.parse(localStorage.getItem('user'))
+// });
 
-export { authAtom };
+// export { authAtom };
 
-const usersAtom = atom({
-  key: 'users',
-  default: null
-});
+// const usersAtom = atom({
+//   key: 'users',
+//   default: null
+// });
 
-export { usersAtom };
+// export { usersAtom };

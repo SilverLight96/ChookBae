@@ -1,28 +1,24 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import styled from "styled-components";
 import logo from "../assets/ChookBae_logo.png";
 import { keyframes } from "styled-components";
 import { REGEX, REGISTER_MESSAGE, STANDARD } from "../utils/constants/constant";
-import { Link } from "react-router-dom";
-import { useRecoilValue } from "recoil";
+import { Link, useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
-import { authAtom } from "../atoms";
-import { useUserActions } from "../utils/hooks/user.actions";
+import { useCookies } from "react-cookie";
+import { fetchData } from "../utils/apis/api";
+import { userApis } from "../utils/apis/userApis";
 
-function LoginPage({ history }) {
-  const auth = useRecoilValue(authAtom);
-  const userActions = useUserActions();
+function LoginPage() {
+  const [userInfo, setUserInfo] = useState({
+    email: "",
+    password: "",
+  });
 
-  useEffect(() => {
-    //redirect to home if already logged in
-    if (auth) history.push("/");
-  }, []);
+  const formRef = useRef();
+  const [cookies, setCookie] = useCookies(["id"]);
+  const navigate = useNavigate();
 
-  const onValid = (email, password) => {
-    return userActions.login(email, password).catch((error) => {
-      console.log(error);
-    });
-  };
   const {
     register,
     watch,
@@ -32,13 +28,31 @@ function LoginPage({ history }) {
   } = useForm({
     defaultValues: {
       email: "",
-      nickname: "",
       password: "",
-      password_confirm: "",
     },
     mode: "onChange",
   });
 
+  useEffect(() => {
+    (async () => {
+      try {
+        await login();
+      } catch (err) {}
+    })();
+  }, [userInfo]);
+  console.log(userInfo);
+
+  const login = async () => {
+    return await fetchData.post(userApis.LOGIN, userInfo).then((res) => {
+      setCookie("id", res.data.token);
+    });
+  };
+
+  const onValid = (data) => {
+    setUserInfo((prev) => ({ ...prev, ...data }));
+  };
+
+  console.log(userInfo);
   return (
     <Wrapper>
       <LoginBox>
