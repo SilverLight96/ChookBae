@@ -11,6 +11,7 @@ from django.db.models import Q
 from rest_framework import status
 from rest_framework.response import Response
 from .models import User, Point, Venue, Team, Match, Player, PlayerCard, Prediction, Bet, EmailCert
+from .translation import venue_k, team_k, player_k, player_pos
 
 # Create your views here.
 
@@ -118,63 +119,6 @@ def predictcalc():
             po=Point.objects.create(user_id=user,point=dang*pre.user_point,info='경기 예측 성공')
         
 
-
-# 한글 번역 함수 (경기장 정보)
-def venue_k(id):
-    k_venue = [
-        {"id": 710,"k_name": "아흐마드 빈 알리 스타디움", "k_address": "카타르 알 라얀",},
-        {"id": 712,"k_name": "알 자누브 스타디움", "k_address": "카타르 알 와크라",},
-        {"id": 1163,"k_name": "알 바이트 스타디움", "k_address": "카타르 알 코르",},
-        {"id": 1164,"k_name": "루사일 스타디움", "k_address": "카타르 루사일",},
-        {"id": 1165,"k_name": "스타디움 974", "k_address": "카타르 도하",},
-        {"id": 1166,"k_name": "칼리파 국제 경기장", "k_address": "카타르 도하",},
-        {"id": 1167,"k_name": "에듀케이션 시티 스타디움", "k_address": "카타르 알 라얀",},
-        {"id": 1168,"k_name": "알 투마마 스타디움", "k_address": "카타르 도하",},
-    ]
-    for kv in k_venue:
-        if kv["id"] == id:
-            return [kv["k_name"], kv["k_address"]]
-
-# 한글 번역 함수 (팀 정보)
-def team_k(id):
-    k_team = [
-        {"id": 434, "countryName": "Qatar", "countryNameKR": "카타르",},
-        {"id": 436, "countryName": "Ecuador", "countryNameKR": "에콰도르",},
-        {"id": 1066, "countryName": "Senegal", "countryNameKR": "세네갈",},
-        {"id": 385, "countryName": "Netherlands", "countryNameKR": "네덜란드",},
-        {"id": 381, "countryName": "England", "countryNameKR": "잉글랜드",},
-        {"id": 1227, "countryName": "Iran", "countryNameKR": "이란",},
-        {"id": 1243, "countryName": "USA", "countryNameKR": "미국",},
-        {"id": 394, "countryName": "Wales", "countryNameKR": "웨일스",},
-        {"id": 427, "countryName": "Argentina", "countryNameKR": "아르헨티나",},
-        {"id": 1237, "countryName": "Saudi Arabia", "countryNameKR": "사우디 아라비아",},
-        {"id": 1244, "countryName": "Mexico", "countryNameKR": "멕시코",},
-        {"id": 386, "countryName": "Poland", "countryNameKR": "폴란드",},
-        {"id": 383, "countryName": "France", "countryNameKR": "프랑스",},
-        {"id": 428, "countryName": "Australia", "countryNameKR": "호주",},
-        {"id": 380, "countryName": "Denmark", "countryNameKR": "덴마크",},
-        {"id": 1046, "countryName": "Tunisia", "countryNameKR": "튀니지",},
-        {"id": 389, "countryName": "Spain", "countryNameKR": "스페인",},
-        {"id": 1278, "countryName": "Costa Rica", "countryNameKR": "코스타리카",},
-        {"id": 384, "countryName": "Germany", "countryNameKR": "독일",},
-        {"id": 1236, "countryName": "Japan", "countryNameKR": "일본",},
-        {"id": 377, "countryName": "Belgium", "countryNameKR": "벨기에",},
-        {"id": 1242, "countryName": "Canada", "countryNameKR": "캐나다",},
-        {"id": 1071, "countryName": "Morocco", "countryNameKR": "모로코",},
-        {"id": 378, "countryName": "Croatia", "countryNameKR": "크로아티아",},
-        {"id": 426, "countryName": "Brazil", "countryNameKR": "브라질",},
-        {"id": 670, "countryName": "Serbia", "countryNameKR": "세르비아",},
-        {"id": 391, "countryName": "Switzerland", "countryNameKR": "스위스",},
-        {"id": 1055, "countryName": "Cameroon", "countryNameKR": "카메룬",},
-        {"id": 387, "countryName": "Portugal", "countryNameKR": "포르투갈",},
-        {"id": 1063, "countryName": "Ghana", "countryNameKR": "가나",},
-        {"id": 430, "countryName": "Uruguay", "countryNameKR": "우루과이",},
-        {"id": 1235, "countryName": "Korea Republic", "countryNameKR": "대한민국",},
-    ]
-    for kt in k_team:
-        if kt["id"] == id:
-            return kt["countryNameKR"]
-
 # 경기 정보 조회 (국가별) GET
 class MatchInfoByTeam(APIView):
     country = openapi.Parameter('id', openapi.IN_PATH, description='team id', required=True, type=openapi.TYPE_NUMBER)
@@ -251,6 +195,8 @@ class TeamInfo(APIView):
 
         players = Player.objects.filter(team_id=id)
         for p in players:
-            team_info.append([p.fullname, p.position, p.number])
+            fullnameKR = player_k(p.id)
+            position = player_pos(p.position)
+            team_info.append([fullnameKR, p.fullname, position, p.number])
         
         return Response(team_info)

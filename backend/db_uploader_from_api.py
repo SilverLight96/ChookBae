@@ -152,7 +152,7 @@ for p in player_list_tmp:
                     int(player['country']['id']), #player['currentTeam']['name'],   # 월드컵 API 선수정보 나올때까지 teams -> teamName 으로 임시 대체
                     player['teams'][0]['teamName'], int(player['additionalInfo']['position']), 0, 0, 0, 0, 0, 0]
     player_table_tmp.append(curr_player)
-
+    
 print('-'*30 + 'player table(tmp): \n', player_table_tmp)
 
 
