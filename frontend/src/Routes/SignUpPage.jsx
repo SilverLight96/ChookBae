@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from "react";
+import React, { useMemo, useState, useEffect } from "react";
 import styled from "styled-components";
 import { useForm } from "react-hook-form";
 import { useRef } from "react";
@@ -7,6 +7,7 @@ import debounce from "../utils/functions/debounce";
 import { userApis } from "../utils/apis/userApis";
 import { fetchData } from "../utils/apis/api";
 import { keyframes } from "styled-components";
+import useSetLoggedIn from "../utils/hooks/useLogin";
 import logo from "../assets/ChookBae_logo.png";
 
 function SignUpPage() {
@@ -35,100 +36,103 @@ function SignUpPage() {
   });
 
   const onValid = (data) => {
-    if (isDuplicatedEmail) {
-      setError(
-        "email",
-        { message: REGISTER_MESSAGE.DUPLICATED_EMAIL },
-        { shouldFocus: true }
-      );
-      return;
-    }
-    if (duplicatedNickname) {
-      setError(
-        "nickname",
-        { message: REGISTER_MESSAGE.DUPLICATED_NIACKNAME },
-        { shouldFocus: true }
-      );
-      return;
-    }
+    // if (isDuplicatedEmail) {
+    //   setError(
+    //     "email",
+    //     { message: REGISTER_MESSAGE.DUPLICATED_EMAIL },
+    //     { shouldFocus: true }
+    //   );
+    //   return;
+    // }
+    // if (duplicatedNickname) {
+    //   setError(
+    //     "nickname",
+    //     { message: REGISTER_MESSAGE.DUPLICATED_NIACKNAME },
+    //     { shouldFocus: true }
+    //   );
+    //   return;
+    // }
     setUserInfo((prev) => ({ ...prev, ...data }));
   };
 
   // 닉네임 중복 검사
 
-  const checkNickname = async (value) => {
-    if (
-      errors?.nickname?.type === "pattern" ||
-      !value ||
-      value.length < STANDARD.NAME_MIN_LENGTH
-    )
-      return;
-    try {
-      const response = await fetchData.get(
-        userApis.NICKNAME_DUPLICATE_CHECK_API(value)
-      );
-      if (response.status === 200) {
-        setDuplicatedNickname(false);
-      }
-    } catch {
-      setError(
-        "nickname",
-        { message: REGISTER_MESSAGE.DUPLICATED_ID },
-        { shouldFocus: true }
-      );
-      setDuplicatedNickname(true);
-    }
-  };
+  // const checkNickname = async (value) => {
+  //   if (
+  //     errors?.nickname?.type === "pattern" ||
+  //     !value ||
+  //     value.length < STANDARD.NAME_MIN_LENGTH
+  //   )
+  //     return;
+  //   try {
+  //     const response = await fetchData.get(
+  //       userApis.NICKNAME_DUPLICATE_CHECK_API(value)
+  //     );
+  //     if (response.status === 200) {
+  //       setDuplicatedNickname(false);
+  //     }
+  //   } catch {
+  //     setError(
+  //       "nickname",
+  //       { message: REGISTER_MESSAGE.DUPLICATED_ID },
+  //       { shouldFocus: true }
+  //     );
+  //     setDuplicatedNickname(true);
+  //   }
+  // };
 
-  const debounceCheckNickname = useMemo(
-    () => debounce(async (e) => await checkNickname(e.target.value), 1000),
-    []
-  );
+  // const debounceCheckNickname = useMemo(
+  //   () => debounce(async (e) => await checkNickname(e.target.value), 1000),
+  //   []
+  // );
 
-  const checkMemberInfo = async (value, url, setState, key, errorMessage) => {
-    if (!value || errors[key]) return;
-    try {
-      const response = await fetchData.get(url);
-      if (response.status === 200) {
-        setState(false);
-      }
-    } catch {
-      setError(key, { message: errorMessage }, { shouldFocus: true });
-      setState(true);
-    }
-  };
+  // const checkMemberInfo = async (value, url, setState, key, errorMessage) => {
+  //   if (!value || errors[key]) return;
+  //   try {
+  //     const response = await fetchData.get(url);
+  //     if (response.status === 200) {
+  //       setState(false);
+  //     }
+  //   } catch {
+  //     setError(key, { message: errorMessage }, { shouldFocus: true });
+  //     setState(true);
+  //   }
+  // };
 
-  const debounceEmailChange = async (value) =>
-    await checkMemberInfo(
-      value,
-      userApis.EMAIL_DUPLICATE_CHECK_API(value),
-      setIsDuplicatedEmail,
-      "email",
-      REGISTER_MESSAGE.DUPLICATED_EMAIL
-    );
+  // const debounceEmailChange = async (value) =>
+  //   await checkMemberInfo(
+  //     value,
+  //     userApis.EMAIL_DUPLICATE_CHECK_API(value),
+  //     setIsDuplicatedEmail,
+  //     "email",
+  //     REGISTER_MESSAGE.DUPLICATED_EMAIL
+  //   );
 
-  const debouncedValidateEmail = useMemo(
-    () => debounce((e) => debounceEmailChange(e.target.value), 500),
-    []
-  );
+  // const debouncedValidateEmail = useMemo(
+  //   () => debounce((e) => debounceEmailChange(e.target.value), 500),
+  //   []
+  // );
   // 비밀번호 확인
   const password = useRef({});
   password.current = watch("password", "");
 
-  //이메일 인증
-  const certificateEmail = async (event) => {
-    event.preventDefault();
-    setIsAuthenticating(true);
-    if (errors.email) return;
-    const response = await fetchData.post(userApis.EMAIL_CERTIFICATE_API, {
-      email: watch().email,
-    });
-  };
+  const setLoggedIn = useSetLoggedIn();
+  useEffect(() => {
+    (async () => {
+      try {
+        await setLoggedIn(signupregister);
+      } catch (err) {
+        if (err.response.status === 409) {
+          return;
+        }
+      }
+    })();
+  }, [userInfo]);
+  console.log(userInfo);
 
-  // 회원가입 전송 API
-  // const register = async () => {
-  //   return await fetchData.post(userApis.REGISTER, userInfo);
-  // };
+  const signupregister = async () => {
+    return await fetchData.post(userApis.REGISTER, userInfo);
+  };
 
   return (
     <Wrapper>
@@ -149,7 +153,7 @@ function SignUpPage() {
                   value: REGEX.EMAIL,
                   message: REGISTER_MESSAGE.EMAIL_STANDARD,
                 },
-                onChange: debouncedValidateEmail,
+                // onChange: debouncedValidateEmail,
               })}
               placeholder=" "
               required
@@ -179,7 +183,7 @@ function SignUpPage() {
                   value: REGEX.NICKNAME,
                   message: REGISTER_MESSAGE.NICKNAME_STANDARD,
                 },
-                onChange: debounceCheckNickname,
+                // onChange: debounceCheckNickname,
               })}
               placeholder=" "
               required
