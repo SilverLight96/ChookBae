@@ -2,7 +2,7 @@ import requests
 import operator
 from datetime import datetime
 import pytz
-import environ
+from secret.apikey import API_KEY
 
 # DB에 데이터를 넣을때 필요한 모듈 및 코드
 import os
@@ -14,19 +14,13 @@ django.setup()
 from worldcup.models import *  # django.setup() 이후에 임포트해야 오류가 나지 않음
 
 
-api_code = environ.Env(
-    DEBUG=(bool, False)
-)
-environ.Env.read_env()
-
-
 ############### 경기 정보 + 필요한 리스트 추출 ###############
 # URL 및 요청변수 설정
 BASE_URL = 'https://api.statorium.com/api/v1/'
 path = 'matches/'
 params = {
     'season_id' : '121',
-    'apikey': api_code('API_KEY')
+    'apikey': API_KEY
     }
 
 # 결과를 받아서 json형식의 data변수로 저장
@@ -40,16 +34,17 @@ venue_set = set()           # 경기장 ID를 담을 빈셋 생성
 team_set = set()            # 팀 ID를 담을 빈셋 생성
 # for문을 이용해 모든 경기 순회하며 리스트에 담기
 for i in range(len(data['calendar']['matchdays'])):
-    for j in range(len(data['calendar']['matchdays'][i]['matches'])):
-        match = data['calendar']['matchdays'][i]['matches'][j]
-        curr_match = [int(match['matchID']), int(match['matchStatus']['statusID']), data['calendar']['matchdays'][i]['matchdayName'], int(data['calendar']['matchdays'][i]['matchdayType']),
-                        int(match['homeParticipant']['participantID']), int(match['awayParticipant']['participantID']), match['matchDate'], match['matchTime'],
-                        int(match['matchVenue']['venueID']), int(match['homeParticipant']['score']), int(match['awayParticipant']['score'])]
-        match_table.append(curr_match)
+    if data['calendar']['matchdays'][i]['matchdayPlayoff'] == "0":
+        for j in range(len(data['calendar']['matchdays'][i]['matches'])):
+            match = data['calendar']['matchdays'][i]['matches'][j]
+            curr_match = [int(match['matchID']), int(match['matchStatus']['statusID']), data['calendar']['matchdays'][i]['matchdayName'], int(data['calendar']['matchdays'][i]['matchdayType']),
+                            int(match['homeParticipant']['participantID']), int(match['awayParticipant']['participantID']), match['matchDate'], match['matchTime'],
+                            int(match['matchVenue']['venueID']), int(match['homeParticipant']['score']), int(match['awayParticipant']['score'])]
+            match_table.append(curr_match)
 
-        venue_set.add(int(data['calendar']['matchdays'][i]['matches'][j]['matchVenue']['venueID']))     # 경기장 ID 담기 (중복제거)
-        team_set.add((int(data['calendar']['matchdays'][i]['matches'][j]['homeParticipant']['participantID']), data['calendar']['matchdays'][i]['matches'][j]['group']['groupName'][-1]))     # 팀 ID 담기 (홈팀, 중복제거)
-        team_set.add((int(data['calendar']['matchdays'][i]['matches'][j]['awayParticipant']['participantID']), data['calendar']['matchdays'][i]['matches'][j]['group']['groupName'][-1]))     # 팀 ID 담기 (원정팀, 중복제거)
+            venue_set.add(int(data['calendar']['matchdays'][i]['matches'][j]['matchVenue']['venueID']))     # 경기장 ID 담기 (중복제거)
+            team_set.add((int(data['calendar']['matchdays'][i]['matches'][j]['homeParticipant']['participantID']), data['calendar']['matchdays'][i]['matches'][j]['group']['groupName'][-1]))     # 팀 ID 담기 (홈팀, 중복제거)
+            team_set.add((int(data['calendar']['matchdays'][i]['matches'][j]['awayParticipant']['participantID']), data['calendar']['matchdays'][i]['matches'][j]['group']['groupName'][-1]))     # 팀 ID 담기 (원정팀, 중복제거)
 
 print('-'*30 + 'match table: \n', match_table)           # 경기 ID 전체 리스트
 
@@ -69,7 +64,7 @@ for v in venue_list:
     path = 'venues/'
     venue_id = str(v) + '/'
     params = {
-        'apikey': api_code('API_KEY')
+        'apikey': API_KEY
         }
     
     # 결과를 받아서 json형식의 data변수로 저장
@@ -94,7 +89,7 @@ for t in team_list:
     team_id = str(t[0]) + '/'
     params = {
         'season_id' : '121',
-        'apikey': api_code('API_KEY')
+        'apikey': API_KEY
         }
     
     # 결과를 받아서 json형식의 data변수로 저장
@@ -120,7 +115,7 @@ BASE_URL = 'https://api.statorium.com/api/v1/'
 path = 'teams/'
 params = {
     'season_id' : '1',
-    'apikey': api_code('API_KEY')
+    'apikey': API_KEY
     }
 
 player_list_tmp = []
@@ -140,7 +135,7 @@ BASE_URL = 'https://api.statorium.com/api/v1/'
 path = 'players/'
 params = {
     'season_id' : '1',
-    'apikey': api_code('API_KEY')
+    'apikey': API_KEY
     }
 
 player_table_tmp = []
@@ -157,14 +152,14 @@ for p in player_list_tmp:
                     int(player['country']['id']), #player['currentTeam']['name'],   # 월드컵 API 선수정보 나올때까지 teams -> teamName 으로 임시 대체
                     player['teams'][0]['teamName'], int(player['additionalInfo']['position']), 0, 0, 0, 0, 0, 0]
     player_table_tmp.append(curr_player)
-
+    
 print('-'*30 + 'player table(tmp): \n', player_table_tmp)
 
 
 
 ###################################################################################################
 ######################################### DB에 데이터 넣기 #########################################
-
+'''
 ## 경기장 정보 DB에 넣기
 for row in venue_table:
     print(row[0])
@@ -255,3 +250,4 @@ for row in player_table_tmp:
                             birthday=birthday_t, weight=weight_t, height=height_t, team_id=team_id_pk, current_team=current_team_t,
                             position=position_t, goal=goal_t, assist=assist_t, yellow_card=yellow_card_t, red_card=red_card_t,
                             run_time=run_time_t, value=value_t)
+'''
