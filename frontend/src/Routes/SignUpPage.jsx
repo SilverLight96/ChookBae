@@ -44,60 +44,60 @@ function SignUpPage() {
     //   );
     //   return;
     // }
-    // if (duplicatedNickname) {
-    //   setError(
-    //     "nickname",
-    //     { message: REGISTER_MESSAGE.DUPLICATED_NIACKNAME },
-    //     { shouldFocus: true }
-    //   );
-    //   return;
-    // }
+    if (duplicatedNickname) {
+      setError(
+        "nickname",
+        { message: REGISTER_MESSAGE.DUPLICATED_NIACKNAME },
+        { shouldFocus: true }
+      );
+      return;
+    }
     setUserInfo((prev) => ({ ...prev, ...data }));
   };
 
   // 닉네임 중복 검사
 
-  // const checkNickname = async (value) => {
-  //   if (
-  //     errors?.nickname?.type === "pattern" ||
-  //     !value ||
-  //     value.length < STANDARD.NAME_MIN_LENGTH
-  //   )
-  //     return;
-  //   try {
-  //     const response = await fetchData.get(
-  //       userApis.NICKNAME_DUPLICATE_CHECK_API(value)
-  //     );
-  //     if (response.status === 200) {
-  //       setDuplicatedNickname(false);
-  //     }
-  //   } catch {
-  //     setError(
-  //       "nickname",
-  //       { message: REGISTER_MESSAGE.DUPLICATED_ID },
-  //       { shouldFocus: true }
-  //     );
-  //     setDuplicatedNickname(true);
-  //   }
-  // };
+  const checkNickname = async (value) => {
+    if (
+      errors?.nickname?.type === "pattern" ||
+      !value ||
+      value.length < STANDARD.NAME_MIN_LENGTH
+    )
+      return;
+    try {
+      const response = await fetchData.get(
+        userApis.NICKNAME_DUPLICATE_CHECK_API(value)
+      );
+      if (response.status === 200) {
+        setDuplicatedNickname(false);
+      }
+    } catch {
+      setError(
+        "nickname",
+        { message: REGISTER_MESSAGE.DUPLICATED_ID },
+        { shouldFocus: true }
+      );
+      setDuplicatedNickname(true);
+    }
+  };
 
-  // const debounceCheckNickname = useMemo(
-  //   () => debounce(async (e) => await checkNickname(e.target.value), 1000),
-  //   []
-  // );
+  const debounceCheckNickname = useMemo(
+    () => debounce(async (e) => await checkNickname(e.target.value), 1000),
+    []
+  );
 
-  // const checkMemberInfo = async (value, url, setState, key, errorMessage) => {
-  //   if (!value || errors[key]) return;
-  //   try {
-  //     const response = await fetchData.get(url);
-  //     if (response.status === 200) {
-  //       setState(false);
-  //     }
-  //   } catch {
-  //     setError(key, { message: errorMessage }, { shouldFocus: true });
-  //     setState(true);
-  //   }
-  // };
+  const checkMemberInfo = async (value, url, setState, key, errorMessage) => {
+    if (!value || errors[key]) return;
+    try {
+      const response = await fetchData.get(url);
+      if (response.status === 200) {
+        setState(false);
+      }
+    } catch {
+      setError(key, { message: errorMessage }, { shouldFocus: true });
+      setState(true);
+    }
+  };
 
   // const debounceEmailChange = async (value) =>
   //   await checkMemberInfo(
@@ -112,6 +112,7 @@ function SignUpPage() {
   //   () => debounce((e) => debounceEmailChange(e.target.value), 500),
   //   []
   // );
+
   // 비밀번호 확인
   const password = useRef({});
   password.current = watch("password", "");
@@ -122,9 +123,9 @@ function SignUpPage() {
       try {
         await setLoggedIn(signupregister);
       } catch (err) {
-        if (err.response.status === 409) {
-          return;
-        }
+        // if (err.response.status === 409) {
+        //   return;
+        // }
       }
     })();
   }, [userInfo]);
@@ -183,7 +184,7 @@ function SignUpPage() {
                   value: REGEX.NICKNAME,
                   message: REGISTER_MESSAGE.NICKNAME_STANDARD,
                 },
-                // onChange: debounceCheckNickname,
+                onChange: debounceCheckNickname,
               })}
               placeholder=" "
               required
