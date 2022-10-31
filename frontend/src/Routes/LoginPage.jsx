@@ -1,21 +1,28 @@
-import React from "react";
+import React, { useEffect } from "react";
 import styled from "styled-components";
 import logo from "../assets/ChookBae_logo.png";
-import { useState, useMemo } from "react";
-import { useForm } from "react-hook-form";
 import { keyframes } from "styled-components";
-import {
-  REGEX,
-  REGISTER_MESSAGE,
-  STANDARD,
-  LOGIN_MESSAGE,
-} from "../utils/constants/constant";
-import useSetLoggedIn from "../utils/hooks/useLogin";
+import { REGEX, REGISTER_MESSAGE, STANDARD } from "../utils/constants/constant";
 import { Link } from "react-router-dom";
-import { userApis } from "../utils/apis/userApis";
-import { fetchData } from "../utils/apis/api";
+import { useRecoilValue } from "recoil";
+import { useForm } from "react-hook-form";
+import { authAtom } from "../atoms";
+import { useUserActions } from "../utils/hooks/user.actions";
 
-function LoginPage() {
+function LoginPage({ history }) {
+  const auth = useRecoilValue(authAtom);
+  const userActions = useUserActions();
+
+  useEffect(() => {
+    //redirect to home if already logged in
+    if (auth) history.push("/");
+  }, []);
+
+  const onValid = (email, password) => {
+    return userActions.login(email, password).catch((error) => {
+      console.log(error);
+    });
+  };
   const {
     register,
     watch,
@@ -25,30 +32,12 @@ function LoginPage() {
   } = useForm({
     defaultValues: {
       email: "",
+      nickname: "",
       password: "",
+      password_confirm: "",
     },
     mode: "onChange",
   });
-  const setLoggedIn = useSetLoggedIn();
-
-  const onValid = async (data) => {
-    try {
-      await setLoggedIn(login, data);
-    } catch (err) {
-      console.log(err);
-      if (err.response.status === 409) {
-        setError("memberId", { message: LOGIN_MESSAGE.FAILED_LOGIN });
-        return;
-      }
-      if (err.response.status === 404) {
-        setError("memberId", { message: LOGIN_MESSAGE.FAILED_LOGIN });
-        return;
-      }
-    }
-  };
-  const login = async (userInfo) => {
-    return await fetchData.post(userApis.LOGIN, userInfo);
-  };
 
   return (
     <Wrapper>
