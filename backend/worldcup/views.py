@@ -74,7 +74,7 @@ class matchpredict(APIView):
             return Response({'error' :ingredient},status=status.HTTP_400_BAD_REQUEST)
         
 
-
+#승부 예측 여부 GET
 class predictinfo(APIView):
     id = openapi.Parameter('id', openapi.IN_PATH, description='match_id', required=True, type=openapi.TYPE_NUMBER)
     @swagger_auto_schema(operation_id="유저의 승부 예측 여부를 조회", operation_description="제공 받은 토큰 값을 기준으로 유저를 파악하고 해당 유저가 승부 예측을 했는지 확인한다", manual_parameters=[id])
@@ -161,6 +161,25 @@ class card(APIView):
         else:
             return Response(gacha,status=status.HTTP_200_OK)
 
+    @swagger_auto_schema(operation_id="유저의 보유하고 있는 카드 확인", operation_description="해당 유저가 보유하고 있는 모든 카드의 정보를 가져온다.")
+    def get(self, request):
+        c_list=[]
+        country = request.GET.get('country', None)
+        team=Team.objects.get(country=country)
+        user_id=1
+
+        card=PlayerCard.objects.filter(user_id=user_id)
+
+        for i in card:
+            C=Player.objects.get(id=i.player_id.id)
+            if team is not None:
+                if(C.team_id != team):
+                    continue
+            serializer = CardSerializer(C)
+            c_list.append(serializer.data)
+        
+        return Response(c_list)    
+
 #선수 합성 POST
 class combine(APIView):
     param = openapi.Schema(type=openapi.TYPE_OBJECT, required=['player_card_id1', 'player_card_id2'],
@@ -207,3 +226,7 @@ class combine(APIView):
             return Response({'error' :comb},status=status.HTTP_400_BAD_REQUEST)
         else:
             return Response(comb,status=status.HTTP_200_OK)
+
+
+
+
