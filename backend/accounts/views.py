@@ -51,6 +51,8 @@ def signup(request):
     if User.objects.filter(email=email):
         return Response({'error: 이메일 중복'}, status=status.HTTP_400_BAD_REQUEST)
 
+    if User.objects.filter(nickname=nickname):
+        return Response({'error: 닉네임 중복'}, status=status.HTTP_400_BAD_REQUEST)
 
     if len(nickname) < 2 or len(nickname) > 10 or not nickname_check or re.findall('[`~!@#$%^&*(),<.>/?]+', nickname):
         return Response({'error: 아이디 형식이 맞지 않습니다.'}, status.HTTP_400_BAD_REQUEST)
@@ -86,7 +88,7 @@ def signup(request):
         email.send()
         return Response(serializers.data, status=status.HTTP_201_CREATED)
 
-#유저 닉네임 중복 체크
+#유저 닉네임 중복 체크 
 @api_view(['GET'])
 @permission_classes([AllowAny])
 def check_nickname(request, nickname):
@@ -99,41 +101,6 @@ def check_nickname(request, nickname):
         return Response(status=status.HTTP_200_OK)
 
 
-#유저 이메일 중복체크
-# @api_view(['GET'])
-# @permission_classes([AllowAny])
-# def check_email(request, email):
-#     User = get_user_model()
-
-#     if User.objects.filter(email=email):
-#         return Response({'error: 이메일 중복'}, status=status.HTTP_400_BAD_REQUEST)
-
-#     #이메일 인증
-#     else:
-#         # code = make_random_code()
-#         # message = f'아래의 인증번호를 사용하여 이메일 주소 인증을 완료하면 다음 단계로 진행이 가능합니다.\n\n인증번호 : {code}\n\n감사합니다.'
-#         # mail_title = '회원가입을 위한 인증번호 발송 메일입니다.'
-#         # mail_to = email
-#         # email = EmailMessage(mail_title, message, to=[mail_to])
-#         # email.send()
-#         # return Response({'code': code})
-#         serializers = AuthenticateSerializer(data=request.data)
-#         if serializers.is_valid(raise_exception=True):
-#             user = serializers.save()
-#             current_site = get_current_site(request)
-#             message = render_to_string('user_activate_email.html',{
-#                 'user': user,
-#                 'domain': current_site.domain,
-#                 'uid': urlsafe_base64_encode(force_bytes(user.pk)).encode().decode(),
-#                 'token': account_activation_token.make_token(user),
-#             })
-#             mail_subject = "[CHOOKBAE] 회원가입 인증 메일입니다."
-#             user_email = user.username
-#             email = EmailMessage(mail_subject, message, to=[user_email])
-#             email.send()
-#             return Response(status=status.HTTP_200_OK)
-#         else:
-#             return Response(status=status.HTTP_400_BAD_REQUEST)
 #이메일 인증 링크 클릭시 실행되는 함수
 def activate(request, uid64, token):
 
