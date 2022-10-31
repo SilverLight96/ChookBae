@@ -1,6 +1,15 @@
 import axios from 'axios';
 import { getCookie, removeCookie, setCookie } from '../functions/cookies';
 
+export const instance = axios.create({
+  baseURL: "https://k7a202.p.ssafy.io/",
+  // baseURL: "http://localhost:8081",
+  headers: {
+    'Content-Type': 'application/json',
+  },
+});
+
+
 const getAccessToken = () => {
   const accessToken = getCookie('accessToken');
   return accessToken;
@@ -36,12 +45,7 @@ export const axiosInstance = axios.create({
   },
 });
 
-export const instance = axios.create({
-  baseURL: process.env.REACT_APP_API_URL,
-  headers: {
-    'Content-Type': 'application/json',
-  },
-});
+
 
 instance.interceptors.request.use(
   (config) => {
@@ -97,3 +101,4 @@ export const fetchData = {
   patch: async (url, body, option) => await instance.patch(url, body, option),
   delete: async (url, body, option) => await instance.delete(url, body, option),
 };
+

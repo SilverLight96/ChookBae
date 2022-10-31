@@ -24,7 +24,7 @@ function UserRank() {
         </RankTH>
         {rankings.map((rank, id) => {
           return (
-            <RankBody>
+            <RankBody key={id}>
               <div>{rank.id}</div>
               <div>{rank.username}</div>
               <div>{rank.points}</div>
