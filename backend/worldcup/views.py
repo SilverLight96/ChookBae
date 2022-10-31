@@ -167,20 +167,21 @@ class card(APIView):
     def get(self, request):
         c_list=[]
         country = request.GET.get('country', None)
-        team=Team.objects.get(country=country)
+        if country is not None:
+            team=Team.objects.get(country=country)
         user_id=1
 
         card=PlayerCard.objects.filter(user_id=user_id)
 
         for i in card:
             C=Player.objects.get(id=i.player_id.id)
-            if team is not None:
+            if country is not None:
                 if(C.team_id != team):
                     continue
             serializer = CardSerializer(C)
             c_list.append(serializer.data)
         
-        return Response(c_list)    
+        return Response(c_list)       
 
 #선수 합성 POST
 class combine(APIView):
