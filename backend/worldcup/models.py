@@ -49,6 +49,7 @@ class Team(models.Model):
     last_five = models.CharField(max_length=200)
     goal_diff = models.IntegerField()
     manager = models.CharField(max_length=200, null=True)
+    round = models.IntegerField()
 
     class Meta:
             db_table='team'
@@ -78,7 +79,7 @@ class Player(models.Model):
     birthday = models.CharField(max_length=200)
     weight = models.IntegerField()
     height = models.IntegerField()
-    team_id = models.ForeignKey(Team, models.DO_NOTHING, db_column='country_id')
+    team_id = models.ForeignKey(Team, models.DO_NOTHING, db_column='team_id')
     current_team = models.CharField(max_length=200,null=True)
     position = models.CharField(max_length=200)
     goal = models.IntegerField()

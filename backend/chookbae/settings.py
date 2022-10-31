@@ -12,7 +12,6 @@ https://docs.djangoproject.com/en/3.2/ref/settings/
 
 from pathlib import Path
 import db_setting
-import email_secret
 import environ
 
 env = environ.Env(
@@ -45,6 +44,13 @@ INSTALLED_APPS = [
     'worldcup',
     'accounts',
     'rest_framework',
+    
+    # 'django.contrib.sites',
+    # 'allauth.account',
+    # 'allauth.socialaccount',
+
+    'six',
+    'imagekit',
     'django_apscheduler',
     'drf_yasg',
     'django.contrib.admin',
@@ -71,7 +77,7 @@ ROOT_URLCONF = 'chookbae.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [BASE_DIR],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -144,6 +150,10 @@ AUTHENTICATION_BACKENDS = {
     # `allauth` specific authentication methods, such as login by e-mail
     'allauth.account.auth_backends.AuthenticationBackend',
 }
+
+MEDAIA_URL = '/media/'
+
+MEDIA_ROOT = BASE_DIR / 'media'
 
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.gmail.com'
