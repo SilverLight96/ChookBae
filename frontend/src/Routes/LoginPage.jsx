@@ -14,7 +14,7 @@ function LoginPage() {
     email: "",
     password: "",
   });
-  const [cookies, setCookie] = useCookies(["id"]);
+  const [cookies, setCookie] = useCookies([""]);
   const navigate = useNavigate();
 
   const {
@@ -42,7 +42,7 @@ function LoginPage() {
 
   const login = async () => {
     return await fetchData.post(userApis.LOGIN, userInfo).then((res) => {
-      setCookie("id", res.data.token);
+      setCookie(res.data);
     });
   };
 
