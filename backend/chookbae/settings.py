@@ -74,6 +74,7 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
+#CORS 허용
 CORS_ALLOW_ALL_ORIGINS = True
 
 ROOT_URLCONF = 'chookbae.urls'
