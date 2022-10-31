@@ -31,7 +31,7 @@ function App() {
         <Route path="/signup" element={<SignUpPage/>}/>
         <Route path="/prediction" element={<PredictionPage/>}/>
         <Route path="/playerget" element={<PlayerGetPage/>}/>
-        <Route path="/v1/accounts/activate/*" element={<ActivatePage/>}/>
+        <Route path="/accounts/activate" element={<ActivatePage/>}/>
     </Routes> 
   </BrowserRouter>
   );
