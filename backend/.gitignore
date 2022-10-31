@@ -9,12 +9,10 @@ __pycache__/
 local_settings.py
 db.sqlite3
 db.sqlite3-journal
-db_setting.py
-api_setting.py
 media
-.env
+email_setting.py
 db_setting.py
-email_secret.py
+
 
 # If your build process includes running collectstatic, then you probably don't need or want to include staticfiles/
 # in your Git repository. Update and uncomment the following line accordingly.
