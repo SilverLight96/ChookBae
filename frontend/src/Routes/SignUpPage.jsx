@@ -119,11 +119,10 @@ function SignUpPage() {
   const password = useRef({});
   password.current = watch("password", "");
 
-  const setLoggedIn = useSetLoggedIn();
   useEffect(() => {
     (async () => {
       try {
-        await setLoggedIn(signupregister);
+        await signupregister();
       } catch (err) {
         // if (err.response.status === 409) {
         //   return;

@@ -12,12 +12,10 @@ import {
 } from "../utils/constants/constant";
 import useSetLoggedIn from "../utils/hooks/useLogin";
 import { Link } from "react-router-dom";
+import { userApis } from "../utils/apis/userApis";
+import { fetchData } from "../utils/apis/api";
 
-function LoginPage({ login }) {
-  const [userInfo, setUserInfo] = useState({
-    email: "",
-    password: "",
-  });
+function LoginPage() {
   const {
     register,
     watch,
@@ -34,23 +32,24 @@ function LoginPage({ login }) {
   const setLoggedIn = useSetLoggedIn();
 
   const onValid = async (data) => {
-    setUserInfo((prev) => ({ ...prev, ...data }));
     try {
       await setLoggedIn(login, data);
     } catch (err) {
       console.log(err);
-      // if (err.response.status === 409) {
-      //   setError("memberId", { message: LOGIN_MESSAGE.FAILED_LOGIN });
-      //   return;
-      // }
-      // if (err.response.status === 404) {
-      //   setError("memberId", { message: LOGIN_MESSAGE.FAILED_LOGIN });
-      //   return;
-      // }
+      if (err.response.status === 409) {
+        setError("memberId", { message: LOGIN_MESSAGE.FAILED_LOGIN });
+        return;
+      }
+      if (err.response.status === 404) {
+        setError("memberId", { message: LOGIN_MESSAGE.FAILED_LOGIN });
+        return;
+      }
     }
   };
+  const login = async (userInfo) => {
+    return await fetchData.post(userApis.LOGIN, userInfo);
+  };
 
-  console.log(userInfo);
   return (
     <Wrapper>
       <LoginBox>

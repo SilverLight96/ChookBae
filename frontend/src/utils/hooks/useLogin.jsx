@@ -19,9 +19,9 @@ function useSetLoggedIn() {
     try {
       const response = await func(data);
       const {
-        data: { email, memberSeq, nickname, accessToken, refreshToken },
+        data: { email, nickname, accessToken, refreshToken },
       } = response;
-      setUserInfo({ email, memberSeq, nickname });
+      setUserInfo({ email, nickname });
       setToken({ accessToken });
       moveToMain();
       setLogged(true);
