@@ -11,16 +11,16 @@ https://docs.djangoproject.com/en/3.2/ref/settings/
 """
 
 from pathlib import Path
-import db_setting
-import environ
-
-env = environ.Env(
-    # set casting, default value
-    DEBUG=(bool, False)
-)
+from secret import db_setting
+# import environ
+import secret.email_setting as email_setting
+# env = environ.Env(
+#     # set casting, default value
+#     DEBUG=(bool, False)
+# )
 
 # reading .env file
-environ.Env.read_env()
+# environ.Env.read_env()
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -44,6 +44,13 @@ INSTALLED_APPS = [
     'worldcup',
     'accounts',
     'rest_framework',
+    
+    # 'django.contrib.sites',
+    # 'allauth.account',
+    # 'allauth.socialaccount',
+
+    'six',
+    'imagekit',
     'django_apscheduler',
     'drf_yasg',
     'django.contrib.admin',
@@ -70,7 +77,7 @@ ROOT_URLCONF = 'chookbae.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [BASE_DIR],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -144,10 +151,16 @@ AUTHENTICATION_BACKENDS = {
     'allauth.account.auth_backends.AuthenticationBackend',
 }
 
+MEDAIA_URL = '/media/'
+
+MEDIA_ROOT = BASE_DIR / 'media'
+
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.gmail.com'
-EMAIL_HOST_USER = env('EMAIL_HOST_USER')
-EMAIL_HOST_PASSWORD = env('EMAIL_HOST_PASSWORD')
+# EMAIL_HOST_USER = env('EMAIL_HOST_USER')
+EMAIL_HOST_USER = email_setting.EMAIL_HOST_USER
+# EMAIL_HOST_PASSWORD = env('EMAIL_HOST_PASSWORD')
+EMAIL_HOST_PASSWORD = email_setting.EMAIL_HOST_PASSWORD
 EMAIL_USE_TLS = True
 EMAIL_PORT = 587
 DEFAULT_FROM_MAIL = EMAIL_HOST_USER

@@ -19,7 +19,7 @@ class AuthenticateSerializer(UserSerializer):
 
     class Meta:
         model = get_user_model()
-        fields = ('email', 'password',)
+        fields = ('email',)
 
 
 class UserUpdateSerializer(UserSerializer):

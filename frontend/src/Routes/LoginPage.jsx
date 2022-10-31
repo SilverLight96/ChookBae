@@ -4,9 +4,16 @@ import logo from "../assets/ChookBae_logo.png";
 import { useState, useMemo } from "react";
 import { useForm } from "react-hook-form";
 import { keyframes } from "styled-components";
-import { REGEX, REGISTER_MESSAGE, STANDARD } from "../utils/constants/constant";
+import {
+  REGEX,
+  REGISTER_MESSAGE,
+  STANDARD,
+  LOGIN_MESSAGE,
+} from "../utils/constants/constant";
+import useSetLoggedIn from "../utils/hooks/useLogin";
+import { Link } from "react-router-dom";
 
-function LoginPage() {
+function LoginPage({ login }) {
   const [userInfo, setUserInfo] = useState({
     email: "",
     password: "",
@@ -24,11 +31,26 @@ function LoginPage() {
     },
     mode: "onChange",
   });
+  const setLoggedIn = useSetLoggedIn();
 
-  const onValid = (data) => {
+  const onValid = async (data) => {
     setUserInfo((prev) => ({ ...prev, ...data }));
+    try {
+      await setLoggedIn(login, data);
+    } catch (err) {
+      console.log(err);
+      // if (err.response.status === 409) {
+      //   setError("memberId", { message: LOGIN_MESSAGE.FAILED_LOGIN });
+      //   return;
+      // }
+      // if (err.response.status === 404) {
+      //   setError("memberId", { message: LOGIN_MESSAGE.FAILED_LOGIN });
+      //   return;
+      // }
+    }
   };
 
+  console.log(userInfo);
   return (
     <Wrapper>
       <LoginBox>
@@ -93,15 +115,17 @@ function LoginPage() {
               <span></span>
               로그인
             </button>
-            <button type={"submit"}>
-              <span></span>
-              <span></span>
-              <span></span>
-              <span></span>
-              회원 가입
-            </button>
           </div>
         </form>
+        <Link to="/signup">
+          <SignUpButton>
+            <span></span>
+            <span></span>
+            <span></span>
+            <span></span>
+            회원 가입
+          </SignUpButton>
+        </Link>
       </LoginBox>
     </Wrapper>
   );
@@ -282,4 +306,66 @@ const Label = styled.label`
   color: #fff;
   pointer-events: none;
   transition: 0.5s;
+`;
+
+const SignUpButton = styled.button`
+  position: absolute;
+  right: 35px;
+  bottom: 40px;
+  padding: 10px 20px;
+  color: #03e9f4;
+  background-color: transparent;
+  border-radius: 5px;
+  border: none;
+  font-size: 16px;
+  text-decoration: none;
+  text-transform: uppercase;
+  overflow: hidden;
+
+  :hover {
+    background: #03e9f4;
+    color: #fff;
+    border-radius: 5px;
+    box-shadow: 0 0 5px #03e9f4, 0 0 25px #03e9f4, 0 0 50px #03e9f4,
+      0 0 100px #03e9f4;
+  }
+  > span {
+    position: absolute;
+    display: block;
+    :nth-child(1) {
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 2px;
+      background: linear-gradient(90deg, transparent, #03e9f4);
+      animation: ${anim1} 3s linear infinite;
+    }
+    :nth-child(2) {
+      top: -100%;
+      right: 0;
+      width: 2px;
+      height: 100%;
+      background: linear-gradient(180deg, transparent, #03e9f4);
+      animation: ${anim2} 3s linear infinite;
+      animation-delay: 0.75s;
+    }
+    :nth-child(3) {
+      bottom: 0;
+      right: -100%;
+      width: 100%;
+      height: 2px;
+      background: linear-gradient(270deg, transparent, #03e9f4);
+      animation: ${anim3} 3s linear infinite;
+      animation-delay: 1.5s;
+    }
+    :nth-child(4) {
+      bottom: -100%;
+      left: 0;
+      width: 2px;
+      height: 100%;
+      background: linear-gradient(360deg, transparent, #03e9f4);
+      animation: ${anim4} 3s linear infinite;
+      animation-delay: 2.25s;
+    }
+  }
 `;
