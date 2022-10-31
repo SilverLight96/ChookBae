@@ -40,8 +40,8 @@ urlpatterns = [
     path(r'swagger', schema_view.with_ui('swagger', cache_timeout=0), name='schema-swagger-ui'),
     path(r'redoc', schema_view.with_ui('redoc', cache_timeout=0), name='schema-redoc-v1'),
     path('admin/', admin.site.urls),
-    path('worldcup/', include('worldcup.urls')),
-    path('accounts/', include('accounts.urls')),
+    path('worldcup/v1/', include('worldcup.urls')),
+    path('accounts/v1/', include('accounts.urls')),
 ]
 
 #이미지 추가를 위한 설정
