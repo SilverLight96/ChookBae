@@ -6,11 +6,15 @@ import { Route, Link, useLocation } from 'react-router-dom';
 function MatchCountryCard(props) {
     const groupNum = props.groupNum
     const groups = props.groups
-    const [group, setGroup] = useState('')
+    const [group, setGroup] = useState()
     const clickFlag = (clickData) => {
-        setGroup(`${clickData}`)
+        setGroup(clickData)
+        props.setSelectCard(clickData)
+        console.log(clickData);
         console.log('clicked');
+        console.log(group);
     }
+
     return (
         <>
         <StyledDiv>
@@ -23,7 +27,8 @@ function MatchCountryCard(props) {
                                 return (
                                 <StyledTh
                                 key={idx}
-                                onClick="clickFlag(item)">
+                                // onClick={() => clickFlag(item)}>
+                                onClick={() => props.setSelectCard(item)}>
                                     {item}
                                 </StyledTh>
                                 )

@@ -8,8 +8,8 @@ import moment from 'moment';
 import 'react-calendar/dist/Calendar.css';
 import axios from "axios"
 
-function MatchPage() {
 
+function MatchPage() {
     const thStyle={
         width: '100em',
         height: 'auto',
@@ -45,7 +45,18 @@ function MatchPage() {
         'team2_score',
     ]
     const [value, onChange] = useState(new Date());
+
+    const [dataDate, setDataDate] = useState([])
+
+    const onChangeTemp = (e) => {
+        onChange(e)
+        console.log(e) 
+        setDataDate(getDataDate(valueMoment))
+        }
+
     const valueMoment = moment(value).format("YYYY-MM-DD")
+
+    const [selectCard, setSelectCard] = useState(0)
 
     const classifyGroup = () => {
         const group = countryMatches.map((item) => {
@@ -320,18 +331,21 @@ function MatchPage() {
                     {classified.map((group, index) => {
                         return (
                             <MatchCountryCard
-                                key={index}
+                                key={index + 'key'}
                                 groupNum={index+1}
                                 groups = {group}
+                                setSelectCard={setSelectCard}
                             />
-                        )
-                    })}
+                            )
+                        })}
+                    <h1>{selectCard}</h1>
                 </div>
                 <div>
                     {countryMatches.map((match, index) => {
+                        if (match.team1_pk==selectCard || match.team2_pk==selectCard) {
                         return (
                             <MatchCountry
-                                key={index}
+                                key={index + 'key'}
                                 id={match.id}
                                 pk={match.pk}
                                 match_name={match.match_name}
@@ -343,11 +357,13 @@ function MatchPage() {
                                 team1_score={match.team1_score}
                                 team2_score={match.team2_score}
                                 team1_group={match.team1_group}
-                        />
-                        )
+                            />
+                            )
+                        }
                     })}
                 </div>
             </div>
+            <BlankDiv><br /><br /><br /></BlankDiv>
             </>
         )
     }
@@ -356,13 +372,15 @@ function MatchPage() {
             <>
             <div>
                 <Tableheader />
-                <StyledCalendar>
-                    <Calendar onChange={onChange} value={value} style={calendarStyle} />
-                </StyledCalendar>
+                <StyledCalendarContainer>
+                    <Calendar onChange={onChangeTemp} value={value} />
+                </StyledCalendarContainer>
+                <h1>{dataDate}</h1>
                 <h1>{valueMoment}</h1>
-                {dateMatches.map((match, index) => {
+                {countryMatches.map((match, index) => {
                     if (match.start_time === valueMoment) {
                     return (
+                        <>
                         <MatchDate
                         date={valueMoment}
                         key={index}
@@ -378,9 +396,11 @@ function MatchPage() {
                         team2_score={match.team2_score}
                         team1_group={match.team1_group}
                         />
+                        </>
                     )
                 }})}
             </div>
+            <BlankDiv><br /><br /><br /></BlankDiv>
             </>
         )
     }
@@ -388,30 +408,41 @@ function MatchPage() {
 
 export default MatchPage;
 
-const StyledCalendar = styled.div`
+const StyledCalendarContainer = styled.div`
     /* container styles */
     margin: auto;
     width: 100%;
-
-    /* calendar styles */
-    .react-calendar {
-        width: 100%;
-        margin-left: auto;
-        margin-right: auto;
-    }
-    /* navigation styles */
-    .react-calendar__navigation  {
-        display: flex;
-        .react-calendar__navigation__label {
-            width: 100%;
-        }
-
-        .react-calendar__navigation__arrow {
-
-        }
-    }
-    /* label styles */
-    .react-calendar__month-view__weekdays {
-        text-align: center;
-    }
 `
+
+const BlankDiv = styled.div`
+    height: 100%;
+`
+
+const baseURL = "https://k7a202.p.ssafy.io/"
+
+function axiosGet (subUrl) {
+    axios
+    .get(baseURL + 'v1/' + subUrl + '/', {
+        headers: {
+            'Content-Type': 'application/json',
+            },
+        })
+    .then(res => {
+        const responseData = res.data
+        console.log(responseData);
+        return (responseData)
+        })
+    .catch(err => {
+        console.log(err)
+        return ('error')
+        })
+    }
+
+const getDataDate = (date) => {
+    console.log(date)
+    const convertedDate = date.split('-').join('')
+    console.log(convertedDate);
+    return axiosGet('match/date/' + convertedDate)
+}
+
+    // return axiosGet('match/date/' + convertedDate)

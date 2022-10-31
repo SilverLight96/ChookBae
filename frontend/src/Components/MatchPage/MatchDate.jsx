@@ -45,7 +45,7 @@ function MatchDate(props) {
         props.match_type,
         props.team1_pk,
         props.team2_pk,
-        // props.start_time,
+        props.start_time,
         props.venue_pk,
         props.team1_score,
         props.team2_score,
@@ -64,7 +64,7 @@ function MatchDate(props) {
             <tbody>
                 <tr style={trStyle}>
                     <Link
-                        to="/Match/Date"
+                        to="/Match/Detail"
                         state= {dataProps}
                         style={matchBtnStyle}
                     >

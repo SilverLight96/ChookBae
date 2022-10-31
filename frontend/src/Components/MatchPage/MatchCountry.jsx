@@ -37,6 +37,7 @@ function MatchCountry(props) {
         "venue_pk",
         "team1_score",
         "team2_score",
+        "team1_group",
     ]
 
     const data = [
@@ -62,15 +63,13 @@ function MatchCountry(props) {
             <tbody>
                 <tr style={trStyle}>
                     <Link
-                        to="/Match/Country"
+                        to="/Match/Detail"
                         state= {dataProps}
                         style={matchBtnStyle}
                     >
                     {data.map((elem, idx) => {
                         return (
-                            <>
-                            <th style={thStyle} key={idx}>{elem}</th>
-                            </>
+                            <th key={idx} style={thStyle}>{elem}</th>
                         )
                     })}
                     </Link>
