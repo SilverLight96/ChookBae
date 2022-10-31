@@ -1,16 +1,11 @@
-// import {atom} from "recoil";
+import { atom, atomFamily } from 'recoil';
+import { getCookie } from './utils/functions/cookies';
+import { recoilPersist } from 'recoil-persist';
 
-// const authAtom = atom({
-//   key: 'auth',
-//   // get initial state from local storage to enable user to stay logged in
-//   default: JSON.parse(localStorage.getItem('user'))
-// });
+const { persistAtom } = recoilPersist();
 
-// export { authAtom };
+export const loggedinState = atom({
+  key: "loggedinState",
+  default: getCookie('token') ? true : false,
+});
 
-// const usersAtom = atom({
-//   key: 'users',
-//   default: null
-// });
-
-// export { usersAtom };

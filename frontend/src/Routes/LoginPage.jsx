@@ -8,14 +8,17 @@ import { useForm } from "react-hook-form";
 import { useCookies } from "react-cookie";
 import { fetchData } from "../utils/apis/api";
 import { userApis } from "../utils/apis/userApis";
+import { useSetRecoilState } from "recoil";
+import { loggedinState } from "../atoms";
 
 function LoginPage() {
   const [userInfo, setUserInfo] = useState({
     email: "",
     password: "",
   });
-  const [cookies, setCookie] = useCookies([""]);
+  const [cookies, setCookie] = useCookies(["token"]);
   const navigate = useNavigate();
+  const setLogged = useSetRecoilState(loggedinState);
 
   const {
     register,
@@ -41,9 +44,15 @@ function LoginPage() {
   console.log(userInfo);
 
   const login = async () => {
-    return await fetchData.post(userApis.LOGIN, userInfo).then((res) => {
-      setCookie(res.data);
-    });
+    return await fetchData
+      .post(userApis.LOGIN, userInfo)
+
+      .then((res) => {
+        console.log(res.data);
+        setCookie("token", res.data.jwt);
+        setLogged(true);
+        navigate("/");
+      });
   };
 
   const onValid = (data) => {
