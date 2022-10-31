@@ -2,7 +2,8 @@
     안녕하세요. 축구의 세계에 오신 것을 환영합니다.
 
     아래 링크를 클릭하면 회원가입 인증이 완료됩니다.
+{% comment %} 
+    회원가입 링크 : http://{{ domain }}{% url 'accounts:activate' uid64=uid token=token %} {% endcomment %}
 
-    회원가입 링크 : http://{{ domain }}{% url 'accounts:activate' uid64=uid token=token %}
-
+    회원가입 링크 : https://k7a202.p.ssafy.io/{% url 'accounts:activate' uid64=uid token=token %}
 {% endautoescape %}
