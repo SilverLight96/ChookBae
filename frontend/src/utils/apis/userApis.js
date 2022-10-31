@@ -1,7 +1,7 @@
 export const userApis = {
-    NICKNAME_DUPLICATE_CHECK_API: (nickname) => `/api/member/nickname/${nickname}`,
-    EMAIL_DUPLICATE_CHECK_API: (email) => `/api/member/email/${email}`,
-    REGISTER: '/api/member',
+    // NICKNAME_DUPLICATE_CHECK_API: (nickname) => `/api/member/nickname/${nickname}`,
+    // EMAIL_DUPLICATE_CHECK_API: (email) => `/api/member/email/${email}`,
+    REGISTER: '/api/v1/accounts',
     LOGIN: '/api/member/login',
     AUTH_EMAIL: '/api/member/password/check',
     PASSWORD_CHANGE: '/api/member/password/change',

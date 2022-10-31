@@ -2,7 +2,7 @@ import axios from 'axios';
 import { getCookie, removeCookie, setCookie } from '../functions/cookies';
 
 export const instance = axios.create({
-  baseURL: "https://k7a202.p.ssafy.io",
+  baseURL: "https://k7a202.p.ssafy.io/",
   // baseURL: "http://localhost:8081",
   headers: {
     'Content-Type': 'application/json',
