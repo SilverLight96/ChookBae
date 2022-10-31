@@ -8,5 +8,6 @@ urlpatterns = [
     path('predict', views.matchpredict.as_view()),
     path('predict/<int:id>', views.predictinfo.as_view()),
     path('card', views.card.as_view()),
+    path('combine', views.combine.as_view()),
     
 ]
