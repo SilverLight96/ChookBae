@@ -15,6 +15,7 @@ function SignUpPage() {
     email: "",
     nickname: "",
     password: "",
+    password_confirm: "",
   });
   const [isDuplicatedEmail, setIsDuplicatedEmail] = useState(true);
   const [duplicatedNickname, setDuplicatedNickname] = useState(false);
@@ -31,6 +32,7 @@ function SignUpPage() {
       email: "",
       nickname: "",
       password: "",
+      password_confirm: "",
     },
     mode: "onChange",
   });
@@ -112,6 +114,7 @@ function SignUpPage() {
   //   () => debounce((e) => debounceEmailChange(e.target.value), 500),
   //   []
   // );
+
   // 비밀번호 확인
   const password = useRef({});
   password.current = watch("password", "");
@@ -122,9 +125,9 @@ function SignUpPage() {
       try {
         await setLoggedIn(signupregister);
       } catch (err) {
-        if (err.response.status === 409) {
-          return;
-        }
+        // if (err.response.status === 409) {
+        //   return;
+        // }
       }
     })();
   }, [userInfo]);
@@ -229,7 +232,7 @@ function SignUpPage() {
               id="password-check"
               type="password"
               placeholder=" "
-              {...register("passwordCheck", {
+              {...register("password_confirm", {
                 required: REGISTER_MESSAGE.REQUIRED_PASSWORD_CHECK,
                 validate: {
                   passwordMatch: (value) =>
@@ -241,8 +244,8 @@ function SignUpPage() {
               required
             />
             <Label htmlFor="password">비밀번호 확인</Label>
-            {errors?.passwordCheck?.message && (
-              <small role="alert">{errors.passwordCheck.message}</small>
+            {errors?.password_confirm?.message && (
+              <small role="alert">{errors.password_confirm.message}</small>
             )}
           </UserBox>
           <button type={"submit"}>
