@@ -14,8 +14,6 @@ function LoginPage() {
     email: "",
     password: "",
   });
-
-  const formRef = useRef();
   const [cookies, setCookie] = useCookies(["id"]);
   const navigate = useNavigate();
 
@@ -51,7 +49,7 @@ function LoginPage() {
   const onValid = (data) => {
     setUserInfo((prev) => ({ ...prev, ...data }));
   };
-
+  console.log(cookies);
   console.log(userInfo);
   return (
     <Wrapper>
