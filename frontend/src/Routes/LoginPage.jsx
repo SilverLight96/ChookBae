@@ -1,21 +1,24 @@
-import React from "react";
+import React, { useEffect, useRef, useState } from "react";
 import styled from "styled-components";
 import logo from "../assets/ChookBae_logo.png";
-import { useState, useMemo } from "react";
-import { useForm } from "react-hook-form";
 import { keyframes } from "styled-components";
-import {
-  REGEX,
-  REGISTER_MESSAGE,
-  STANDARD,
-  LOGIN_MESSAGE,
-} from "../utils/constants/constant";
-import useSetLoggedIn from "../utils/hooks/useLogin";
-import { Link } from "react-router-dom";
-import { userApis } from "../utils/apis/userApis";
+import { REGEX, REGISTER_MESSAGE, STANDARD } from "../utils/constants/constant";
+import { Link, useNavigate } from "react-router-dom";
+import { useForm } from "react-hook-form";
+import { useCookies } from "react-cookie";
 import { fetchData } from "../utils/apis/api";
+import { userApis } from "../utils/apis/userApis";
 
 function LoginPage() {
+  const [userInfo, setUserInfo] = useState({
+    email: "",
+    password: "",
+  });
+
+  const formRef = useRef();
+  const [cookies, setCookie] = useCookies(["id"]);
+  const navigate = useNavigate();
+
   const {
     register,
     watch,
@@ -29,27 +32,27 @@ function LoginPage() {
     },
     mode: "onChange",
   });
-  const setLoggedIn = useSetLoggedIn();
 
-  const onValid = async (data) => {
-    try {
-      await setLoggedIn(login, data);
-    } catch (err) {
-      console.log(err);
-      if (err.response.status === 409) {
-        setError("memberId", { message: LOGIN_MESSAGE.FAILED_LOGIN });
-        return;
-      }
-      if (err.response.status === 404) {
-        setError("memberId", { message: LOGIN_MESSAGE.FAILED_LOGIN });
-        return;
-      }
-    }
-  };
-  const login = async (userInfo) => {
-    return await fetchData.post(userApis.LOGIN, userInfo);
+  useEffect(() => {
+    (async () => {
+      try {
+        await login();
+      } catch (err) {}
+    })();
+  }, [userInfo]);
+  console.log(userInfo);
+
+  const login = async () => {
+    return await fetchData.post(userApis.LOGIN, userInfo).then((res) => {
+      setCookie("id", res.data.token);
+    });
   };
 
+  const onValid = (data) => {
+    setUserInfo((prev) => ({ ...prev, ...data }));
+  };
+
+  console.log(userInfo);
   return (
     <Wrapper>
       <LoginBox>
