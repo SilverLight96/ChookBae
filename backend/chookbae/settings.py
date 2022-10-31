@@ -36,7 +36,7 @@ SECRET_KEY = 'django-insecure-9xx1qky5j(sc!m!-#8#befht@z68j8*=-0jiv#gheq(!fhy39+
 DEBUG = True
 
 # ALLOWED_HOSTS = ['k7a202.p.ssafy.io']
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 # Application definition
 
