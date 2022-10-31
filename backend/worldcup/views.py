@@ -213,8 +213,10 @@ class MatchInfoByDate(APIView):
         games = Match.objects.filter(start_date=str(match_date)[:10])
         for g in games:
             match = Match.objects.get(id=g.id)
-            curr_info = [match.id, match.start_date, match.start_time, match.venue_id.venue_name, match.venue_id.address,
-                        match.team1_id.country, match.team1_id.logo, match.team1_id.group, match.team2_id.country, match.team2_id.logo]
+            venue_name, address = venue_k(match.venue_id.id)
+            team1_name, team2_name = team_k(match.team1_id.id), team_k(match.team2_id.id)
+            curr_info = [match.id, match.start_date, match.start_time, venue_name, address,
+                        team1_name, match.team1_id.logo, match.team1_id.group, team2_name, match.team2_id.logo]
             match_list.append(curr_info)
         
         match_list = sorted(match_list, key=operator.itemgetter(2, 7))
@@ -228,10 +230,12 @@ class MatchDetail(APIView):
     @swagger_auto_schema(operation_id="경기 상세 정보 조회", operation_description="경기 고유번호로 상세 정보 조회", manual_parameters=[id], responses={200: '조회 성공'})
     def get(self, request, id):
         match = Match.objects.get(id=id)
-        match_detail = [match.id, match.start_date, match.start_time, match.venue_id.venue_name, match.venue_id.address,
-                        match.team1_id.id, match.team1_id.country, match.team1_id.logo, match.team1_id.group, match.team1_id.rank, match.team1_id.win, match.team1_id.draw, match.team1_id.loss,
+        venue_name, address = venue_k(match.venue_id.id)
+        team1_name, team2_name = team_k(match.team1_id.id), team_k(match.team2_id.id)
+        match_detail = [match.id, match.start_date, match.start_time, venue_name, address,
+                        match.team1_id.id, team1_name, match.team1_id.logo, match.team1_id.group, match.team1_id.rank, match.team1_id.win, match.team1_id.draw, match.team1_id.loss,
                         match.team1_id.points, match.team1_id.last_five, match.team1_id.goal_diff, match.team1_id.manager, match.team1_id.round,
-                        match.team2_id.id, match.team2_id.country, match.team2_id.logo, match.team2_id.group, match.team2_id.rank, match.team2_id.win, match.team2_id.draw, match.team2_id.loss,
+                        match.team2_id.id, team2_name, match.team2_id.logo, match.team2_id.group, match.team2_id.rank, match.team2_id.win, match.team2_id.draw, match.team2_id.loss,
                         match.team2_id.points, match.team2_id.last_five, match.team2_id.goal_diff, match.team2_id.manager, match.team2_id.round]
         
         return Response(match_detail)
