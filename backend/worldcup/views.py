@@ -310,6 +310,8 @@ class MatchTable(APIView):
             team_name = team_k(t.id)
             curr_team = [team_name, t.win, t.draw, t.loss, t.points, t.goal_diff] 
             team_table.append(curr_team)
+
+        team_table = sorted(team_table, key=operator.itemgetter(4, 5))
         
         return Response(team_table)
 
