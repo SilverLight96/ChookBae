@@ -10,7 +10,7 @@ from django.shortcuts import render
 from django.db.models import Q
 from rest_framework import status
 from rest_framework.response import Response
-from .Serializers import CardSerializer
+from .Serializers import CardSerializer,UserrankSerializer,goalrankSerializer
 from .models import User, Point, Venue, Team, Match, Player, PlayerCard, Prediction, Bet, EmailCert
 from .translation import venue_k, team_k, player_k, player_pos
 
@@ -142,8 +142,11 @@ class card(APIView):
             if(team_id > 0):
                 card=Player.objects.filter(team_id=team_id).order_by('?').first()
             else :
-                card=Player.objects.order_by('?').first()     
+                card=Player.objects.order_by('?').first()   
 
+            find=PlayerCard.objects.filter(Q(player_id=card.id) & Q(user_id=user_id)).count()
+            if(find==0):
+                user.value+=card.value
             new_card=PlayerCard.objects.create(player_id=card, user_id=user)
             serializer = CardSerializer(card)
             c_list.append(serializer.data)
@@ -155,7 +158,7 @@ class card(APIView):
 
     @swagger_auto_schema(operation_id="카드 뽑기", operation_description="새로운 선수카드 뽑기", request_body=param)
     def post(self, request, format=None):
-        user_id=1
+        user_id=2
         gacha=self.get_object(user_id,request.data['team_id'],request.data['gacha_count'],request.data['point'])
 
         if(gacha=='보유하고 있는 포인트를 확인해 주세요.'):
@@ -213,7 +216,21 @@ class combine(APIView):
 
         if card is None:
             return ('뽑을 선수가 없습니다.')
+    
+        find=PlayerCard.objects.filter(Q(player_id=card.id) & Q(user_id=user_id)).count()
+        if(find==0):
+           user.value+=card.value
 
+        firstfind=PlayerCard.objects.filter(Q(player_id=first.player_id.id) & Q(user_id=user_id)).count()
+        secondfind=PlayerCard.objects.filter(Q(player_id=second.player_id.id) & Q(user_id=user_id)).count()
+        
+
+        if(firstfind==1):
+            user.value-=first.player_id.value
+        if(secondfind==1):
+            user.value-=second.player_id.value
+
+        user.save()
         first.delete()
         second.delete()
         new_card=PlayerCard.objects.create(player_id=card, user_id=user)
@@ -222,7 +239,7 @@ class combine(APIView):
 
     @swagger_auto_schema(operation_id="카드 합성", operation_description="기존의 선수 합성하여 새 선수 뽑기", request_body=param)
     def post(self, request, format=None):
-        user_id=1
+        user_id=2
         comb=self.get_object(user_id,request.data['player_card_id1'],request.data['player_card_id2'])
 
         if(comb=='보유하고 있지 않은 선수카드입니다.' or comb=='뽑을 선수가 없습니다.'):
@@ -230,6 +247,34 @@ class combine(APIView):
         else:
             return Response(comb,status=status.HTTP_200_OK)
 
+# 랭킹 조회 POST
+class rank(APIView):
+    param = openapi.Schema(type=openapi.TYPE_OBJECT, required=['type',],
+    properties={
+        'type': openapi.Schema(type=openapi.TYPE_STRING, description="랭킹의 타입"),
+        })
+
+    def get_object(self, type):
+        R_list=[]
+        if(type=='value'):
+            user=User.objects.all().order_by('-value')
+            for i in user:
+                serializer = UserrankSerializer(i)
+                R_list.append(serializer.data)
+            
+        elif(type=='player'):
+            player=Player.objects.all().order_by('-goal')
+            for i in player:
+                serializer=goalrankSerializer(i)
+                R_list.append(serializer.data)
+                
+        return (R_list)   
+
+
+    @swagger_auto_schema(operation_id="랭킹 조회", operation_description="타입에 따라 보유하고 있는 포인트 혹은 보유하고 있는 선수의 가치 랭킹 조회", request_body=param)
+    def post(self, request, format=None):
+        rank=self.get_object(request.data['type'])
+        return Response(rank,status=status.HTTP_200_OK)
 
 
 
