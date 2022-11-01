@@ -299,13 +299,30 @@ class MatchDetail(APIView):
         return Response(match_detail)
 
 
+# 그룹 순위표 조회 GET
+class MatchTable(APIView):
+    group = openapi.Parameter('id', openapi.IN_PATH, description='group name', required=True, type=openapi.TYPE_NUMBER)
+    @swagger_auto_schema(operation_id="순위표 조회", operation_description="조 이름으로 순위표 조회", manual_parameters=[id], responses={200: '조회 성공'})
+    def get(self, request, id):
+        teams = Team.objects.filter(group=id)
+        team_table = []
+        for t in teams:
+            team_name = team_k(t.id)
+            curr_team = [team_name, t.win, t.draw, t.loss, t.points, t.goal_diff] 
+            team_table.append(curr_team)
+
+        team_table = sorted(team_table, key=operator.itemgetter(4, 5))
+        
+        return Response(team_table)
+
+
 # 팀 정보 조회 GET
 class TeamInfo(APIView):
     team = openapi.Parameter('id', openapi.IN_PATH, description='team id', required=True, type=openapi.TYPE_NUMBER)
     @swagger_auto_schema(operation_id="팀 정보 조회", operation_description="팀 고유번호로 정보 조회", manual_parameters=[id], responses={200: '조회 성공'})
     def get(self, request, id):
         team = Team.objects.get(id=id)
-        team_info = [[team.manager, 0, 0]]
+        team_info = [["감독님", team.manager, 0, 0]]
 
         players = Player.objects.filter(team_id=id)
         for p in players:
