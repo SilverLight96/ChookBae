@@ -26,7 +26,7 @@ from django.core.mail import EmailMessage
 import re
 import string
 import random
-import jwt
+import jwt, datetime
 
 def make_random_code():
     code_list = string.ascii_uppercase + '0123456789'
@@ -138,6 +138,13 @@ def login(request):
         return Response({'error: 이메일 인증을 해주세요.'}, status=status.HTTP_400_BAD_REQUEST)
 
     # 토큰 생성
+
+    payload = {
+      'id' : user.id, # 유저의 id
+      'exp' : datetime.datetime.now() + datetime.timedelta(minutes=60), # 토큰 유효기간 60분
+      'iat' : datetime.datetime.now() # 토큰 발행 시간
+      }
+
     token = jwt.encode({'id': user.id}, SECRET_KEY, algorithm='HS256')
     res = Response()
     res.set_cookie(key='jwt',value=token,httponly=True)
@@ -145,6 +152,17 @@ def login(request):
         'jwt':token
     }
     return res
+
+#로그인 유지
+@api_view(['GET'])
+def check(request):
+    token_receive = request.COOKIES.get('jwt')
+    try:
+        payload = jwt.decode(token_receive, SECRET_KEY, algorithms=['HS256'])
+        user = User.objects.get(id=payload['id'])
+        return Response({'id': user.id, 'nickname': user.nickname, 'email': user.email})
+    except jwt.ExpiredSignatureError:
+        return Response({'error': '로그인 시간이 만료되었습니다.'}, status=status.HTTP_400_BAD_REQUEST)
 
 
 # 토큰을 이용해 로그아웃
@@ -168,12 +186,13 @@ def update(request):
     new_nickname = request.data.get('new_nickname')
     new_password = request.data.get('new_password')
     new_password_confirm = request.data.get('new_password_confirm')
-    profile_image = request.data.get('profile_image')
+
     if request.user == user and user.check_password(password):
         serializer = UserUpdateSerializer(user, data=request.data)
 
         if serializer.is_valid(raise_exception=True):
             me = serializer.save()
+
 
         #비밀번호 변경
         if new_password:
@@ -199,8 +218,21 @@ def update(request):
 
             me.nickname = new_nickname
             me.save()
+
+        #프로필 이미지 수정
+        if request.FILES.get('profile_image'):
+            me.profile_image = request.FILES.get('profile_image')
+            me.save()
+
         return Response(serializer.data)
 
         
     return Response({'error: 본인 인증 실패'}, status=status.HTTP_401_UNAUTHORIZED)
     
+
+#마이페이지 정보: 나 자신의 정보를 담아서 react의 mypage로 정보를 보내줌
+@api_view(['GET'])
+def mypage(request):
+    me = get_object_or_404(User, nickname=request.user.nickname)
+    if request.user == me:
+        return render(request,'k7a202.p.ssafy.io/mypage',{'me':me})
