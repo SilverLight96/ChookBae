@@ -9,8 +9,9 @@ urlpatterns = [
     path('predict/<int:id>', views.predictinfo.as_view()),
     path('card', views.card.as_view()),
     path('combine', views.combine.as_view()),
-    path('match/team/<int:id>/', views.MatchInfoByTeam.as_view()),
-    path('match/date/<int:id>/', views.MatchInfoByDate.as_view()),
-    path('match/detail/<int:id>/', views.MatchDetail.as_view()),
-    path('match/teaminfo/<int:id>/', views.TeamInfo.as_view()),
+    path('match/team/<int:id>', views.MatchInfoByTeam.as_view()),
+    path('match/date/<int:id>', views.MatchInfoByDate.as_view()),
+    path('match/detail/<int:id>', views.MatchDetail.as_view()),
+    path('match/table/<str:id>', views.MatchTable.as_view()),
+    path('match/teaminfo/<int:id>', views.TeamInfo.as_view()),
 ]
