@@ -12,5 +12,6 @@ urlpatterns = [
     path('match/team/<int:id>', views.MatchInfoByTeam.as_view()),
     path('match/date/<int:id>', views.MatchInfoByDate.as_view()),
     path('match/detail/<int:id>', views.MatchDetail.as_view()),
+    path('match/table/<str:id>', views.MatchTable.as_view()),
     path('match/teaminfo/<int:id>', views.TeamInfo.as_view()),
 ]
