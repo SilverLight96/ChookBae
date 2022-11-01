@@ -19,7 +19,11 @@ function MixPage() {
         </NavStyle>
       </ButtonContainer>
       <MixMain>
-        <MixCardContainer></MixCardContainer>
+        <GachaCardContainer>
+          <Glow></Glow>
+          <CardPack>?</CardPack>
+          <GachaCardListContainer></GachaCardListContainer>
+        </GachaCardContainer>
         <MixButtonWrapper>
           <MixButton>합성하기</MixButton>
         </MixButtonWrapper>
@@ -124,22 +128,6 @@ const MixMain = styled.div`
   flex-direction: column;
 `;
 
-const MixCardContainer = styled.div`
-  background-color: white;
-  margin: auto;
-  width: 380px;
-  height: 60vh;
-  border-radius: 5px;
-`;
-
-const HoloGradient = keyframes`
-  0% {
-    background-position: 100% 100%;
-  }
-  100% {
-    background-position: 0% 0%;
-  }
-`;
 const MixButtonWrapper = styled.div`
   display: flex;
   justify-content: center;
@@ -199,7 +187,7 @@ const MixButtonContainer = styled.div`
   > button {
     border-radius: 5px;
     font-size: 30px;
-    padding: 80px 10px;
+    padding: 70px 5px;
     border-color: transparent;
     color: ${(props) => props.theme.colors.white};
     font-weight: bold;
@@ -239,4 +227,91 @@ const MixButtonContainer = styled.div`
       top: 6px;
     }
   }
+`;
+
+const Steam = keyframes`
+  0% {
+    background-position: 0 0;
+  }
+  50% {
+    background-position: 400% 0;
+  }
+  100% {
+    background-position: 0 0;
+  }
+`;
+
+const Glow = styled.span`
+  z-index: 1;
+  position: absolute;
+  width: 250px;
+  height: 180px;
+  background: linear-gradient(0deg, #000, #272727);
+  :before,
+  :after {
+    content: "";
+    position: absolute;
+    left: -2px;
+    top: -2px;
+    background: linear-gradient(
+      35deg,
+      #b118ac,
+      #4c4cff,
+      #e69500,
+      #b118ac,
+      #4c4cff,
+      #e69500
+    );
+    background-size: 400%;
+    width: calc(100% + 5px);
+    height: calc(100% + 5px);
+    z-index: -1;
+    animation: ${Steam} 20s linear infinite;
+  }
+  :after {
+    filter: blur(30px);
+  }
+`;
+
+const GachaCardListContainer = styled.div`
+  position: relative;
+  top: 0;
+  margin: 15px;
+  width: 100%;
+  height: 100%;
+  max-height: 740px;
+  max-width: 1015px;
+  display: none;
+`;
+
+const GachaCardContainer = styled.div`
+  position: relative;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  margin-top: 30px;
+  margin-bottom: 30px;
+  .modes {
+    margin: 30px;
+    position: absolute;
+    top: 0;
+    left: 0;
+  }
+`;
+
+const CardPack = styled.div`
+  background: linear-gradient(0deg, #000, #272727);
+  //background-image: linear-gradient(135deg, #b118ac 0%, #26c7da 100%);
+  position: absolute;
+  z-index: 2;
+  width: 250px;
+  height: 180px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 130px;
+  color: white;
 `;
