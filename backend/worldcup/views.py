@@ -13,6 +13,7 @@ from rest_framework.response import Response
 from .Serializers import CardSerializer,UserrankSerializer,goalrankSerializer
 from .models import User, Point, Venue, Team, Match, Player, PlayerCard, Prediction, Bet, EmailCert
 from .translation import venue_k, team_k, player_k, player_pos
+from chookbae.settings import SECRET_KEY
 
 # Create your views here.
 
@@ -65,6 +66,9 @@ class matchpredict(APIView):
             
     @swagger_auto_schema(operation_id="승부 예측", operation_description="승부 예측하기", request_body=param)
     def post(self, request, format=None):
+        # token=request.COOKIES.get('jwt')
+        # pay=jwt.decode(token,SECRET_KEY, algorithms=['HS256'])
+        # user_id=pay['id']
         user_id=1
         ingredient = self.get_object(user_id,request.data['match_pk'],request.data['point'],request.data['predict'])
 
@@ -81,6 +85,9 @@ class predictinfo(APIView):
     id = openapi.Parameter('id', openapi.IN_PATH, description='match_id', required=True, type=openapi.TYPE_NUMBER)
     @swagger_auto_schema(operation_id="유저의 승부 예측 여부를 조회", operation_description="제공 받은 토큰 값을 기준으로 유저를 파악하고 해당 유저가 승부 예측을 했는지 확인한다", manual_parameters=[id])
     def get(self, request, id):
+        # token=request.COOKIES.get('jwt')
+        # pay=jwt.decode(token,SECRET_KEY, algorithms=['HS256'])
+        # user_id=pay['id']
         user_id=1
         try:
             predict=Prediction.objects.get(match_id=id ,user_id=user_id)
@@ -158,7 +165,10 @@ class card(APIView):
 
     @swagger_auto_schema(operation_id="카드 뽑기", operation_description="새로운 선수카드 뽑기", request_body=param)
     def post(self, request, format=None):
-        user_id=2
+        # token=request.COOKIES.get('jwt')
+        # pay=jwt.decode(token,SECRET_KEY, algorithms=['HS256'])
+        # user_id=pay['id']
+        user_id=1
         gacha=self.get_object(user_id,request.data['team_id'],request.data['gacha_count'],request.data['point'])
 
         if(gacha=='보유하고 있는 포인트를 확인해 주세요.'):
@@ -172,6 +182,10 @@ class card(APIView):
         country = request.GET.get('country', None)
         if country is not None:
             team=Team.objects.get(country=country)
+        
+        # token=request.COOKIES.get('jwt')
+        # pay=jwt.decode(token,SECRET_KEY, algorithms=['HS256'])
+        # user_id=pay['id']
         user_id=1
 
         card=PlayerCard.objects.filter(user_id=user_id)
@@ -239,7 +253,10 @@ class combine(APIView):
 
     @swagger_auto_schema(operation_id="카드 합성", operation_description="기존의 선수 합성하여 새 선수 뽑기", request_body=param)
     def post(self, request, format=None):
-        user_id=2
+        # token=request.COOKIES.get('jwt')
+        # pay=jwt.decode(token,SECRET_KEY, algorithms=['HS256'])
+        # user_id=pay['id']
+        user_id=1
         comb=self.get_object(user_id,request.data['player_card_id1'],request.data['player_card_id2'])
 
         if(comb=='보유하고 있지 않은 선수카드입니다.' or comb=='뽑을 선수가 없습니다.'):
@@ -267,7 +284,7 @@ class rank(APIView):
             for i in player:
                 serializer=goalrankSerializer(i)
                 R_list.append(serializer.data)
-                
+
         return (R_list)   
 
 
