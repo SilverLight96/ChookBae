@@ -2,28 +2,48 @@ import React, { useRef, useState, useMemo } from "react";
 import styled from "styled-components";
 import { Route, Link, useLocation } from 'react-router-dom';
 import MatchDeatilTable from '../Components/MatchPage/MatchDetailTable'
+import MatchDetailChart from '../Components/MatchPage/MatchDetailChart'
 
 function MatchDetail() {
     const location = useLocation()
-    const propData = {}
+    console.log(location.state)
+    const propData = location.state.firstData
+    const propDataSecond = location.state.secondData
 
-    for (let data of location.state) {
-        let splitData = data.split(': ')
-        propData[splitData[0]] = splitData[1]
-    }
+    const detailData_1 = [
+        propData.team1_rank,
+        'FIFA Rank',
+        propData.team1_last_five,
+        // propData.team1_manager,
+        'Manager',
+        `${propData.team1_country} 대표팀`,
+    ]
 
+    const detailData_2 = [
+        propData.team2_rank,
+        'FIFA Rank',
+        propData.team2_last_five,
+        // propData.team2_manager,
+        'Manager',
+        `${propData.team2_country} 대표팀`,
+    ]
+    const detailDataHeader = [
+        '조별 순위',
+        '피파 랭킹',
+        '최근 5경기',
+        '감독',
+        '선수단',
+    ]
     return(
         <Container>
             <DescriptionContainer>
-                <p>{propData.start_time}</p>
-                <p>{propData.venue_pk}</p>
-                <p>카타르, 도하</p>
+                <p>{propData.start_date} - {propData.start_time}</p>
+                <p>{propData.venue_name}</p>
+                <p>{propData.venue_address}</p>
             </DescriptionContainer>
 
             <FlagContainer>
-                <Flag>
-                    <h1>{propData.team1_pk}</h1>
-                </Flag>
+                <Flag src={propData.team1_logo} />
 
                 <Predict>
                     <Group>
@@ -35,22 +55,26 @@ function MatchDetail() {
                     </PredictBtn>
                 </Predict>
 
-                <Flag>
-                <h1>{propData.team2_pk}</h1>
-                </Flag>
+                <Flag src={propData.team2_logo} />
             </FlagContainer>
 
             <DataContainer>
                 <Data>
-                    {location.state.map((elem, idx) => {
+                    {detailData_1.map((elem, idx) => {
                         return(
                             <p key={idx}>{elem}</p>
                         )
                     })}
                 </Data>
-                
                 <Data>
-                    {location.state.map((elem, idx) => {
+                    {detailDataHeader.map((elem, idx) => {
+                        return(
+                            <p key={idx}>{elem}</p>
+                        )
+                    })}
+                </Data>
+                <Data>
+                    {detailData_2.map((elem, idx) => {
                         return(
                             <p key={idx}>{elem}</p>
                         )
@@ -59,8 +83,14 @@ function MatchDetail() {
             </DataContainer>
 
             <TableContainer>
-                <MatchDeatilTable />
+                <MatchDeatilTable
+                data= {propDataSecond}/>
             </TableContainer>
+
+            <ChartContainer>
+                <MatchDetailChart
+                data= {propDataSecond} />
+            </ChartContainer>
         </Container>
     )
 }
@@ -69,7 +99,7 @@ export default MatchDetail
 
 const Data = styled.div`
     height: 50%;
-    width: 50%;
+    width: 40%;
     
     font-size: 5%;
 
@@ -95,10 +125,12 @@ const Container = styled.div`
 
 const DataContainer = styled.div`
     width: 95vw;
+
     display: flex;
+    justify-content: space-between;
 
     position: absolute;
-    bottom: 40%;
+    top: 35%;
     right: 0;
 
     border: 1px solid black;
@@ -136,13 +168,9 @@ const FlagContainer = styled.div`
     border: 1px solid black;
 `
 
-const Flag = styled.div`
+const Flag = styled.img`
     width: 30%;
     height: 50%;
-
-    display: flex;
-    justify-content: center;
-    align-items: center;
 
     border: 1px solid black;
 `
@@ -171,12 +199,12 @@ const Group = styled.div`
 
 const PredictBtn = styled.button`
     width: 30%;
-    height: 30%;
+    height: 25%;
     margin: 0;
     padding: 0;
 
     position: absolute;
-    top: 45%;
+    top: 50%;
     left: 35%;
 
     border: 1px solid black;
@@ -184,15 +212,32 @@ const PredictBtn = styled.button`
 
 const TableContainer = styled.div`
     width: 95vw;
-    height: 30%;
+    height: 30vh;
 
     display: flex;
     justify-content: space-between;
     align-items: center;
 
     position: absolute;
-    bottom: 6%;
+    bottom: 25%;
     right: 0;
+
+    border: 1px solid black;
+`
+
+const ChartContainer = styled.div`
+    width: 95vw;
+    height: 70vw;
+    margin-top: 75vh;
+    margin-bottom: 0;
+
+    /* display: flex;
+    justify-content: space-between;
+    align-items: center; */
+
+    /* position: absolute;
+    bottom: 15%;
+    right: 0; */
 
     border: 1px solid black;
 `

@@ -5,11 +5,28 @@ import MatchCountryCard from "../Components/MatchPage/MatchCountryCard"
 import MatchDate from "../Components/MatchPage/MatchDate"
 import Calendar from 'react-calendar';
 import moment from 'moment';
+import 'moment/locale/ko';
 import 'react-calendar/dist/Calendar.css';
 import axios from "axios"
 
 
 function MatchPage() {
+    const baseURL = "https://k7a202.p.ssafy.io/"
+
+    const axiosGet = async(subUrl) => {
+        const dataAxios = await axios
+        .get(baseURL + 'v1/' + subUrl, {
+            headers: {
+                'Content-Type': 'application/json',
+                },
+            })
+        await setDataDate(dataAxios.data)
+        }
+
+    const getDataDate = (date) => {
+        const convertedDate = date.split('-').join('')
+        return axiosGet('match/date/' + convertedDate)
+    }
     const thStyle={
         width: '100em',
         height: 'auto',
@@ -31,7 +48,6 @@ function MatchPage() {
         width: '100%',
     }
 
-    //const [matches, setMatches] = useState([])
     const header = [
         'id',
         'pk',
@@ -49,9 +65,10 @@ function MatchPage() {
     const [dataDate, setDataDate] = useState([])
 
     const onChangeTemp = (e) => {
+        const valueMoment = moment(e).format("YYYY-MM-DD")
+        getDataDate(valueMoment)
         onChange(e)
-        console.log(e) 
-        setDataDate(getDataDate(valueMoment))
+        console.log(dataDate)
         }
 
     const valueMoment = moment(value).format("YYYY-MM-DD")
@@ -375,26 +392,23 @@ function MatchPage() {
                 <StyledCalendarContainer>
                     <Calendar onChange={onChangeTemp} value={value} />
                 </StyledCalendarContainer>
-                <h1>{dataDate}</h1>
                 <h1>{valueMoment}</h1>
-                {countryMatches.map((match, index) => {
-                    if (match.start_time === valueMoment) {
+                {dataDate.map((match, index) => {
+                    if (match[1] === valueMoment) {
                     return (
                         <>
                         <MatchDate
-                        date={valueMoment}
-                        key={index}
-                        id={match.id}
-                        pk={match.pk}
-                        match_name={match.match_name}
-                        match_type={match.match_type}
-                        team1_pk={match.team1_pk}
-                        team2_pk={match.team2_pk}
-                        start_time={match.start_time}
-                        venue_pk={match.venue_pk}
-                        team1_score={match.team1_score}
-                        team2_score={match.team2_score}
-                        team1_group={match.team1_group}
+                            match_id = {match[0]}
+                            start_date={match[1]}
+                            start_time={match[2]}
+                            venue_name={match[3]}
+                            venue_address={match[4]}
+                            team1_country={match[5]}
+                            team1_logo={match[6]}
+                            team1_group={match[7]}
+                            team2_country={match[8]}
+                            team2_logo={match[9]}
+                            key={index}
                         />
                         </>
                     )
@@ -418,31 +432,6 @@ const BlankDiv = styled.div`
     height: 100%;
 `
 
-const baseURL = "https://k7a202.p.ssafy.io/"
 
-function axiosGet (subUrl) {
-    axios
-    .get(baseURL + 'v1/' + subUrl + '/', {
-        headers: {
-            'Content-Type': 'application/json',
-            },
-        })
-    .then(res => {
-        const responseData = res.data
-        console.log(responseData);
-        return (responseData)
-        })
-    .catch(err => {
-        console.log(err)
-        return ('error')
-        })
-    }
-
-const getDataDate = (date) => {
-    console.log(date)
-    const convertedDate = date.split('-').join('')
-    console.log(convertedDate);
-    return axiosGet('match/date/' + convertedDate)
-}
 
     // return axiosGet('match/date/' + convertedDate)
