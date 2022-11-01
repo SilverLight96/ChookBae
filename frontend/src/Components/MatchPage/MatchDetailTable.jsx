@@ -10,8 +10,8 @@ const MatchDeatilTable = (props) => {
         <StyledTable>
             <tbody>
                 <StyledTr>
-                    <StyledTh>국가</StyledTh>
                     <StyledTh>순위</StyledTh>
+                    <StyledTh>국가</StyledTh>
                     <StyledTh>승</StyledTh>
                     <StyledTh>무</StyledTh>
                     <StyledTh>패</StyledTh>
@@ -20,14 +20,14 @@ const MatchDeatilTable = (props) => {
                 </StyledTr>
                 {propData.map((data, index) => {
                     return(
-                        <StyledTr>
+                        <StyledTr key={index}>
                             <StyledTh>{data[0]}</StyledTh>
-                            <StyledTh>{index+1}</StyledTh>
                             <StyledTh>{data[1]}</StyledTh>
                             <StyledTh>{data[2]}</StyledTh>
                             <StyledTh>{data[3]}</StyledTh>
                             <StyledTh>{data[4]}</StyledTh>
                             <StyledTh>{data[5]}</StyledTh>
+                            <StyledTh>{data[6]}</StyledTh>
                         </StyledTr>
                     )
                 })}
