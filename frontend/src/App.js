@@ -10,8 +10,8 @@ import MainPage from './Routes/MainPage';
 import LoginPage from './Routes/LoginPage';
 import SignUpPage from './Routes/SignUpPage';
 import MatchPage from './Routes/MatchPage';
-import MatchCountryDetail from './Routes/MatchCountryDetail'
-import MatchDateDetail from './Routes/MatchDateDetail'
+// import MatchCountryDetail from './Routes/MatchCountryDetail'
+import MatchDetail from './Routes/MatchDetail'
 import ProfilePage from "./Routes/ProfilePage";
 import NavBar from "./Components/common/NavBar";
 import PredictionPage from "./Routes/PredictionPage";
@@ -37,8 +37,7 @@ function App() {
         </Route>
           <Route path="" element={<MainPage/>}/>
           <Route path="/Match" element={<MatchPage type='country'/>}/>
-          <Route path="/Match/Country" element={<MatchCountryDetail/>}/>
-          <Route path="/Match/Date" element={<MatchDateDetail/>}/>  
+          <Route path="/Match/Detail" element={<MatchDetail/>}/>
           <Route path="/accounts/activate" element={<ActivatePage/>}/>
       </Routes> 
     </BrowserRouter>
