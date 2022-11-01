@@ -21,7 +21,8 @@ export default function MatchDetailChart (props) {
     const options = {
         responsive: true,
         plugins: {
-            legned: {
+            legend: {
+                display: 'false',
                 position: 'top',
                 maxWidth: 10,
             },
@@ -42,9 +43,9 @@ export default function MatchDetailChart (props) {
 
     propData.map((datas, index) => {
         data.datasets.push({
-            label: datas[0],
-            data: [1,2,3,4,5],
-            // data: datas.slice(1),
+            label: datas[1],
+            // data: [1,2,3,4,5],
+            data: datas.slice(2),
             backgroundColor: colors[index]
         })
     })
