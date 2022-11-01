@@ -178,57 +178,34 @@ def logout(request):
 
 
 #회원정보수정
+#update user's password
 @api_view(['PATCH'])
 def update(request):
     User = get_user_model()
     user = get_object_or_404(User, nickname=request.data['nickname'])
     password = request.data.get('password')
-    new_nickname = request.data.get('new_nickname')
     new_password = request.data.get('new_password')
     new_password_confirm = request.data.get('new_password_confirm')
 
-    if request.user == user and user.check_password(password):
-        serializer = UserUpdateSerializer(user, data=request.data)
+    # if request.user == user and user.check_password(password):
+    # if request.user == user:
+    serializer = UserUpdateSerializer(user, data=request.data)
 
-        if serializer.is_valid(raise_exception=True):
+    if serializer.is_valid(raise_exception=True):
             me = serializer.save()
 
-
-        #비밀번호 변경
-        if new_password:
+    if new_password:
             if password == new_password or new_password != new_password_confirm:
                 return Response({'error: password mismatch'}, status.HTTP_400_BAD_REQUEST)
 
-            if len(password) < 8 or not re.findall('[a-z]', password) \
-            or not re.findall('[0-9]+', password) or not re.findall('[`~!@#$%^&*(),<.>/?]+', password):
-                return Response({'error: 비밀번호 형식이 맞지 않습니다. 영어, 숫자, 특수기호가 들어가야합니다.'}, status.HTTP_400_BAD_REQUEST)
+            if len(new_password) < 8 or len(new_password) > 20 or not re.findall('[a-z]', new_password) \
+                or not re.findall('[0-9]+', new_password) or not re.findall('[`~!@#$%^&*(),<.>/?]+', new_password):
+                return Response({'error: 비밀번호 형식이 맞지 않습니다.'}, status.HTTP_400_BAD_REQUEST)
 
             me.set_password(new_password)
             me.save()
-        
-        #닉네임 변경
-        if new_nickname:
-            nickname_check = re.findall('[a-z]', new_nickname)
-            nickname_check += re.findall('[A-Z]', new_nickname)
-            if len(new_nickname) < 2 or len(new_nickname) > 10 or not nickname_check or re.findall('[`~!@#$%^&*(),<.>/?]+', new_nickname):
-                return Response({'error: 닉네임 형식이 맞지 않습니다.'}, status.HTTP_400_BAD_REQUEST)
+    return Response(serializer.data)
 
-            if User.objects.filter(nickname=new_nickname).exists():
-                return Response({'error: 이미 존재하는 닉네임입니다.'}, status.HTTP_400_BAD_REQUEST)
-
-            me.nickname = new_nickname
-            me.save()
-
-        #프로필 이미지 수정
-        if request.FILES.get('profile_image'):
-            me.profile_image = request.FILES.get('profile_image')
-            me.save()
-
-        return Response(serializer.data)
-
-        
-    return Response({'error: 본인 인증 실패'}, status=status.HTTP_401_UNAUTHORIZED)
-    
 
 #마이페이지 정보: 나 자신의 정보를 담아서 react의 mypage로 정보를 보내줌
 @api_view(['GET'])
