@@ -10,10 +10,12 @@ from django.shortcuts import render
 from django.db.models import Q
 from rest_framework import status
 from rest_framework.response import Response
-from .Serializers import CardSerializer
+from .Serializers import CardSerializer,UserrankSerializer,goalrankSerializer
 from .models import User, Point, Venue, Team, Match, Player, PlayerCard, Prediction, Bet, EmailCert
 from .translation import venue_k, team_k, player_k, player_pos
 import pandas as pd
+from chookbae.settings import SECRET_KEY
+
 
 # Create your views here.
 
@@ -66,6 +68,9 @@ class matchpredict(APIView):
             
     @swagger_auto_schema(operation_id="승부 예측", operation_description="승부 예측하기", request_body=param)
     def post(self, request, format=None):
+        # token=request.COOKIES.get('jwt')
+        # pay=jwt.decode(token,SECRET_KEY, algorithms=['HS256'])
+        # user_id=pay['id']
         user_id=1
         ingredient = self.get_object(user_id,request.data['match_pk'],request.data['point'],request.data['predict'])
 
@@ -82,6 +87,9 @@ class predictinfo(APIView):
     id = openapi.Parameter('id', openapi.IN_PATH, description='match_id', required=True, type=openapi.TYPE_NUMBER)
     @swagger_auto_schema(operation_id="유저의 승부 예측 여부를 조회", operation_description="제공 받은 토큰 값을 기준으로 유저를 파악하고 해당 유저가 승부 예측을 했는지 확인한다", manual_parameters=[id])
     def get(self, request, id):
+        # token=request.COOKIES.get('jwt')
+        # pay=jwt.decode(token,SECRET_KEY, algorithms=['HS256'])
+        # user_id=pay['id']
         user_id=1
         try:
             predict=Prediction.objects.get(match_id=id ,user_id=user_id)
@@ -143,8 +151,11 @@ class card(APIView):
             if(team_id > 0):
                 card=Player.objects.filter(team_id=team_id).order_by('?').first()
             else :
-                card=Player.objects.order_by('?').first()     
+                card=Player.objects.order_by('?').first()   
 
+            find=PlayerCard.objects.filter(Q(player_id=card.id) & Q(user_id=user_id)).count()
+            if(find==0):
+                user.value+=card.value
             new_card=PlayerCard.objects.create(player_id=card, user_id=user)
             serializer = CardSerializer(card)
             c_list.append(serializer.data)
@@ -156,6 +167,9 @@ class card(APIView):
 
     @swagger_auto_schema(operation_id="카드 뽑기", operation_description="새로운 선수카드 뽑기", request_body=param)
     def post(self, request, format=None):
+        # token=request.COOKIES.get('jwt')
+        # pay=jwt.decode(token,SECRET_KEY, algorithms=['HS256'])
+        # user_id=pay['id']
         user_id=1
         gacha=self.get_object(user_id,request.data['team_id'],request.data['gacha_count'],request.data['point'])
 
@@ -170,6 +184,10 @@ class card(APIView):
         country = request.GET.get('country', None)
         if country is not None:
             team=Team.objects.get(country=country)
+        
+        # token=request.COOKIES.get('jwt')
+        # pay=jwt.decode(token,SECRET_KEY, algorithms=['HS256'])
+        # user_id=pay['id']
         user_id=1
 
         card=PlayerCard.objects.filter(user_id=user_id)
@@ -214,7 +232,21 @@ class combine(APIView):
 
         if card is None:
             return ('뽑을 선수가 없습니다.')
+    
+        find=PlayerCard.objects.filter(Q(player_id=card.id) & Q(user_id=user_id)).count()
+        if(find==0):
+           user.value+=card.value
 
+        firstfind=PlayerCard.objects.filter(Q(player_id=first.player_id.id) & Q(user_id=user_id)).count()
+        secondfind=PlayerCard.objects.filter(Q(player_id=second.player_id.id) & Q(user_id=user_id)).count()
+        
+
+        if(firstfind==1):
+            user.value-=first.player_id.value
+        if(secondfind==1):
+            user.value-=second.player_id.value
+
+        user.save()
         first.delete()
         second.delete()
         new_card=PlayerCard.objects.create(player_id=card, user_id=user)
@@ -223,6 +255,9 @@ class combine(APIView):
 
     @swagger_auto_schema(operation_id="카드 합성", operation_description="기존의 선수 합성하여 새 선수 뽑기", request_body=param)
     def post(self, request, format=None):
+        # token=request.COOKIES.get('jwt')
+        # pay=jwt.decode(token,SECRET_KEY, algorithms=['HS256'])
+        # user_id=pay['id']
         user_id=1
         comb=self.get_object(user_id,request.data['player_card_id1'],request.data['player_card_id2'])
 
@@ -231,6 +266,34 @@ class combine(APIView):
         else:
             return Response(comb,status=status.HTTP_200_OK)
 
+# 랭킹 조회 POST
+class rank(APIView):
+    param = openapi.Schema(type=openapi.TYPE_OBJECT, required=['type',],
+    properties={
+        'type': openapi.Schema(type=openapi.TYPE_STRING, description="랭킹의 타입"),
+        })
+
+    def get_object(self, type):
+        R_list=[]
+        if(type=='value'):
+            user=User.objects.all().order_by('-value')
+            for i in user:
+                serializer = UserrankSerializer(i)
+                R_list.append(serializer.data)
+            
+        elif(type=='player'):
+            player=Player.objects.all().order_by('-goal')
+            for i in player:
+                serializer=goalrankSerializer(i)
+                R_list.append(serializer.data)
+
+        return (R_list)   
+
+
+    @swagger_auto_schema(operation_id="랭킹 조회", operation_description="타입에 따라 보유하고 있는 포인트 혹은 보유하고 있는 선수의 가치 랭킹 조회", request_body=param)
+    def post(self, request, format=None):
+        rank=self.get_object(request.data['type'])
+        return Response(rank,status=status.HTTP_200_OK)
 
 
 
