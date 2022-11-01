@@ -19,6 +19,7 @@ function LoginPage() {
   const [cookies, setCookie] = useCookies(["token"]);
   const navigate = useNavigate();
   const setLogged = useSetRecoilState(loggedinState);
+  const [loginError, setLoginError] = useState();
 
   const {
     register,
@@ -46,6 +47,10 @@ function LoginPage() {
   const login = async () => {
     return await fetchData
       .post(userApis.LOGIN, userInfo)
+      .catch((error) => {
+        console.log(error.response.data);
+        setLoginError(error.response.data);
+      })
 
       .then((res) => {
         console.log(res.data);
@@ -85,6 +90,7 @@ function LoginPage() {
             />
             <Label htmlFor="email">이메일</Label>
             {errors.email && <small role="alert">{errors.email.message}</small>}
+            {loginError && <big role="alert">{loginError}</big>}
           </UserBox>
           <UserBox>
             <Input
@@ -284,6 +290,14 @@ const UserBox = styled.div`
     position: absolute;
     left: 0;
     bottom: 15px;
+  }
+  > big {
+    color: ${(props) => props.theme.colors.subRed};
+    font-size: 36px;
+    font-weight: bold;
+    position: absolute;
+    left: 0;
+    bottom: 160px;
   }
 `;
 

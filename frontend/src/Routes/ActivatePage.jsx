@@ -5,8 +5,7 @@ import styled from "styled-components";
 export default function ActivatePage() {
   return (
     <ActivateContainer>
-      <div>회원가입이 승인되었습니다.</div>
-      <div>로그인을 진행해 주세요.</div>
+      <div>이메일에서 회원가입을 승인해 주세요</div>
     </ActivateContainer>
   );
 }

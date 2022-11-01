@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import styled from "styled-components";
 import { useForm } from "react-hook-form";
 import { useRef } from "react";
@@ -11,8 +11,9 @@ import { keyframes } from "styled-components";
 export default function AccountPage() {
   const [userInfo, setUserInfo] = useState({
     image: "",
-    nickname: "",
-    password: "",
+    new_nickname: "",
+    new_password: "",
+    new_password_confirm: "",
   });
   const [duplicatedNickname, setDuplicatedNickname] = useState(false);
   const {
@@ -24,71 +25,34 @@ export default function AccountPage() {
   } = useForm({
     defaultValues: {
       image: "",
-      nickname: "",
-      password: "",
+      new_nickname: "",
+      new_password: "",
+      new_password_confirm: "",
     },
     mode: "onChange",
   });
 
   // 회원 정보 수정
   const onValid = (data) => {
-    if (duplicatedNickname) {
-      setError(
-        "nickname",
-        { message: REGISTER_MESSAGE.DUPLICATED_NIACKNAME },
-        { shouldFocus: true }
-      );
-      return;
-    }
     setUserInfo((prev) => ({ ...prev, ...data }));
   };
 
-  // 닉네임 중복 검사
-  const checkNickname = async (value) => {
-    if (
-      errors?.nickname?.type === "pattern" ||
-      !value ||
-      value.length < STANDARD.NAME_MIN_LENGTH
-    )
-      return;
-    try {
-      const response = await fetchData.get(
-        userApis.NICKNAME_DUPLICATE_CHECK_API(value)
-      );
-      if (response.status === 200) {
-        setDuplicatedNickname(false);
-      }
-    } catch {
-      setError(
-        "nickname",
-        { message: REGISTER_MESSAGE.DUPLICATED_ID },
-        { shouldFocus: true }
-      );
-      setDuplicatedNickname(true);
-    }
-  };
+  useEffect(() => {
+    (async () => {
+      try {
+        await updateuser();
+      } catch (err) {}
+    })();
+  }, [userInfo]);
+  console.log(userInfo);
 
-  const debounceCheckNickname = useMemo(
-    () => debounce(async (e) => await checkNickname(e.target.value), 1000),
-    []
-  );
-
-  const checkMemberInfo = async (value, url, setState, key, errorMessage) => {
-    if (!value || errors[key]) return;
-    try {
-      const response = await fetchData.get(url);
-      if (response.status === 200) {
-        setState(false);
-      }
-    } catch {
-      setError(key, { message: errorMessage }, { shouldFocus: true });
-      setState(true);
-    }
+  const updateuser = async () => {
+    return await fetchData.post(userApis.UPDATE_USER, userInfo);
   };
 
   // 비밀번호 확인
   const password = useRef({});
-  password.current = watch("password", "");
+  password.current = watch("new_password", "");
   return (
     <Wrapper>
       <LoginBox>
@@ -104,13 +68,13 @@ export default function AccountPage() {
           </ProfileImgContainer>
           <UserBox>
             <Input
-              name="nickname"
-              id="nickname"
+              name="nickname_new"
+              id="nickname_new"
               type="text"
               autoComplete="off"
               maxLength={STANDARD.NAME_MAX_LENGTH}
               minLength={STANDARD.NAME_MIN_LENGTH}
-              {...register("nickname", {
+              {...register("new_nickname", {
                 required: REGISTER_MESSAGE.REQUIRED_NICKNAME,
                 minLength: {
                   value: STANDARD.NAME_MIN_LENGTH,
@@ -124,7 +88,6 @@ export default function AccountPage() {
                   value: REGEX.NICKNAME,
                   message: REGISTER_MESSAGE.NICKNAME_STANDARD,
                 },
-                onChange: debounceCheckNickname,
               })}
               placeholder=" "
               required
@@ -136,12 +99,12 @@ export default function AccountPage() {
           </UserBox>
           <UserBox>
             <Input
-              name="password"
-              id="password"
+              name="new_password"
+              id="new_password"
               type="password"
               maxLength={STANDARD.ID_MAX_LENGTH}
               minLength={STANDARD.ID_MIN_LENGTH}
-              {...register("password", {
+              {...register("new_password", {
                 required: REGISTER_MESSAGE.REQUIRED_PASSWORD,
                 minLength: {
                   value: 8,
@@ -166,11 +129,11 @@ export default function AccountPage() {
           </UserBox>
           <UserBox>
             <Input
-              name="password-check"
-              id="password-check"
+              name="new_password_confirm"
+              id="new_password_confirm"
               type="password"
               placeholder=" "
-              {...register("passwordCheck", {
+              {...register("new_password_confirm", {
                 required: REGISTER_MESSAGE.REQUIRED_PASSWORD_CHECK,
                 validate: {
                   passwordMatch: (value) =>
