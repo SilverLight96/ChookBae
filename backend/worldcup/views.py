@@ -386,7 +386,7 @@ class MatchTable(APIView):
             new_table[i].insert(0, int(new_table[i][-1]))
             rank_table.append(new_table[i][:-2])
         
-        rank_table = sorted(rank_table, key=operator.itemgetter(4, 5))
+        rank_table = sorted(rank_table, key=operator.itemgetter(0))
         
         return Response(rank_table)
 
