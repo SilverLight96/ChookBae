@@ -3,16 +3,47 @@ import styled from "styled-components";
 
 export default function MyPredictionList() {
   const predictions = [
-    { id: 1, match: "한국vs이탈리아", date: "2022/10/17", result: "적중" },
-    { id: 2, match: "한국vs브라질", date: "2022/10/18", result: "미적중" },
-    { id: 3, match: "한국vs독일", date: "2022/10/19", result: "적중" },
-    { id: 4, match: "한국vs프랑스", date: "2022/10/20", result: "대기중" },
-    { id: 5, match: "한국vs영국", date: "2022/10/21", result: "미적중" },
-    { id: 6, match: "한국vs가나", date: "2022/10/22", result: "적중" },
-    { id: 7, match: "한국vs영국", date: "2022/10/21", result: "미적중" },
-    { id: 8, match: "한국vs가나", date: "2022/10/22", result: "적중" },
-    { id: 9, match: "한국vs영국", date: "2022/10/21", result: "미적중" },
-    { id: 10, match: "한국vs가나", date: "2022/10/22", result: "적중" },
+    // predict: 1 = 적중, 2 = 미적중, 3 = 대기중
+    {
+      id: 1,
+      match_id: "한국vs이탈리아",
+      bet_time: "2022/10/17",
+      predict: 1,
+    },
+    {
+      id: 2,
+      match_id: "한국vs브라질",
+      bet_time: "2022/10/18",
+      predict: 2,
+    },
+    { id: 3, match_id: "한국vs독일", bet_time: "2022/10/19", predict: 1 },
+    {
+      id: 4,
+      match_id: "한국vs프랑스",
+      bet_time: "2022/10/20",
+      predict: 3,
+    },
+    {
+      id: 5,
+      match_id: "한국vs영국",
+      bet_time: "2022/10/21",
+      predict: 3,
+    },
+    { id: 6, match_id: "한국vs가나", bet_time: "2022/10/22", predict: 3 },
+    {
+      id: 7,
+      match_id: "한국vs영국",
+      bet_time: "2022/10/21",
+      predict: 2,
+    },
+    { id: 8, match_id: "한국vs가나", bet_time: "2022/10/22", predict: 3 },
+    {
+      id: 9,
+      match_id: "한국vs영국",
+      bet_time: "2022/10/21",
+      predict: 2,
+    },
+    { id: 10, match_id: "한국vs가나", bet_time: "2022/10/22", predict: 2 },
   ];
 
   return (
@@ -27,10 +58,16 @@ export default function MyPredictionList() {
         {predictions.map((prediction, id) => {
           return (
             <PredictionBody key={prediction.id}>
-              <div>{prediction.match}</div>
-              <div>{prediction.date}</div>
-              <PredictionResult result={prediction.result}>
-                {prediction.result}
+              <div>{prediction.match_id}</div>
+              <div>{prediction.bet_time}</div>
+              <PredictionResult result={prediction.predict}>
+                {prediction.predict === 1 ? (
+                  <div>적중</div>
+                ) : prediction.predict === 2 ? (
+                  <div>미적중</div>
+                ) : (
+                  <div>대기중</div>
+                )}
               </PredictionResult>
             </PredictionBody>
           );
@@ -75,9 +112,9 @@ const PredictionBody = styled.div`
 const PredictionResult = styled.div`
   font-weight: bold;
   color: ${(props) =>
-    props.result === "미적중"
+    props.result === 2
       ? props.theme.colors.mainOrange
-      : props.result === "적중"
+      : props.result === 1
       ? props.theme.colors.pointBlue
       : props.theme.colors.pointBlack};
 `;

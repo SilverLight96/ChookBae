@@ -7,32 +7,32 @@ function MyPlayerCardList() {
   const [playerCards, setPlayerCards] = useState([
     {
       id: 1,
-      title: "손흥민",
-      image:
+      fullname: "손흥민",
+      player_image:
         "https://ichef.bbci.co.uk/news/624/cpsprodpb/4118/production/_119546661_gettyimages-1294130887.jpg.webp",
     },
     {
       id: 2,
-      title: "손흥민",
-      image:
+      fullname: "손흥민",
+      player_image:
         "https://ichef.bbci.co.uk/news/624/cpsprodpb/4118/production/_119546661_gettyimages-1294130887.jpg.webp",
     },
     {
       id: 3,
-      title: "손흥민",
-      image:
+      fullname: "손흥민",
+      player_image:
         "https://ichef.bbci.co.uk/news/624/cpsprodpb/4118/production/_119546661_gettyimages-1294130887.jpg.webp",
     },
     {
       id: 4,
-      title: "손흥민",
-      image:
+      fullname: "손흥민",
+      player_image:
         "https://ichef.bbci.co.uk/news/624/cpsprodpb/4118/production/_119546661_gettyimages-1294130887.jpg.webp",
     },
     {
       id: 5,
-      title: "손흥민",
-      image:
+      fullname: "손흥민",
+      player_image:
         "https://ichef.bbci.co.uk/news/624/cpsprodpb/4118/production/_119546661_gettyimages-1294130887.jpg.webp",
     },
   ]);
@@ -51,8 +51,8 @@ function MyPlayerCardList() {
       {playerCards.map((playerCard) => {
         return (
           <PlayerCard
-            title={playerCard.title}
-            image={playerCard.image}
+            title={playerCard.fullname}
+            image={playerCard.player_image}
             key={playerCard.id}
           />
         );
