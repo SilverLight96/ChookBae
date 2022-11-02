@@ -296,6 +296,19 @@ class rank(APIView):
         return Response(rank,status=status.HTTP_200_OK)
 
 
+# 그룹 정보 조회 GET
+class GroupInfo(APIView):
+    @swagger_auto_schema(operation_id="그룹 정보 조회", operation_description="url을 통해 그룹 정보 조회", responses={200: '조회 성공'})
+    def get(self, request):
+        teams = Team.objects.all().values('group', 'id', 'country', 'logo').order_by('group')
+        group_info = []
+        for t in teams:
+            team_name = team_k(t['id'])
+            curr_team = [t['group'], t['id'], team_name, t['logo']]
+            group_info.append(curr_team)
+        
+        return Response(group_info)
+
 
 # 경기 정보 조회 (국가별) GET
 class MatchInfoByTeam(APIView):

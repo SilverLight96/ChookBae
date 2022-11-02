@@ -55,7 +55,9 @@ def signup(request):
     if User.objects.filter(nickname=nickname):
         return Response({'닉네임 중복'}, status=status.HTTP_400_BAD_REQUEST)
 
-    if len(nickname) < 2 or len(nickname) > 10 or not nickname_check or re.findall('[`~!@#$%^&*(),<.>/?]+', nickname):
+    # if len(nickname) < 2 or len(nickname) > 10 or not nickname_check or re.findall('[`~!@#$%^&*(),<.>/?]+', nickname):
+    
+    if len(nickname) < 2 or len(nickname) > 10 or re.findall('[`~!@#$%^&*(),<.>/?]+', nickname):
         return Response({'닉네임 형식이 맞지 않습니다.'}, status.HTTP_400_BAD_REQUEST)
 
     if password != password_confirm:

@@ -13,12 +13,13 @@ import MatchPage from './Routes/MatchPage';
 // import MatchCountryDetail from './Routes/MatchCountryDetail'
 import MatchDetail from './Routes/MatchDetail'
 import ProfilePage from "./Routes/ProfilePage";
+import GachaPage from "./Routes/GachaPage";
 import NavBar from "./Components/common/NavBar";
 import PredictionPage from "./Routes/PredictionPage";
-import PlayerGetPage from "./Routes/PlayerGetPage";
 import AccountPage from "./Routes/AccountPage";
 import ActivatePage from "./Routes/ActivatePage";
 import ProtectedRoute from "./Routes/ProtectedRoute";
+import MixPage from "./Routes/MixPage";
 
 function App() {
   const loggedin = useRecoilValue(loggedinState);
@@ -33,7 +34,8 @@ function App() {
         <Route element={<ProtectedRoute loggedin={loggedin} />}>
           <Route path="/profile/*" element={<ProfilePage/>}/>
           <Route path="/prediction" element={<PredictionPage/>}/>
-          <Route path="/playerget" element={<PlayerGetPage/>}/>
+          <Route path="/gacha" element={<GachaPage/>}/>
+          <Route path="/mix" element={<MixPage/>}/>
         </Route>
           <Route path="" element={<MainPage/>}/>
           <Route path="/Match" element={<MatchPage type='country'/>}/>

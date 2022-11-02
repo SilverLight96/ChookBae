@@ -30,7 +30,7 @@ const BestCardContainer = styled.div`
   align-items: center;
   width: 90%;
   height: 91%;
-  border-radius: 20px;
+  border-radius: 5px;
   box-shadow: 5px 5px 15px 1px black;
   overflow: hidden;
   &:hover {
@@ -42,7 +42,7 @@ const BestCardContainer = styled.div`
 const Image = styled.img`
   width: 100%;
   height: 100%;
-  border-radius: 20px;
+  border-radius: 5px;
   object-fit: cover !important;
 `;
 
@@ -59,8 +59,8 @@ const Title = styled.div`
   font-style: normal;
   color: ${(props) => props.theme.colors.white};
   text-align: center;
-  border-bottom-left-radius: 20px;
-  border-bottom-right-radius: 20px;
+  border-bottom-left-radius: 5px;
+  border-bottom-right-radius: 5px;
   position: absolute;
   bottom: 0px;
 `;
