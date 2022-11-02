@@ -22,29 +22,29 @@ from chookbae.settings import SECRET_KEY
 # 승부 예측 POST
  
 class matchpredict(APIView):
-    param = openapi.Schema(type=openapi.TYPE_OBJECT, required=['match_pk', 'point', 'predict'],
+    param = openapi.Schema(type=openapi.TYPE_OBJECT, required=['match_id', 'point', 'predict'],
     properties={
-        'match_pk': openapi.Schema(type=openapi.TYPE_NUMBER, description="경기 번호"),
+        'match_id': openapi.Schema(type=openapi.TYPE_NUMBER, description="경기 번호"),
         'point': openapi.Schema(type=openapi.TYPE_NUMBER, description="배팅 포인트"),
         'predict': openapi.Schema(type=openapi.TYPE_NUMBER, description="승부 예측"),
         })
 
     @transaction.atomic()
-    def get_object(self,user_id, match_pk, point, predict):
+    def get_object(self,user_id, match_id, point, predict):
 
         today=datetime.datetime.now()+datetime.timedelta(minutes=5)
 
         
-        if Match.objects.filter(Q(id=match_pk) &Q(start_date=today.date(), start_time__lte=today.time())) :
+        if Match.objects.filter(Q(id=match_id) &Q(start_date=today.date(), start_time__lte=today.time())) :
             return ('예측 가능한 시간이 초과되었습니다.')
 
-        match=Match.objects.get(id=match_pk)
+        match=Match.objects.get(id=match_id)
         user=User.objects.get(id=user_id)
         if(user.points<point):
             return ('보유하고 있는 포인트를 확인해 주세요.')
              
         try:
-            pre=Prediction.objects.get(match_id=match_pk,user_id=1)
+            pre=Prediction.objects.get(match_id=match_id,user_id=1)
             return ('이미 예측을 완료한 경기입니다.')
            
         except Prediction.DoesNotExist:
@@ -55,11 +55,11 @@ class matchpredict(APIView):
            
 
         try:  
-            match_num=Bet.objects.get(id=match_pk)
+            match_num=Bet.objects.get(id=match_id)
         except Bet.DoesNotExist:
             bet=Bet.objects.create(id=match, win=0, draw=0, lose=0)
             
-        bet=Bet.objects.get(id=match_pk)
+        bet=Bet.objects.get(id=match_id)
         
         if(predict==0):
             bet.win+=point
@@ -78,7 +78,7 @@ class matchpredict(APIView):
         # pay=jwt.decode(token,SECRET_KEY, algorithms=['HS256'])
         # user_id=pay['id']
         user_id=1
-        ingredient = self.get_object(user_id,request.data['match_pk'],request.data['point'],request.data['predict'])
+        ingredient = self.get_object(user_id,request.data['match_id'],request.data['point'],request.data['predict'])
 
         #print(request.META.get('HTTP_AUTHORIZATION'))
         print(ingredient)
