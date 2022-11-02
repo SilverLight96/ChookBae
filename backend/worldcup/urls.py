@@ -16,4 +16,6 @@ urlpatterns = [
     path('match/detail/<int:id>', views.MatchDetail.as_view()),
     path('match/table/<str:id>', views.MatchTable.as_view()),
     path('match/teaminfo/<int:id>', views.TeamInfo.as_view()),
+
+    path('player/datatest', views.PlayerTest.as_view()),
 ]

@@ -13,6 +13,7 @@ from rest_framework.response import Response
 from .Serializers import CardSerializer,UserrankSerializer,goalrankSerializer
 from .models import User, Point, Venue, Team, Match, Player, PlayerCard, Prediction, Bet, EmailCert
 from .translation import venue_k, team_k, player_k, player_pos
+from .playervaluesetup import value_p
 import pandas as pd
 from chookbae.settings import SECRET_KEY
 
@@ -437,3 +438,27 @@ class TeamInfo(APIView):
             team_info.append([fullnameKR, p.fullname, position, p.number])
         
         return Response(team_info)
+
+
+# 선수 시세 변동 알고리즘
+class PlayerTest(APIView):
+    @swagger_auto_schema(operation_id="선수 스탯 테스트", operation_description="선수 스탯 테스트", responses={200: '조회 성공'})
+    def get(self, request):
+        # 선수 기록 수정 코드 (테스트)
+        player = Player.objects.get(id=48)
+        # player.goal += 1      # 1골 추가
+        # player.run_time += 90   # 출장시간 추가
+        # player.save()      # DB 업데이트
+        
+        # 선수 시세 설정 코드
+        players = Player.objects.all()
+        for player in players:
+            # 초기값 설정하기 (소속 국가의 피파랭킹, 소속 팀이 속한 리그)
+            init_value = 100 * (100 - team_k(player.team_id.id)[1]) * value_p(player.current_team)
+            
+            # 월드컵 성적으로 시세 조정하기
+            goal, assist, yellow, red, runtime = player.goal, player.assist, player.yellow_card, player.red_card, player.run_time
+            player.value = init_value * (1 + goal * 0.3) * (1 + assist * 0.1) * (1 - yellow * 0.05) * (1 - red * 0.2) * (1 + runtime * 0.01)
+            player.save()
+
+        return Response("success")
