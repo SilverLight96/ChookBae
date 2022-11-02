@@ -6,7 +6,7 @@ const { persistAtom } = recoilPersist();
 
 export const loggedinState = atom({
   key: "loggedinState",
-  default: getCookie('token') ? true : false,
+  default: getCookie('jwt') ? true : false,
 });
 
 export const myInformation = atom({

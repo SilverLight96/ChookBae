@@ -16,7 +16,7 @@ function LoginPage() {
     email: "",
     password: "",
   });
-  const [cookies, setCookie] = useCookies(["token"]);
+  // const [cookies, setCookie] = useCookies(["token"]);
   const navigate = useNavigate();
   const setLogged = useSetRecoilState(loggedinState);
   const [loginError, setLoginError] = useState();
@@ -50,7 +50,7 @@ function LoginPage() {
       .post(userApis.LOGIN, userInfo)
       .then((res) => {
         console.log(res);
-        setCookie("token", res.data.jwt);
+        // setCookie("token", res.data.jwt);
         setLogged(true);
         navigate("/");
       })
@@ -71,7 +71,7 @@ function LoginPage() {
   const onValid = (data) => {
     setUserInfo((prev) => ({ ...prev, ...data }));
   };
-  console.log(cookies);
+  // console.log(cookies);
   console.log(userInfo);
   return (
     <Wrapper>

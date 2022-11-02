@@ -1,9 +1,44 @@
-import React from "react";
+import React, { useState } from "react";
 import styled, { keyframes } from "styled-components";
 import { NavLink } from "react-router-dom";
 import { Keyframes } from "styled-components";
+import Modal from "../Components/common/Modal";
+import { fetchData } from "../utils/apis/api";
 
 function GachaPage() {
+  const [isGacha, setIsGacha] = useState({
+    team_id: "",
+    gacha_count: 0,
+    point: 0,
+  });
+
+  const [gachaResult, setGachaResult] = useState(
+    {
+      card_img: "",
+      player_name: "",
+      value: 0,
+    },
+    {
+      card_img: "",
+      player_name: "",
+      value: 0,
+    },
+    {
+      card_img: "",
+      player_name: "",
+      value: 0,
+    }
+  );
+  const [isModal, setIsModal] = useState(false);
+  const ModalHandler = (gachacards) => {};
+  const getGacha = async (url) => {
+    const response = await fetchData.post(url, isGacha).then((res) => {
+      console.log(res);
+      setGachaResult(res);
+    });
+    return response;
+  };
+
   return (
     <Wrapper>
       <ButtonContainer>
@@ -27,10 +62,20 @@ function GachaPage() {
         </GachaCardContainer>
 
         <GachaButtonContainer>
-          <button>1회 뽑기</button>
+          {/* <button onClick={oneGacha}>1회 뽑기</button> */}
           <button>10회 뽑기</button>
         </GachaButtonContainer>
       </GachaMain>
+      <Modal open={isModal} close={ModalHandler}>
+        <p>가차 1회 뽑기</p>
+        {gachaResult.map((gachacard) => {
+          <div>
+            <div>{gachacard.card_img}</div>
+            <div>{gachacard.player_name}</div>
+            <div>{gachacard.value}</div>
+          </div>;
+        })}
+      </Modal>
     </Wrapper>
   );
 }

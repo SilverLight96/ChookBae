@@ -6,7 +6,7 @@ export const instance = axios.create({
   // baseURL: "http://localhost:8000",
   headers: {
     'Content-Type': 'application/json',
-    'Authorization' : `${getCookie("token")}`,
+    // 'Authorization' : `${getCookie("token")}`,
   },
 });
 
