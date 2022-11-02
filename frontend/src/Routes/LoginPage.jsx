@@ -20,6 +20,7 @@ function LoginPage() {
   const navigate = useNavigate();
   const setLogged = useSetRecoilState(loggedinState);
   const [loginError, setLoginError] = useState();
+  const [isError, setIsError] = useState(false);
 
   const {
     register,
@@ -47,18 +48,25 @@ function LoginPage() {
   const login = async () => {
     return await fetchData
       .post(userApis.LOGIN, userInfo)
-      .catch((error) => {
-        console.log(error.response.data);
-        setLoginError(error.response.data);
-      })
-
       .then((res) => {
         console.log(res.data);
         setCookie("token", res.data.jwt);
         setLogged(true);
         navigate("/");
+      })
+      .catch((error) => {
+        console.log(error.response.data);
+        setLoginError(error.response.data);
       });
   };
+
+  useEffect(
+    (prev) => {
+      setIsError(!prev);
+    },
+    [loginError]
+  );
+  console.log(isError);
 
   const onValid = (data) => {
     setUserInfo((prev) => ({ ...prev, ...data }));
@@ -90,7 +98,6 @@ function LoginPage() {
             />
             <Label htmlFor="email">이메일</Label>
             {errors.email && <small role="alert">{errors.email.message}</small>}
-            {loginError && <big role="alert">{loginError}</big>}
           </UserBox>
           <UserBox>
             <Input
@@ -293,11 +300,13 @@ const UserBox = styled.div`
   }
   > big {
     color: ${(props) => props.theme.colors.subRed};
-    font-size: 36px;
+    font-size: 26px;
     font-weight: bold;
     position: absolute;
     left: 0;
-    bottom: 160px;
+    bottom: 250px;
+    text-align: center;
+    margin: auto;
   }
 `;
 

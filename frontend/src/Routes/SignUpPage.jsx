@@ -58,6 +58,8 @@ function SignUpPage() {
         navigate("/accounts/activate");
       });
   };
+
+  console.log(userInfo);
   return (
     <Wrapper>
       <LoginBox>
