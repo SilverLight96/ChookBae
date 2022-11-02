@@ -44,7 +44,7 @@ INSTALLED_APPS = [
     'worldcup',
     'accounts',
     'rest_framework',
-    
+    # 'rest_framework_simplejwt',
     # 'django.contrib.sites',
     # 'allauth.account',
     # 'allauth.socialaccount',
@@ -63,6 +63,7 @@ INSTALLED_APPS = [
 ]
 SITE_ID = 1
 AUTH_USER_MODEL = 'accounts.User'
+
 MIDDLEWARE = [
     'corsheaders.middleware.CorsMiddleware',  # 가능한 한 위에 배치
     'django.middleware.security.SecurityMiddleware',
@@ -73,6 +74,27 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
+# REST_FRAMEWORK = {
+#     'DEFAULT_PERMISSION_CLASSES': (
+#         'rest_framework.permissions.IsAuthenticated',  # 인증된 요청인지 확인
+#         'rest_framework.permissions.IsAdminUser',  # 관리자만 접근 가능
+#         'rest_framework.permissions.AllowAny',  # 누구나 접근 가능
+#     ),
+#     'DEFAULT_AUTHENTICATION_CLASSES': (
+#         'rest_framework_simplejwt.authentication.JWTAuthentication',  # JWT를 통한 인증방식 사용
+#     ),
+# }
+REST_USE_JWT = True
+
+
+from datetime import timedelta
+SIMPLE_JWT = {
+    'SIGNING_KEY': SECRET_KEY,
+    'ACCESS_TOKEN_LIFETIME': timedelta(hours=1),
+    'REFRESH_TOKEN_LIFETIME': timedelta(days=7),
+    'ROTATE_REFRESH_TOKENS': False,
+    'BLACKLIST_AFTER_ROTATION': True,
+}
 
 #CORS 허용
 CORS_ALLOW_ALL_ORIGINS = True
