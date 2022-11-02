@@ -1,9 +1,9 @@
-import React, { useRef, useState, useMemo, useEffect } from "react";
+import React, { useRef, useState, useMemo } from "react";
 import styled from "styled-components";
 import { Route, Link, useLocation, useNavigate } from 'react-router-dom';
-import axios from "axios"
+import axios from 'axios'
 
-function MatchDate(props) {
+function MatchData(props) {
     const navigate = useNavigate()
 
     const baseURL = "https://k7a202.p.ssafy.io/"
@@ -68,7 +68,6 @@ function MatchDate(props) {
         navigate('/Match/Detail', {state})
     }
 
-    console.log(props);
 
     return (
         <>
@@ -79,23 +78,28 @@ function MatchDate(props) {
                 </TextDiv>
 
                 <FlagDiv>
-                    <Flag src={props.team1_logo}/>
+                    <FlagContainer>                    
+                        <Flag src={props.team1_logo}/>
+                        <FlagName><p>{props.team1_country}</p></FlagName>
+                    </FlagContainer>
                     <Group>Group {props.team1_group}</Group>
-                    <Flag src={props.team2_logo} />
+                    <FlagContainer>                    
+                        <Flag src={props.team2_logo} />
+                        <FlagName><p>{props.team2_country}</p></FlagName>
+                    </FlagContainer>
                 </FlagDiv>
         </StyledCard>
         </>
     )
 }
 
-export default MatchDate
+export default MatchData
 
 const StyledCard = styled.div`
-    height: 15vh;
+    height: 20vh;
     width: 90vw;
     margin-left: auto;
     margin-right: auto;
-    margin-bottom: 1vh;
 
     position: relative;
 
@@ -125,14 +129,40 @@ const FlagDiv = styled.div`
     justify-content: space-between;
 
     position: absolute;
-    bottom: 0;
+    bottom: 15%;
 
     border: 1px solid black;
 `
 
-const Flag = styled.img`
-    height: 10vh;
+const FlagContainer = styled.div`
+    height: 13vh;
     width: 30vw;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+
+    border: 1px solid black;
+
+`
+
+const Flag = styled.img`
+    height: 80%;
+    width: 80%;
+
+    border: 1px solid black;
+
+`
+
+const FlagName = styled.div`
+    height: 20%;
+    width: 100%;
+    font-size: 5%;
+    text-align: center;
+
+    border: 1px solid black;
+
 `
 
 const Group = styled.p`
