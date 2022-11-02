@@ -10,7 +10,7 @@ from django.shortcuts import render
 from django.db.models import Q
 from rest_framework import status
 from rest_framework.response import Response
-from .Serializers import CardSerializer,UserrankSerializer,goalrankSerializer
+from .Serializers import CardSerializer,UserrankSerializer,goalrankSerializer,matchidSerializer
 from .models import User, Point, Venue, Team, Match, Player, PlayerCard, Prediction, Bet, EmailCert
 from .translation import venue_k, team_k, player_k, player_pos
 from .playervaluesetup import value_p
@@ -23,29 +23,29 @@ from chookbae.settings import SECRET_KEY
 # 승부 예측 POST
  
 class matchpredict(APIView):
-    param = openapi.Schema(type=openapi.TYPE_OBJECT, required=['match_pk', 'point', 'predict'],
+    param = openapi.Schema(type=openapi.TYPE_OBJECT, required=['match_id', 'point', 'predict'],
     properties={
-        'match_pk': openapi.Schema(type=openapi.TYPE_NUMBER, description="경기 번호"),
+        'match_id': openapi.Schema(type=openapi.TYPE_NUMBER, description="경기 번호"),
         'point': openapi.Schema(type=openapi.TYPE_NUMBER, description="배팅 포인트"),
         'predict': openapi.Schema(type=openapi.TYPE_NUMBER, description="승부 예측"),
         })
 
     @transaction.atomic()
-    def get_object(self,user_id, match_pk, point, predict):
+    def get_object(self,user_id, match_id, point, predict):
 
         today=datetime.datetime.now()+datetime.timedelta(minutes=5)
 
         
-        if Match.objects.filter(Q(id=match_pk) &Q(start_date=today.date(), start_time__lte=today.time())) :
+        if Match.objects.filter(Q(id=match_id) &Q(start_date=today.date(), start_time__lte=today.time())) :
             return ('예측 가능한 시간이 초과되었습니다.')
 
-        match=Match.objects.get(id=match_pk)
+        match=Match.objects.get(id=match_id)
         user=User.objects.get(id=user_id)
         if(user.points<point):
             return ('보유하고 있는 포인트를 확인해 주세요.')
              
         try:
-            pre=Prediction.objects.get(match_id=match_pk,user_id=1)
+            pre=Prediction.objects.get(match_id=match_id,user_id=1)
             return ('이미 예측을 완료한 경기입니다.')
            
         except Prediction.DoesNotExist:
@@ -56,11 +56,11 @@ class matchpredict(APIView):
            
 
         try:  
-            match_num=Bet.objects.get(id=match_pk)
+            match_num=Bet.objects.get(id=match_id)
         except Bet.DoesNotExist:
             bet=Bet.objects.create(id=match, win=0, draw=0, lose=0)
             
-        bet=Bet.objects.get(id=match_pk)
+        bet=Bet.objects.get(id=match_id)
         
         if(predict==0):
             bet.win+=point
@@ -79,7 +79,7 @@ class matchpredict(APIView):
         # pay=jwt.decode(token,SECRET_KEY, algorithms=['HS256'])
         # user_id=pay['id']
         user_id=1
-        ingredient = self.get_object(user_id,request.data['match_pk'],request.data['point'],request.data['predict'])
+        ingredient = self.get_object(user_id,request.data['match_id'],request.data['point'],request.data['predict'])
 
         #print(request.META.get('HTTP_AUTHORIZATION'))
         print(ingredient)
@@ -87,6 +87,25 @@ class matchpredict(APIView):
             return Response(ingredient,status=status.HTTP_200_OK)
         else :
             return Response({'error' :ingredient},status=status.HTTP_400_BAD_REQUEST)
+
+#승부 예측 경기 리스트 GET
+class predictlist(APIView):
+    date = openapi.Parameter('id', openapi.IN_PATH, description='date in YYYYMMDD', required=True, type=openapi.TYPE_NUMBER)
+    @swagger_auto_schema(operation_id="경기 정보 조회 (날짜별)", operation_description="날짜 입력으로 경기 조회 (날짜양식: YYYYMMDD)", manual_parameters=[id])
+    def get(self, request, id):
+        match_list=[]
+        id=str(id)
+        match_date = datetime.datetime(int(id[:4]), int(id[4:6]), int(id[6:8]))
+
+        matches = Match.objects.filter(start_date=match_date)
+        for i in matches:
+            serializer = matchidSerializer(i)
+            match_list.append(serializer.data)
+        
+        print(match_list)
+        return Response(match_list,status=status.HTTP_200_OK)
+
+
         
 
 #승부 예측 여부 GET
