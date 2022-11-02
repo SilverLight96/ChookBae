@@ -1,12 +1,14 @@
 import styled from "styled-components";
 
-function Modal(props) {
+function GachaModal(props) {
   const { open, close, title } = props;
   return (
     <div>
       {open ? (
         <Background onClick={close}>
-          <section onClick={(e) => e.stopPropagation()}>
+          <section
+          //   onClick={(e) => e.stopPropagation()}
+          >
             <main>{props.children}</main>
           </section>
         </Background>
@@ -37,4 +39,4 @@ const Background = styled.div`
     }
   }
 `;
-export default Modal;
+export default GachaModal;

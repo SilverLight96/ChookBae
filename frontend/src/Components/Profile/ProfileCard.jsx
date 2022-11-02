@@ -11,7 +11,8 @@ function ProfileCard() {
 
   const handleLogout = () => {
     setLoggedin(false);
-    removeCookie("token");
+    removeCookie("jwt");
+    removeCookie("refresh_token");
     navigate("/");
   };
 
