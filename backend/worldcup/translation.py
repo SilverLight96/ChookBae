@@ -56,7 +56,7 @@ def team_k(id):
     ]
     for kt in k_team:
         if kt["id"] == id:
-            return (kt["countryNameKR"], kt["FIFA_rank"])
+            return [kt["countryNameKR"], kt["FIFA_rank"]]
 
 
 ### 선수 포지션
