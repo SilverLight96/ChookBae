@@ -1,3 +1,4 @@
+from time import time
 from django.shortcuts import get_object_or_404
 from django.contrib.auth import get_user_model
 from django.shortcuts import render, redirect
@@ -14,6 +15,9 @@ from django.core.mail import EmailMessage
 from .tokens import account_activation_token
 from django.utils.encoding import force_bytes, force_text
 from django.contrib import auth
+from rest_framework_simplejwt.tokens import RefreshToken
+from django.contrib.auth.models import update_last_login
+from django.utils import timezone
 
 from chookbae.settings import SECRET_KEY
 from .serializers import (
@@ -55,7 +59,9 @@ def signup(request):
     if User.objects.filter(nickname=nickname):
         return Response({'닉네임 중복'}, status=status.HTTP_400_BAD_REQUEST)
 
-    if len(nickname) < 2 or len(nickname) > 10 or not nickname_check or re.findall('[`~!@#$%^&*(),<.>/?]+', nickname):
+    # if len(nickname) < 2 or len(nickname) > 10 or not nickname_check or re.findall('[`~!@#$%^&*(),<.>/?]+', nickname):
+    
+    if len(nickname) < 2 or len(nickname) > 10 or re.findall('[`~!@#$%^&*(),<.>/?]+', nickname):
         return Response({'닉네임 형식이 맞지 않습니다.'}, status.HTTP_400_BAD_REQUEST)
 
     if password != password_confirm:
@@ -138,7 +144,8 @@ def login(request):
         return Response({'이메일 인증을 해주세요.'}, status=status.HTTP_400_BAD_REQUEST)
 
     # 토큰 생성
-
+    user.last_login =  timezone.localtime()
+    user.save(update_fields=['last_login'])
     payload = {
       'id' : user.id, # 유저의 id
       'exp' : datetime.datetime.now() + datetime.timedelta(minutes=60), # 토큰 유효기간 60분
@@ -152,17 +159,16 @@ def login(request):
         'jwt':token
     }
     return res
-
 #로그인 유지
-@api_view(['GET'])
-def check(request):
-    token_receive = request.COOKIES.get('jwt')
-    try:
-        payload = jwt.decode(token_receive, SECRET_KEY, algorithms=['HS256'])
-        user = User.objects.get(id=payload['id'])
-        return Response({'id': user.id, 'nickname': user.nickname, 'email': user.email})
-    except jwt.ExpiredSignatureError:
-        return Response({'error': '로그인 시간이 만료되었습니다.'}, status=status.HTTP_400_BAD_REQUEST)
+# @api_view(['GET'])
+# def check(request):
+#     token_receive = request.COOKIES.get('jwt')
+#     try:
+#         payload = jwt.decode(token_receive, SECRET_KEY, algorithms=['HS256'])
+#         user = User.objects.get(id=payload['id'])
+#         return Response({'id': user.id, 'nickname': user.nickname, 'email': user.email})
+#     except jwt.ExpiredSignatureError:
+#         return Response({'error': '로그인 시간이 만료되었습니다.'}, status=status.HTTP_400_BAD_REQUEST)
 
 
 # 토큰을 이용해 로그아웃
@@ -181,20 +187,28 @@ def logout(request):
 #update user's password
 @api_view(['PATCH'])
 def update(request):
-    User = get_user_model()
-    user = get_object_or_404(User, nickname=request.data['nickname'])
-    password = request.data.get('password')
-    new_password = request.data.get('new_password')
-    new_password_confirm = request.data.get('new_password_confirm')
+    # User = get_user_model()
+    # user = get_object_or_404(User, nickname=request.data['nickname'])
+    #토큰 송신
+    token_receive = request.META.get('HTTP_AUTHORIZATION')
+    # token_receive = request.COOKIES.get('jwt')
+    try:
+        payload = jwt.decode(token_receive, SECRET_KEY, algorithms=['HS256'])
+        user = User.objects.get(id=payload['id'])
+        #토큰 값의 유저 닉네임을 변경
+        user.nickname = request.data['nickname']
+        user.save()
+        password = request.data.get('password')
+        new_password = request.data.get('new_password')
+        new_password_confirm = request.data.get('new_password_confirm')
 
-    # if request.user == user and user.check_password(password):
-    # if request.user == user:
-    serializer = UserUpdateSerializer(user, data=request.data)
+ 
+        serializer = UserUpdateSerializer(user, data=request.data)
 
-    if serializer.is_valid(raise_exception=True):
+        if serializer.is_valid(raise_exception=True):
             me = serializer.save()
 
-    if new_password:
+        if new_password:
             if password == new_password or new_password != new_password_confirm:
                 return Response({'password mismatch'}, status.HTTP_400_BAD_REQUEST)
 
@@ -204,7 +218,11 @@ def update(request):
 
             me.set_password(new_password)
             me.save()
-    return Response(serializer.data)
+        return Response({'id': user.id, 'nickname': user.nickname, 'email': user.email,'password':user.password},status=status.HTTP_200_OK)
+    except jwt.ExpiredSignatureError:
+        return Response({'error': '토큰이 유효하지 않습니다.'}, status=status.HTTP_400_BAD_REQUEST)
+
+    
 
 
 #마이페이지 정보: 나 자신의 정보를 담아서 react의 mypage로 정보를 보내줌
@@ -213,3 +231,13 @@ def mypage(request):
     me = get_object_or_404(User, nickname=request.user.nickname)
     if request.user == me:
         return render(request,'k7a202.p.ssafy.io/mypage',{'me':me})
+
+
+#worldcup app에서 현재 나의 보유 선수 조회
+# @api_view(['GET'])
+# def myplayer(request):
+#     me = get_object_or_404(User, nickname=request.user.nickname)
+#     if request.user == me:
+#         myplayers = me.player.all()
+#         serializer = PlayerSerializer(myplayers, many=True)
+#         return Response(serializer.data)
