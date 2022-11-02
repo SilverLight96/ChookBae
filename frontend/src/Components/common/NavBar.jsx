@@ -25,7 +25,7 @@ function NavBar() {
           <img src={logo} alt="메인 로고" />
         </NavLogo>
       </Link>
-      <Link to="/playerget">
+      <Link to="/gacha">
         <NavButton>
           <GiCardRandom size="40px" color="#E5E5E5" />
         </NavButton>
