@@ -10,6 +10,7 @@ urlpatterns = [
     path('card', views.card.as_view()),
     path('card/combine', views.combine.as_view()),
     path('rank', views.rank.as_view()),
+    path('match/group', views.GroupInfo.as_view()),
     path('match/team/<int:id>', views.MatchInfoByTeam.as_view()),
     path('match/date/<int:id>', views.MatchInfoByDate.as_view()),
     path('match/detail/<int:id>', views.MatchDetail.as_view()),
