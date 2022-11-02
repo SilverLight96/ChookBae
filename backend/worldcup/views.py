@@ -32,8 +32,14 @@ class matchpredict(APIView):
     @transaction.atomic()
     def get_object(self,user_id, match_pk, point, predict):
 
+        today=datetime.datetime.now()+datetime.timedelta(minutes=5)
+
+        
+        if Match.objects.filter(Q(id=match_pk) &Q(start_date=today.date(), start_time__lte=today.time())) :
+            return ('예측 가능한 시간이 초과되었습니다.')
+
         match=Match.objects.get(id=match_pk)
-        user=User.objects.get(id=1)
+        user=User.objects.get(id=user_id)
         if(user.points<point):
             return ('보유하고 있는 포인트를 확인해 주세요.')
              
@@ -87,15 +93,25 @@ class predictinfo(APIView):
     id = openapi.Parameter('id', openapi.IN_PATH, description='match_id', required=True, type=openapi.TYPE_NUMBER)
     @swagger_auto_schema(operation_id="유저의 승부 예측 여부를 조회", operation_description="제공 받은 토큰 값을 기준으로 유저를 파악하고 해당 유저가 승부 예측을 했는지 확인한다", manual_parameters=[id])
     def get(self, request, id):
+
+        today=datetime.datetime.now()+datetime.timedelta(minutes=5)
+
+        
+        if Match.objects.filter(Q(id=id) &Q(start_date=today.date(), start_time__lte=time.time())) :
+            return Response({False},status=status.HTTP_200_OK)
+
+        if not Match.objects.filter(id=id) :
+            return Response({False},status=status.HTTP_400_BAD_REQUEST)
+
         # token=request.COOKIES.get('jwt')
         # pay=jwt.decode(token,SECRET_KEY, algorithms=['HS256'])
         # user_id=pay['id']
         user_id=1
         try:
             predict=Prediction.objects.get(match_id=id ,user_id=user_id)
-            return Response({True}, status=status.HTTP_200_OK)
-        except Prediction.DoesNotExist:
             return Response({False}, status=status.HTTP_200_OK)
+        except Prediction.DoesNotExist:
+            return Response({True}, status=status.HTTP_200_OK)
         except Prediction.MultipleObjectsReturned:
             return Response({False}, status=status.HTTP_400_BAD_REQUEST)
 
@@ -190,7 +206,7 @@ class card(APIView):
         # user_id=pay['id']
         user_id=1
 
-        card=PlayerCard.objects.filter(user_id=user_id)
+        card=PlayerCard.objects.filter(user_id=user_id).order_by('player_id')
 
         for i in card:
             C=Player.objects.get(id=i.player_id.id)
@@ -198,6 +214,7 @@ class card(APIView):
                 if(C.team_id != team):
                     continue
             serializer = CardSerializer(C)
+            
             c_list.append(serializer.data)
         
         return Response(c_list)       
