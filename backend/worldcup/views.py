@@ -383,8 +383,8 @@ class MatchDetail(APIView):
     def get(self, request, id):
         match = Match.objects.get(id=id)
         venue_name, address = venue_k(match.venue_id.id)
-        team1_name, team1_rank = team_k(match.team1_id.id)
-        team2_name, team2_rank = team_k(match.team2_id.id)
+        team1_name, team1_rank = team_k(match.team1_id.id)[0], team_k(match.team1_id.id)[1]
+        team2_name, team2_rank = team_k(match.team2_id.id)[0], team_k(match.team2_id.id)[1]
         match_detail = [match.id, match.start_date, match.start_time, venue_name, address,
                         match.team1_id.id, team1_name, match.team1_id.logo, match.team1_id.group, team1_rank, match.team1_id.win, match.team1_id.draw, match.team1_id.loss,
                         match.team1_id.points, match.team1_id.last_five, match.team1_id.goal_diff, match.team1_id.manager, match.team1_id.round,
