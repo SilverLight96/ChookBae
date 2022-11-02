@@ -9,3 +9,11 @@ export const loggedinState = atom({
   default: getCookie('token') ? true : false,
 });
 
+export const myInformation = atom({
+  key: 'myInformation',
+  default: {
+    memberId: '',
+    nickname: '',
+    memberSeq: '',
+  },
+});
