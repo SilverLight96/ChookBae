@@ -196,7 +196,7 @@ def update(request):
         payload = jwt.decode(token_receive, SECRET_KEY, algorithms=['HS256'])
         user = User.objects.get(id=payload['id'])
         #토큰 값의 유저 닉네임을 변경
-        user.nickname = request.data['nickname']
+        user.nickname = request.data['new_nickname']
         user.save()
         password = request.data.get('password')
         new_password = request.data.get('new_password')
@@ -218,7 +218,7 @@ def update(request):
 
             me.set_password(new_password)
             me.save()
-        return Response({'id': user.id, 'nickname': user.nickname, 'email': user.email,'password':user.password},status=status.HTTP_200_OK)
+        return Response({'id': user.id, 'new_nickname': user.nickname, 'email': user.email,'password':user.password},status=status.HTTP_200_OK)
     except jwt.ExpiredSignatureError:
         return Response({'error': '토큰이 유효하지 않습니다.'}, status=status.HTTP_400_BAD_REQUEST)
 
