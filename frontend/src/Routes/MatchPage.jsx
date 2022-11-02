@@ -1,8 +1,7 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import styled from "styled-components";
-import MatchCountry from "../Components/MatchPage/MatchCountry"
+import MatchCard from "../Components/MatchPage/MatchCard"
 import MatchCountryCard from "../Components/MatchPage/MatchCountryCard"
-import MatchDate from "../Components/MatchPage/MatchDate"
 import Calendar from 'react-calendar';
 import moment from 'moment';
 import 'moment/locale/ko';
@@ -12,6 +11,33 @@ import axios from "axios"
 
 function MatchPage() {
     const baseURL = "https://k7a202.p.ssafy.io/"
+    const [groupData, setGroupData] = useState([])
+
+    useEffect(() => {
+        const axiosGetGroup = async() => {
+            const dataAxios = await axios
+            .get(baseURL + 'v1/match/group', {
+                headers: {
+                    'Content-Type': 'application/json',
+                    },
+            })
+            setGroupData(dataAxios.data)
+        }
+
+        axiosGetGroup()
+    }, [])
+
+    const axiosGetCountry = async(subUrl) => {
+        const dataAxios = await axios
+        .get(baseURL + 'v1/match/team/' + subUrl, {
+            headers: {
+                'Content-Type': 'application/json',
+                },
+            })
+        await setDataCountry(dataAxios.data)
+        console.log(dataAxios.data);
+        }
+
 
     const axiosGet = async(subUrl) => {
         const dataAxios = await axios
@@ -63,6 +89,8 @@ function MatchPage() {
     const [value, onChange] = useState(new Date());
 
     const [dataDate, setDataDate] = useState([])
+    const [dataCountry, setDataCountry] = useState([])
+    const [cardState, setCardState] = useState([])
 
     const onChangeTemp = (e) => {
         const valueMoment = moment(e).format("YYYY-MM-DD")
@@ -73,27 +101,7 @@ function MatchPage() {
 
     const valueMoment = moment(value).format("YYYY-MM-DD")
 
-    const [selectCard, setSelectCard] = useState(0)
-
-    const classifyGroup = () => {
-        const group = countryMatches.map((item) => {
-            return item.team1_group
-        })
-        const maxGroup = Math.max(...group)
-        const classifiedGroup = Array.from({length:maxGroup}, () => [])
-
-        for (let country of countryMatches) {
-            classifiedGroup[country.team1_group-1].push(Number(country.team1_pk))
-            classifiedGroup[country.team1_group-1].push(Number(country.team2_pk))
-        }
-        
-        for (let i=0; i<maxGroup; i++) {
-            let set = new Set(classifiedGroup[i])
-            classifiedGroup[i] = [...set]
-        }
-
-        return classifiedGroup
-    }
+    const [selectCard, setSelectCard] = useState()
 
     const Tableheader = () => {
         return(
@@ -113,271 +121,41 @@ function MatchPage() {
     const changeDate = () => {
         setType('date')
     }
-    const [countryMatches, setcountryMatches] = useState([{
-            id: '1',
-            pk: '1',
-            match_name: 'a',
-            match_type: 'a',
-            team1_pk: '1',
-            team2_pk: '2',
-            start_time: '2022-10-26',
-            venue_pk: '1',
-            team1_score: '99',
-            team2_score: '0',
-            team1_group: '1',
-        },
-        {
-            id: '2',
-            pk: '2',
-            match_name: 'b',
-            match_type: 'b',
-            team1_pk: '1',
-            team2_pk: '3',
-            start_time: '2022-10-26',
-            venue_pk: '1',
-            team1_score: '97',
-            team2_score: '0',
-            team1_group: '1',
-        },
-        {
-            id: '3',
-            pk: '3',
-            match_name: 'c',
-            match_type: 'c',
-            team1_pk: '1',
-            team2_pk: '4',
-            start_time: '2022-10-27',
-            venue_pk: '1',
-            team1_score: '94',
-            team2_score: '0',
-            team1_group: '1',
-        },
-        {
-            id: '4',
-            pk: '4',
-            match_name: 'd',
-            match_type: 'd',
-            team1_pk: '2',
-            team2_pk: '3',
-            start_time: '2022-10-27',
-            venue_pk: '2',
-            team1_score: '54',
-            team2_score: '0',
-            team1_group: '1',
-        },
-        {
-            id: '5',
-            pk: '5',
-            match_name: 'e',
-            match_type: 'e',
-            team1_pk: '2',
-            team2_pk: '4',
-            start_time: '2022-10-28',
-            venue_pk: '2',
-            team1_score: '13',
-            team2_score: '0',
-            team1_group: '1',
-        },
-        {
-            id: '6',
-            pk: '6',
-            match_name: 'f',
-            match_type: 'f',
-            team1_pk: '3',
-            team2_pk: '4',
-            start_time: '2022-10-28',
-            venue_pk: '3',
-            team1_score: '14',
-            team2_score: '0',
-            team1_group: '1',
-        },
-        {
-            id: '7',
-            pk: '7',
-            match_name: 'g',
-            match_type: 'g',
-            team1_pk: '5',
-            team2_pk: '6',
-            start_time: '2022-10-28',
-            venue_pk: '5',
-            team1_score: '35',
-            team2_score: '14',
-            team1_group: '2',
-        },
-        {
-            id: '8',
-            pk: '8',
-            match_name: 'h',
-            match_type: 'h',
-            team1_pk: '5',
-            team2_pk: '7',
-            start_time: '2022-10-27',
-            venue_pk: '5',
-            team1_score: '76',
-            team2_score: '35',
-            team1_group: '2',
-        },
-    ]);
 
-    const [dateMatches, setdateMatches] = useState([{
-        id: '1',
-        pk: '1',
-        match_name: 'a',
-        match_type: 'a',
-        team1_pk: '1',
-        team2_pk: '2',
-        start_time: '2022-10-26',
-        venue_pk: '1',
-        team1_score: '99',
-        team2_score: '0',
-        team1_group: '1',
-    },
-    {
-        id: '2',
-        pk: '2',
-        match_name: 'b',
-        match_type: 'b',
-        team1_pk: '1',
-        team2_pk: '3',
-        start_time: '2022-10-26',
-        venue_pk: '1',
-        team1_score: '97',
-        team2_score: '0',
-        team1_group: '1',
-    },
-    {
-        id: '3',
-        pk: '3',
-        match_name: 'c',
-        match_type: 'c',
-        team1_pk: '1',
-        team2_pk: '4',
-        start_time: '2022-10-27',
-        venue_pk: '1',
-        team1_score: '94',
-        team2_score: '0',
-        team1_group: '1',
-    },
-    {
-        id: '4',
-        pk: '4',
-        match_name: 'd',
-        match_type: 'd',
-        team1_pk: '2',
-        team2_pk: '3',
-        start_time: '2022-10-27',
-        venue_pk: '2',
-        team1_score: '54',
-        team2_score: '0',
-        team1_group: '1',
-    },
-    {
-        id: '5',
-        pk: '5',
-        match_name: 'e',
-        match_type: 'e',
-        team1_pk: '2',
-        team2_pk: '4',
-        start_time: '2022-10-28',
-        venue_pk: '2',
-        team1_score: '13',
-        team2_score: '0',
-        team1_group: '1',
-    },
-    {
-        id: '6',
-        pk: '6',
-        match_name: 'f',
-        match_type: 'f',
-        team1_pk: '3',
-        team2_pk: '4',
-        start_time: '2022-10-28',
-        venue_pk: '3',
-        team1_score: '14',
-        team2_score: '0',
-        team1_group: '1',
-    },
-    {
-        id: '7',
-        pk: '7',
-        match_name: 'g',
-        match_type: 'g',
-        team1_pk: '5',
-        team2_pk: '6',
-        start_time: '2022-10-28',
-        venue_pk: '5',
-        team1_score: '35',
-        team2_score: '14',
-        team1_group: '2',
-    },
-    {
-        id: '8',
-        pk: '8',
-        match_name: 'h',
-        match_type: 'h',
-        team1_pk: '5',
-        team2_pk: '7',
-        start_time: '2022-10-27',
-        venue_pk: '5',
-        team1_score: '76',
-        team2_score: '35',
-        team1_group: '2',
-    },
-    ]);
-
-    // let url = 'https://example.com/';
-    // const axios_options = {
-    //     option1: 'option1',
-    //     option2: 'option2',
-    // }
-    // const axios_url = `${url}/${axios_options.option1}/${axios_options.option2}`
-
-    // axios
-    // .get(axios_url)
-    // .then(res => setMatches(res.data))
-    // .catch(err => console.log(err))
-    const classified = classifyGroup(countryMatches)
-
+    console.log(cardState);
     if (type ==='country'){
         return (
             <>
             <div>
-                <Tableheader />
+            <Tableheader />
+                <hr />
+                <MatchCountryCard 
+                data={groupData}
+                setState={setCardState}
+                selectedCard={setSelectCard}
+                />
+                <hr />
+                <h1>{selectCard}</h1>
+
                 <div>
-                    <hr />
-                    {classified.map((group, index) => {
+                    {cardState.map((match, index) => {
                         return (
-                            <MatchCountryCard
+                            <MatchCard
                                 key={index + 'key'}
-                                groupNum={index+1}
-                                groups = {group}
-                                setSelectCard={setSelectCard}
-                            />
-                            )
-                        })}
-                    <h1>{selectCard}</h1>
-                </div>
-                <div>
-                    {countryMatches.map((match, index) => {
-                        if (match.team1_pk==selectCard || match.team2_pk==selectCard) {
-                        return (
-                            <MatchCountry
-                                key={index + 'key'}
-                                id={match.id}
-                                pk={match.pk}
-                                match_name={match.match_name}
-                                match_type={match.match_type}
-                                team1_pk={match.team1_pk}
-                                team2_pk={match.team2_pk}
-                                start_time={match.start_time}
-                                venue_pk={match.venue_pk}
-                                team1_score={match.team1_score}
-                                team2_score={match.team2_score}
-                                team1_group={match.team1_group}
+                                match_id={match[0]}
+                                start_date={match[1]}
+                                start_time={match[2]}
+                                venue_name={match[3]}
+                                venue_address={match[4]}
+                                team1_country={match[5]}
+                                team1_logo={match[6]}
+                                team1_group={match[7]}
+                                team2_country={match[8]}
+                                team2_logo={match[9]}
                             />
                             )
                         }
-                    })}
+                    )}
                 </div>
             </div>
             <BlankDiv><br /><br /><br /></BlankDiv>
@@ -397,7 +175,7 @@ function MatchPage() {
                     if (match[1] === valueMoment) {
                     return (
                         <>
-                        <MatchDate
+                        <MatchCard
                             match_id = {match[0]}
                             start_date={match[1]}
                             start_time={match[2]}
@@ -424,7 +202,11 @@ export default MatchPage;
 
 const StyledCalendarContainer = styled.div`
     /* container styles */
-    margin: auto;
+    margin-left: auto;
+    margin-right: auto;
+
+    display: flex;
+    justify-content: center;
     width: 100%;
 `
 
