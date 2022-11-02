@@ -94,11 +94,10 @@ class predictinfo(APIView):
     @swagger_auto_schema(operation_id="유저의 승부 예측 여부를 조회", operation_description="제공 받은 토큰 값을 기준으로 유저를 파악하고 해당 유저가 승부 예측을 했는지 확인한다", manual_parameters=[id])
     def get(self, request, id):
 
-        today=datetime.datetime.now().date()
-        time=datetime.datetime.now()+datetime.timedelta(minutes=5)
+        today=datetime.datetime.now()+datetime.timedelta(minutes=5)
 
         
-        if Match.objects.filter(Q(id=id) &Q(start_date=today, start_time__lte=time.time())) :
+        if Match.objects.filter(Q(id=id) &Q(start_date=today.date(), start_time__lte=time.time())) :
             return Response({False},status=status.HTTP_200_OK)
 
         if not Match.objects.filter(id=id) :
