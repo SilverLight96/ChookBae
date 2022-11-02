@@ -7,6 +7,7 @@ urlpatterns = [
     
     path('predict', views.matchpredict.as_view()),
     path('predict/<int:id>', views.predictinfo.as_view()),
+    path('predict/list/<int:id>', views.predictlist.as_view()),
     path('card', views.card.as_view()),
     path('card/combine', views.combine.as_view()),
     path('rank', views.rank.as_view()),
