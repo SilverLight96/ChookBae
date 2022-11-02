@@ -1,3 +1,4 @@
+from time import time
 from django.shortcuts import get_object_or_404
 from django.contrib.auth import get_user_model
 from django.shortcuts import render, redirect
@@ -16,6 +17,7 @@ from django.utils.encoding import force_bytes, force_text
 from django.contrib import auth
 from rest_framework_simplejwt.tokens import RefreshToken
 from django.contrib.auth.models import update_last_login
+from django.utils import timezone
 
 from chookbae.settings import SECRET_KEY
 from .serializers import (
@@ -142,7 +144,8 @@ def login(request):
         return Response({'이메일 인증을 해주세요.'}, status=status.HTTP_400_BAD_REQUEST)
 
     # 토큰 생성
-
+    user.last_login =  timezone.localtime()
+    user.save(update_fields=['last_login'])
     payload = {
       'id' : user.id, # 유저의 id
       'exp' : datetime.datetime.now() + datetime.timedelta(minutes=60), # 토큰 유효기간 60분
@@ -214,7 +217,7 @@ def update(request):
 
             me.set_password(new_password)
             me.save()
-        return Response({'id': user.id, 'nickname': user.nickname, 'email': user.email,'password':user.password})
+        return Response({'id': user.id, 'nickname': user.nickname, 'email': user.email,'password':user.password},status=status.HTTP_200_OK)
     except jwt.ExpiredSignatureError:
         return Response({'error': '토큰이 유효하지 않습니다.'}, status=status.HTTP_400_BAD_REQUEST)
 
