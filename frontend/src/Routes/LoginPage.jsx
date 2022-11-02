@@ -19,6 +19,8 @@ function LoginPage() {
   const [cookies, setCookie] = useCookies(["token"]);
   const navigate = useNavigate();
   const setLogged = useSetRecoilState(loggedinState);
+  const [loginError, setLoginError] = useState();
+  const [isError, setIsError] = useState(false);
 
   const {
     register,
@@ -46,14 +48,25 @@ function LoginPage() {
   const login = async () => {
     return await fetchData
       .post(userApis.LOGIN, userInfo)
-
       .then((res) => {
-        console.log(res.data);
+        console.log(res);
         setCookie("token", res.data.jwt);
         setLogged(true);
         navigate("/");
+      })
+      .catch((error) => {
+        console.log(error.response.data);
+        setLoginError(error.response.data);
       });
   };
+
+  useEffect(
+    (prev) => {
+      setIsError(!prev);
+    },
+    [loginError]
+  );
+  console.log(isError);
 
   const onValid = (data) => {
     setUserInfo((prev) => ({ ...prev, ...data }));
@@ -284,6 +297,16 @@ const UserBox = styled.div`
     position: absolute;
     left: 0;
     bottom: 15px;
+  }
+  > big {
+    color: ${(props) => props.theme.colors.subRed};
+    font-size: 26px;
+    font-weight: bold;
+    position: absolute;
+    left: 0;
+    bottom: 250px;
+    text-align: center;
+    margin: auto;
   }
 `;
 
