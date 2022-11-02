@@ -104,8 +104,33 @@ class predictlist(APIView):
         print(match_list)
         return Response(match_list,status=status.HTTP_200_OK)
 
+#승부 예측 정보 조회 GET
+class predicdetail(APIView):
+    match_id = openapi.Parameter('id', openapi.IN_PATH, description='date in YYYYMMDD', required=True, type=openapi.TYPE_NUMBER)
+    @swagger_auto_schema(operation_id="경기 정보 조회 (날짜별)", operation_description="날짜 입력으로 경기 조회 (날짜양식: YYYYMMDD)", manual_parameters=[id])
+    def get(self, request, id):
+        try:
+            bet=Bet.objects.get(id=id)
+        except:
+            return Response({'error': '경기 정보를 찾을수 없습니다.'},status=status.HTTP_400_BAD_REQUEST)
 
-        
+        win_dang=0
+        draw_dang=0
+        lose_dang=0
+
+        win_count=Prediction.objects.filter(Q(match_id=id) & Q(predict=0)).count()
+        draw_count=Prediction.objects.filter(Q(match_id=id) & Q(predict=1)).count()
+        lose_count=Prediction.objects.filter(Q(match_id=id) & Q(predict=2)).count()
+
+        total=bet.win+bet.draw+bet.lose
+
+        if(bet.win!=0): win_dang=total/bet.win
+        if(bet.draw!=0): draw_dang=total/bet.draw
+        if(bet.lose!=0): lose_dang=total/bet.lose
+
+        return Response({'win_count': win_count, 'win_total': bet.win, 'win_dang': win_dang,
+        'draw_count': draw_count, 'draw_total': bet.draw, 'draw_dang': draw_dang,
+        'lose_count': lose_count, 'lose_total': bet.lose, 'lose_dang': lose_dang,},status=status.HTTP_200_OK)
 
 #승부 예측 여부 GET
 class predictinfo(APIView):
