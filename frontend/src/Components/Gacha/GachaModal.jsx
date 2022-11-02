@@ -28,12 +28,12 @@ const Background = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  border-radius: 5px;
   & section {
     width: 90%;
     max-width: 600px;
     height: 70vh;
     background-color: ${(props) => props.theme.colors.subBlack};
+    border-radius: 5px;
     & main {
       padding: 0 20px 20px;
     }

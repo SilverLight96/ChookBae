@@ -4,6 +4,7 @@ import { NavLink } from "react-router-dom";
 import { Keyframes } from "styled-components";
 import GachaModal from "../Components/Gacha/GachaModal";
 import { fetchData } from "../utils/apis/api";
+import GachaCard from "../Components/Gacha/GachaCard";
 
 function GachaPage() {
   const [isGacha, setIsGacha] = useState({
@@ -29,6 +30,14 @@ function GachaPage() {
       value: 0,
     }
   );
+
+  const [playerCards, setPlayerCards] = useState({
+    id: 1,
+    fullname: "손흥민",
+    player_image:
+      "https://ichef.bbci.co.uk/news/624/cpsprodpb/4118/production/_119546661_gettyimages-1294130887.jpg.webp",
+  });
+
   const [isModal, setIsModal] = useState(false);
 
   const oneGacha = () => {
@@ -109,7 +118,14 @@ function GachaPage() {
       </GachaMain>
       <GachaModal open={isModal} close={ModalHandler}>
         {isGacha.gacha_count === 1 ? (
-          <GachaText>가차 1회 뽑기</GachaText>
+          <div>
+            <GachaText>가차 1회 뽑기</GachaText>
+            <GachaCard
+              title={playerCards.fullname}
+              image={playerCards.player_image}
+              key={playerCards.id}
+            />
+          </div>
         ) : null}
         {isGacha.gacha_count === 10 ? (
           <GachaText>가차 10회 뽑기</GachaText>
