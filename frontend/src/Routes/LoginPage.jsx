@@ -49,7 +49,7 @@ function LoginPage() {
     return await fetchData
       .post(userApis.LOGIN, userInfo)
       .then((res) => {
-        console.log(res.data);
+        console.log(res);
         setCookie("token", res.data.jwt);
         setLogged(true);
         navigate("/");

@@ -15,7 +15,7 @@ export default function AccountPage() {
     new_password: "",
     new_password_confirm: "",
   });
-  const [duplicatedNickname, setDuplicatedNickname] = useState(false);
+
   const {
     register,
     watch,
@@ -47,8 +47,9 @@ export default function AccountPage() {
   console.log(userInfo);
 
   const updateuser = async () => {
-    return await fetchData.post(userApis.UPDATE_USER, userInfo);
+    return await fetchData.patch(userApis.UPDATE_USER, userInfo);
   };
+  console.log(fetchData.patch.header);
 
   // 비밀번호 확인
   const password = useRef({});
