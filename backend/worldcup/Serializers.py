@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Player,User
+from .models import Player,User,Match
 
 
 
@@ -18,3 +18,8 @@ class goalrankSerializer(serializers.ModelSerializer):
     class Meta:
         model= Player
         fields = ( 'fullname', 'goal', 'value',)
+
+class matchidSerializer(serializers.ModelSerializer):
+    class Meta:
+        model= Match
+        fields = ( 'id',)

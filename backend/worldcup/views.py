@@ -10,7 +10,7 @@ from django.shortcuts import render
 from django.db.models import Q
 from rest_framework import status
 from rest_framework.response import Response
-from .Serializers import CardSerializer,UserrankSerializer,goalrankSerializer
+from .Serializers import CardSerializer,UserrankSerializer,goalrankSerializer,matchidSerializer
 from .models import User, Point, Venue, Team, Match, Player, PlayerCard, Prediction, Bet, EmailCert
 from .translation import venue_k, team_k, player_k, player_pos
 import pandas as pd
@@ -86,6 +86,25 @@ class matchpredict(APIView):
             return Response(ingredient,status=status.HTTP_200_OK)
         else :
             return Response({'error' :ingredient},status=status.HTTP_400_BAD_REQUEST)
+
+#승부 예측 경기 리스트 GET
+class predictlist(APIView):
+    date = openapi.Parameter('id', openapi.IN_PATH, description='date in YYYYMMDD', required=True, type=openapi.TYPE_NUMBER)
+    @swagger_auto_schema(operation_id="경기 정보 조회 (날짜별)", operation_description="날짜 입력으로 경기 조회 (날짜양식: YYYYMMDD)", manual_parameters=[id])
+    def get(self, request, id):
+        match_list=[]
+        id=str(id)
+        match_date = datetime.datetime(int(id[:4]), int(id[4:6]), int(id[6:8]))
+
+        matches = Match.objects.filter(start_date=match_date)
+        for i in matches:
+            serializer = matchidSerializer(i)
+            match_list.append(serializer.data)
+        
+        print(match_list)
+        return Response(match_list,status=status.HTTP_200_OK)
+
+
         
 
 #승부 예측 여부 GET
