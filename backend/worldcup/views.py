@@ -366,11 +366,12 @@ class MatchDetail(APIView):
     def get(self, request, id):
         match = Match.objects.get(id=id)
         venue_name, address = venue_k(match.venue_id.id)
-        team1_name, team2_name = team_k(match.team1_id.id), team_k(match.team2_id.id)
+        team1_name, team1_rank = team_k(match.team1_id.id)
+        team2_name, team2_rank = team_k(match.team2_id.id)
         match_detail = [match.id, match.start_date, match.start_time, venue_name, address,
-                        match.team1_id.id, team1_name, match.team1_id.logo, match.team1_id.group, match.team1_id.rank, match.team1_id.win, match.team1_id.draw, match.team1_id.loss,
+                        match.team1_id.id, team1_name, match.team1_id.logo, match.team1_id.group, team1_rank, match.team1_id.win, match.team1_id.draw, match.team1_id.loss,
                         match.team1_id.points, match.team1_id.last_five, match.team1_id.goal_diff, match.team1_id.manager, match.team1_id.round,
-                        match.team2_id.id, team2_name, match.team2_id.logo, match.team2_id.group, match.team2_id.rank, match.team2_id.win, match.team2_id.draw, match.team2_id.loss,
+                        match.team2_id.id, team2_name, match.team2_id.logo, match.team2_id.group, team2_rank, match.team2_id.win, match.team2_id.draw, match.team2_id.loss,
                         match.team2_id.points, match.team2_id.last_five, match.team2_id.goal_diff, match.team2_id.manager, match.team2_id.round]
         
         return Response(match_detail)
