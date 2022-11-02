@@ -13,7 +13,9 @@ from rest_framework.response import Response
 from .Serializers import CardSerializer,UserrankSerializer,goalrankSerializer
 from .models import User, Point, Venue, Team, Match, Player, PlayerCard, Prediction, Bet, EmailCert
 from .translation import venue_k, team_k, player_k, player_pos
+import pandas as pd
 from chookbae.settings import SECRET_KEY
+
 
 # Create your views here.
 
@@ -312,6 +314,19 @@ class rank(APIView):
         return Response(rank,status=status.HTTP_200_OK)
 
 
+# 그룹 정보 조회 GET
+class GroupInfo(APIView):
+    @swagger_auto_schema(operation_id="그룹 정보 조회", operation_description="url을 통해 그룹 정보 조회", responses={200: '조회 성공'})
+    def get(self, request):
+        teams = Team.objects.all().values('group', 'id', 'country', 'logo').order_by('group')
+        group_info = []
+        for t in teams:
+            team_name = team_k(t['id'])
+            curr_team = [t['group'], t['id'], team_name, t['logo']]
+            group_info.append(curr_team)
+        
+        return Response(group_info)
+
 
 # 경기 정보 조회 (국가별) GET
 class MatchInfoByTeam(APIView):
@@ -388,12 +403,23 @@ class MatchTable(APIView):
         team_table = []
         for t in teams:
             team_name = team_k(t.id)
-            curr_team = [team_name, t.win, t.draw, t.loss, t.points, t.goal_diff] 
+            curr_team = [team_name, t.win, t.draw, t.loss, t.points, t.goal_diff, -1*(t.points*100+t.goal_diff)] 
             team_table.append(curr_team)
 
         team_table = sorted(team_table, key=operator.itemgetter(4, 5))
+
+        df = pd.DataFrame(team_table, columns=['name', 'win', 'draw', 'loss', 'points', 'goal_diff', 'rank_pts'])
+        df['rank_min'] = df['rank_pts'].rank(method='min')
+        new_table = df.values.tolist()
+
+        rank_table = []
+        for i in range(len(new_table)):
+            new_table[i].insert(0, int(new_table[i][-1]))
+            rank_table.append(new_table[i][:-2])
         
-        return Response(team_table)
+        rank_table = sorted(rank_table, key=operator.itemgetter(0))
+        
+        return Response(rank_table)
 
 
 # 팀 정보 조회 GET
