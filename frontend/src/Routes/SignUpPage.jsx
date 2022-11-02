@@ -7,6 +7,7 @@ import { userApis } from "../utils/apis/userApis";
 import { fetchData } from "../utils/apis/api";
 import { keyframes } from "styled-components";
 import logo from "../assets/ChookBae_logo.png";
+import { useNavigate } from "react-router-dom";
 
 function SignUpPage() {
   const [userInfo, setUserInfo] = useState({
@@ -15,7 +16,7 @@ function SignUpPage() {
     password: "",
     password_confirm: "",
   });
-
+  const navigate = useNavigate();
   const {
     register,
     watch,
@@ -47,12 +48,18 @@ function SignUpPage() {
       } catch (err) {}
     })();
   }, [userInfo]);
-  console.log(userInfo);
 
   const signupregister = async () => {
-    return await fetchData.post(userApis.REGISTER, userInfo);
+    return await fetchData
+      .post(userApis.REGISTER, userInfo)
+
+      .then((res) => {
+        console.log(res.data);
+        navigate("/accounts/activate");
+      });
   };
 
+  console.log(userInfo);
   return (
     <Wrapper>
       <LoginBox>
