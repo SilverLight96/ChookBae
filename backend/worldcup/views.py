@@ -320,7 +320,7 @@ class GroupInfo(APIView):
         teams = Team.objects.all().values('group', 'id', 'country', 'logo').order_by('group')
         group_info = []
         for t in teams:
-            team_name = team_k(t['id'])
+            team_name = team_k(t['id'])[0]
             curr_team = [t['group'], t['id'], team_name, t['logo']]
             group_info.append(curr_team)
         
@@ -344,7 +344,7 @@ class MatchInfoByTeam(APIView):
         for g in sorted(games):
             match = Match.objects.get(id=g)
             venue_name, address = venue_k(match.venue_id.id)
-            team1_name, team2_name = team_k(match.team1_id.id), team_k(match.team2_id.id)
+            team1_name, team2_name = team_k(match.team1_id.id)[0], team_k(match.team2_id.id)[0]
             curr_info = [match.id, match.start_date, match.start_time, venue_name, address,
                         team1_name, match.team1_id.logo, match.team1_id.group, team2_name, match.team2_id.logo]
             match_list.append(curr_info)
@@ -366,7 +366,7 @@ class MatchInfoByDate(APIView):
         for g in games:
             match = Match.objects.get(id=g.id)
             venue_name, address = venue_k(match.venue_id.id)
-            team1_name, team2_name = team_k(match.team1_id.id), team_k(match.team2_id.id)
+            team1_name, team2_name = team_k(match.team1_id.id)[0], team_k(match.team2_id.id)[0]
             curr_info = [match.id, match.start_date, match.start_time, venue_name, address,
                         team1_name, match.team1_id.logo, match.team1_id.group, team2_name, match.team2_id.logo]
             match_list.append(curr_info)
@@ -402,7 +402,7 @@ class MatchTable(APIView):
         teams = Team.objects.filter(group=id)
         team_table = []
         for t in teams:
-            team_name = team_k(t.id)
+            team_name = team_k(t.id)[0]
             curr_team = [team_name, t.win, t.draw, t.loss, t.points, t.goal_diff, -1*(t.points*100+t.goal_diff)] 
             team_table.append(curr_team)
 
