@@ -59,7 +59,7 @@ export default MyPlayerCardList;
 const Wrapper = styled.div`
   width: 100%;
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(3, 2fr);
   grid-gap: 1rem;
   margin-bottom: 1rem;
   scroll-behavior: smooth;

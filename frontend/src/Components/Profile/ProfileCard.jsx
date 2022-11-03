@@ -1,8 +1,20 @@
 import React from "react";
 import styled from "styled-components";
 import { Link, useNavigate, useParams } from "react-router-dom";
+import { removeCookie } from "../../utils/functions/cookies";
+import { loggedinState } from "../../atoms";
+import { useSetRecoilState } from "recoil";
 
 function ProfileCard() {
+  const setLoggedin = useSetRecoilState(loggedinState);
+  const navigate = useNavigate();
+
+  const handleLogout = () => {
+    setLoggedin(false);
+    removeCookie("token");
+    navigate("/");
+  };
+
   return (
     <Wrapper>
       <ButtonConatiner>
@@ -10,7 +22,7 @@ function ProfileCard() {
           <button>회원정보 수정</button>
         </Link>
         <Link>
-          <button>로그 아웃</button>
+          <button onClick={handleLogout}>로그 아웃</button>
         </Link>
       </ButtonConatiner>
       <ProfileImgContainer>

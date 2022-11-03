@@ -105,8 +105,36 @@ class predictlist(APIView):
         print(match_list)
         return Response(match_list,status=status.HTTP_200_OK)
 
+#승부 예측 정보 조회 GET
+class predicdetail(APIView):
+    match_id = openapi.Parameter('id', openapi.IN_PATH, description='date in YYYYMMDD', required=True, type=openapi.TYPE_NUMBER)
+    @swagger_auto_schema(operation_id="경기 정보 조회 (날짜별)", operation_description="날짜 입력으로 경기 조회 (날짜양식: YYYYMMDD)", manual_parameters=[id])
+    def get(self, request, id):
+        try:
+            bet=Bet.objects.get(id=id)
+        except:
+            if not Match.objects.filter(id=id):
+                return Response({'error': '경기 정보를 찾을수 없습니다.'},status=status.HTTP_400_BAD_REQUEST)
+            else :
+                bet=Bet.objects.create(id=Match.objects.get(id=id),win=0,draw=0,lose=0)
+                
+        win_dang=0
+        draw_dang=0
+        lose_dang=0
 
-        
+        win_count=Prediction.objects.filter(Q(match_id=id) & Q(predict=0)).count()
+        draw_count=Prediction.objects.filter(Q(match_id=id) & Q(predict=1)).count()
+        lose_count=Prediction.objects.filter(Q(match_id=id) & Q(predict=2)).count()
+
+        total=bet.win+bet.draw+bet.lose
+
+        if(bet.win!=0): win_dang=total/bet.win
+        if(bet.draw!=0): draw_dang=total/bet.draw
+        if(bet.lose!=0): lose_dang=total/bet.lose
+
+        return Response({'win_count': win_count, 'win_total': bet.win, 'win_dang': win_dang,
+        'draw_count': draw_count, 'draw_total': bet.draw, 'draw_dang': draw_dang,
+        'lose_count': lose_count, 'lose_total': bet.lose, 'lose_dang': lose_dang,'total_point' :total, },status=status.HTTP_200_OK)
 
 #승부 예측 여부 GET
 class predictinfo(APIView):
@@ -217,6 +245,7 @@ class card(APIView):
     @swagger_auto_schema(operation_id="유저의 보유하고 있는 카드 확인", operation_description="해당 유저가 보유하고 있는 모든 카드의 정보를 가져온다.")
     def get(self, request):
         c_list=[]
+        hashmap = {} 
         country = request.GET.get('country', None)
         if country is not None:
             team=Team.objects.get(country=country)
@@ -224,19 +253,23 @@ class card(APIView):
         # token=request.COOKIES.get('jwt')
         # pay=jwt.decode(token,SECRET_KEY, algorithms=['HS256'])
         # user_id=pay['id']
-        user_id=1
+        user_id=2
 
         card=PlayerCard.objects.filter(user_id=user_id).order_by('player_id')
 
         for i in card:
-            C=Player.objects.get(id=i.player_id.id)
+            if i.player_id.id in hashmap :
+                num=hashmap[i.player_id.id]
+                hashmap[i.player_id.id]=num+1
+            else :
+                hashmap[i.player_id.id]=1
+
+        for i in hashmap.keys():
+            C=Player.objects.get(id=i)
             if country is not None:
                 if(C.team_id != team):
                     continue
-            serializer = CardSerializer(C)
-            
-            c_list.append(serializer.data)
-        
+            c_list.append({'player_image' : C.player_image, 'fullname' : C.fullname, 'value' : C.value, 'count' : hashmap.get(i) })    
         return Response(c_list)       
 
 #선수 합성 POST
@@ -249,7 +282,7 @@ class combine(APIView):
 
 
     @transaction.atomic()
-    def get_object(self, user_id, card1, card2):
+    def get_object(self, user_id, card1, card2):  
         user=User.objects.get(id=user_id)
         first=PlayerCard.objects.get(id=card1)
         second=PlayerCard.objects.get(id=card2)
