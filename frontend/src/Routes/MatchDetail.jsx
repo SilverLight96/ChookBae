@@ -1,18 +1,26 @@
 import React, { useRef, useState, useMemo } from "react";
 import styled from "styled-components";
-import { Route, Link, useLocation } from 'react-router-dom';
+import { Route, Link, useLocation, useNavigate } from 'react-router-dom';
 import MatchDeatilTable from '../Components/MatchPage/MatchDetailTable'
 import MatchDetailChart from '../Components/MatchPage/MatchDetailChart'
 
 function MatchDetail() {
     const location = useLocation()
+    const navigate = useNavigate()
+
     console.log(location.state)
     const propData = location.state.firstData
     const propDataSecond = location.state.secondData
 
+    const state = {
+        match_id: location.state.firstData.match_id,
+        team1_country: location.state.firstData.team1_country,
+        team2_country: location.state.firstData.team2_country
+    }
+
     const detailData_1 = [
+        '',
         propData.team1_rank,
-        'FIFA Rank',
         propData.team1_last_five,
         // propData.team1_manager,
         'Manager',
@@ -20,13 +28,23 @@ function MatchDetail() {
     ]
 
     const detailData_2 = [
+        '',
         propData.team2_rank,
-        'FIFA Rank',
         propData.team2_last_five,
         // propData.team2_manager,
         'Manager',
         `${propData.team2_country} 대표팀`,
     ]
+
+    Object.keys(propDataSecond).map(elem => {
+        if (propDataSecond[elem][1] === propData.team1_country) {
+            detailData_1[0] = elem[0]
+        }
+        if (propDataSecond[elem][1] === propData.team2_country) {
+            detailData_2[0] = elem[0]
+        }
+    })
+
     const detailDataHeader = [
         '조별 순위',
         '피파 랭킹',
@@ -50,7 +68,9 @@ function MatchDetail() {
                         <h1>{propData.team1_group}</h1>
                     </Group>
 
-                    <PredictBtn>
+                    <PredictBtn
+                    onClick={() => navigate('/PredictDetail', {state})}
+                    >
                         <p>승부예측</p>
                     </PredictBtn>
                 </Predict>
