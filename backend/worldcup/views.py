@@ -258,18 +258,17 @@ class card(APIView):
         card=PlayerCard.objects.filter(user_id=user_id).order_by('player_id')
 
         for i in card:
-            C=Player.objects.get(id=i.player_id.id)
-            if country is not None:
-                if(C.team_id != team):
-                    continue
-            if C.id in hashmap :
-                num=hashmap[C.id]
-                hashmap[C.id]=num+1
+            if i.player_id.id in hashmap :
+                num=hashmap[i.player_id.id]
+                hashmap[i.player_id.id]=num+1
             else :
-                hashmap[C.id]=1
+                hashmap[i.player_id.id]=1
 
         for i in hashmap.keys():
             C=Player.objects.get(id=i)
+            if country is not None:
+                if(C.team_id != team):
+                    continue
             c_list.append({'player_image' : C.player_image, 'fullname' : C.fullname, 'value' : C.value, 'count' : hashmap.get(i) })    
         return Response(c_list)       
 
