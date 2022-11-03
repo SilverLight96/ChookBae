@@ -17,7 +17,7 @@ from django.utils.encoding import force_bytes, force_text
 from django.contrib import auth
 from django.utils import timezone
 
-from worldcup.models import PlayerCard
+from worldcup.models import Player, PlayerCard
 from worldcup.models import Prediction
 from worldcup.models import Point
 # from worldcup.models import User
@@ -255,10 +255,15 @@ def mypage(request):
     # token_receive = request.COOKIES.get('jwt')
     token_receive = request.META.get('HTTP_AUTHORIZATION')
     try:
+        C_list=[]
         payload = jwt.decode(token_receive, SECRET_KEY, algorithms=['HS256'])
         user = User.objects.get(id=payload['id'])
-        #유저가 소유한 카드 리스트 가져오기
-        card_list = PlayerCard.objects.filter(user_id=user.id).values()
+        #유저가 소유한 카드 리스트
+        card_list = PlayerCard.objects.filter(user_id=user.id)
+        for i in card_list:
+            card=Player.objects.filter(id=i.player_id.id).values('fullname','player_image','value')
+            C_list.append(card)
+        # card_list = Player.objects.filter().values('fullname','player_image','value')
 
         #유저의 예측 내역 조회
         predict_match = Prediction.objects.filter(user_id=user.id).values()
@@ -267,7 +272,7 @@ def mypage(request):
         point_list = Point.objects.filter(user_id=user.id).values()
         
         return Response({'predict_match':predict_match,'nickname':user.nickname,'point':user.points \
-        ,'card_list':card_list,'point_list':point_list},status=status.HTTP_200_OK)
+        ,'card_list':C_list,'point_list':point_list},status=status.HTTP_200_OK)
     except jwt.ExpiredSignatureError:
         return Response({'error': '토큰이 유효하지 않습니다.'}, status=status.HTTP_400_BAD_REQUEST)
     
