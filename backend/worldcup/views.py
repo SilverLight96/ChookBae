@@ -47,13 +47,13 @@ class matchpredict(APIView):
             return ('보유하고 있는 포인트를 확인해 주세요.')
              
         try:
-            pre=Prediction.objects.get(match_id=match_id,user_id=36)
+            pre=Prediction.objects.get(match_id=match_id,user_id=user_id)
             return ('이미 예측을 완료한 경기입니다.')
            
         except Prediction.DoesNotExist:
             user.points-=point
             user.save()
-            po=Point.objects.create(user_id=user,point=point,info='경기 결과 예측 배팅')
+            po=Point.objects.create(user_id=user,point=-1*point,info='경기 결과 예측 배팅')
             pred=Prediction.objects.create(user_point=point,predict=predict,match_id=match,user_id=user)
            
 
@@ -207,6 +207,9 @@ class card(APIView):
 
     @transaction.atomic()
     def get_object(self, user_id, team_id,gacha_count,point):
+        point=int(point)
+        gacha_count=int(gacha_count)
+        team_id=int(team_id)
         c_list=[]
         user=User.objects.get(id=user_id)
 
@@ -227,7 +230,7 @@ class card(APIView):
             c_list.append(serializer.data)
         user.points-=point
         user.save()
-        po=Point.objects.create(user_id=user,point=point,info='선수 뽑기')
+        po=Point.objects.create(user_id=user,point=-1*point,info='선수 뽑기')
 
         return (c_list)
 

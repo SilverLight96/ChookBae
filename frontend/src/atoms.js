@@ -10,11 +10,11 @@ export const loggedinState = atom({
 export const myInformation = atom({
   key: 'myInformation',
   default: {
-    predict_match: null,
+    predict_match: [],
     nickname: "",
     photo: "http://t0.gstatic.com/licensed-image?q=tbn:ANd9GcSIjMZAnE9OcAtov5EVsznvysN1zvXq5jDY7vSZkoqKv59QN306vyoU0ouBEgcHsyih",
     point: 0,
-    card_list: null,
-    point_list: null,
+    card_list:[],
+    point_list: [],
   },
 });
