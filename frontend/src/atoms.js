@@ -10,8 +10,11 @@ export const loggedinState = atom({
 export const myInformation = atom({
   key: 'myInformation',
   default: {
-    memberId: '',
-    nickname: '',
-    memberSeq: '',
+    predict_match: [],
+    nickname: "",
+    photo: "",
+    point: 0,
+    card_list: [],
+    point_list: [],
   },
 });
