@@ -1,4 +1,4 @@
-##### 한글 번역 함수  #####
+##### 한글 번역 및 기타 함수  #####
 
 
 ### 경기장 정보
@@ -21,42 +21,42 @@ def venue_k(id):
 ### 팀 정보
 def team_k(id):
     k_team = [
-        {"id": 434, "countryName": "Qatar", "countryNameKR": "카타르",},
-        {"id": 436, "countryName": "Ecuador", "countryNameKR": "에콰도르",},
-        {"id": 1066, "countryName": "Senegal", "countryNameKR": "세네갈",},
-        {"id": 385, "countryName": "Netherlands", "countryNameKR": "네덜란드",},
-        {"id": 381, "countryName": "England", "countryNameKR": "잉글랜드",},
-        {"id": 1227, "countryName": "Iran", "countryNameKR": "이란",},
-        {"id": 1243, "countryName": "USA", "countryNameKR": "미국",},
-        {"id": 394, "countryName": "Wales", "countryNameKR": "웨일스",},
-        {"id": 427, "countryName": "Argentina", "countryNameKR": "아르헨티나",},
-        {"id": 1237, "countryName": "Saudi Arabia", "countryNameKR": "사우디 아라비아",},
-        {"id": 1244, "countryName": "Mexico", "countryNameKR": "멕시코",},
-        {"id": 386, "countryName": "Poland", "countryNameKR": "폴란드",},
-        {"id": 383, "countryName": "France", "countryNameKR": "프랑스",},
-        {"id": 428, "countryName": "Australia", "countryNameKR": "호주",},
-        {"id": 380, "countryName": "Denmark", "countryNameKR": "덴마크",},
-        {"id": 1046, "countryName": "Tunisia", "countryNameKR": "튀니지",},
-        {"id": 389, "countryName": "Spain", "countryNameKR": "스페인",},
-        {"id": 1278, "countryName": "Costa Rica", "countryNameKR": "코스타리카",},
-        {"id": 384, "countryName": "Germany", "countryNameKR": "독일",},
-        {"id": 1236, "countryName": "Japan", "countryNameKR": "일본",},
-        {"id": 377, "countryName": "Belgium", "countryNameKR": "벨기에",},
-        {"id": 1242, "countryName": "Canada", "countryNameKR": "캐나다",},
-        {"id": 1071, "countryName": "Morocco", "countryNameKR": "모로코",},
-        {"id": 378, "countryName": "Croatia", "countryNameKR": "크로아티아",},
-        {"id": 426, "countryName": "Brazil", "countryNameKR": "브라질",},
-        {"id": 670, "countryName": "Serbia", "countryNameKR": "세르비아",},
-        {"id": 391, "countryName": "Switzerland", "countryNameKR": "스위스",},
-        {"id": 1055, "countryName": "Cameroon", "countryNameKR": "카메룬",},
-        {"id": 387, "countryName": "Portugal", "countryNameKR": "포르투갈",},
-        {"id": 1063, "countryName": "Ghana", "countryNameKR": "가나",},
-        {"id": 430, "countryName": "Uruguay", "countryNameKR": "우루과이",},
-        {"id": 1235, "countryName": "Korea Republic", "countryNameKR": "대한민국",},
+        {"id": 434, "countryName": "Qatar", "countryNameKR": "카타르", "FIFA_rank": 50},
+        {"id": 436, "countryName": "Ecuador", "countryNameKR": "에콰도르", "FIFA_rank": 44},
+        {"id": 1066, "countryName": "Senegal", "countryNameKR": "세네갈", "FIFA_rank": 18},
+        {"id": 385, "countryName": "Netherlands", "countryNameKR": "네덜란드", "FIFA_rank": 8},
+        {"id": 381, "countryName": "England", "countryNameKR": "잉글랜드", "FIFA_rank": 5},
+        {"id": 1227, "countryName": "Iran", "countryNameKR": "이란", "FIFA_rank": 20},
+        {"id": 1243, "countryName": "USA", "countryNameKR": "미국", "FIFA_rank": 16},
+        {"id": 394, "countryName": "Wales", "countryNameKR": "웨일스", "FIFA_rank": 19},
+        {"id": 427, "countryName": "Argentina", "countryNameKR": "아르헨티나", "FIFA_rank": 3},
+        {"id": 1237, "countryName": "Saudi Arabia", "countryNameKR": "사우디 아라비아", "FIFA_rank": 51},
+        {"id": 1244, "countryName": "Mexico", "countryNameKR": "멕시코", "FIFA_rank": 13},
+        {"id": 386, "countryName": "Poland", "countryNameKR": "폴란드", "FIFA_rank": 26},
+        {"id": 383, "countryName": "France", "countryNameKR": "프랑스", "FIFA_rank": 4},
+        {"id": 428, "countryName": "Australia", "countryNameKR": "호주", "FIFA_rank": 38},
+        {"id": 380, "countryName": "Denmark", "countryNameKR": "덴마크", "FIFA_rank": 10},
+        {"id": 1046, "countryName": "Tunisia", "countryNameKR": "튀니지", "FIFA_rank": 30},
+        {"id": 389, "countryName": "Spain", "countryNameKR": "스페인", "FIFA_rank": 7},
+        {"id": 1278, "countryName": "Costa Rica", "countryNameKR": "코스타리카", "FIFA_rank": 31},
+        {"id": 384, "countryName": "Germany", "countryNameKR": "독일", "FIFA_rank": 11},
+        {"id": 1236, "countryName": "Japan", "countryNameKR": "일본", "FIFA_rank": 24},
+        {"id": 377, "countryName": "Belgium", "countryNameKR": "벨기에", "FIFA_rank": 2},
+        {"id": 1242, "countryName": "Canada", "countryNameKR": "캐나다", "FIFA_rank": 41},
+        {"id": 1071, "countryName": "Morocco", "countryNameKR": "모로코", "FIFA_rank": 22},
+        {"id": 378, "countryName": "Croatia", "countryNameKR": "크로아티아", "FIFA_rank": 12},
+        {"id": 426, "countryName": "Brazil", "countryNameKR": "브라질", "FIFA_rank": 1},
+        {"id": 670, "countryName": "Serbia", "countryNameKR": "세르비아", "FIFA_rank": 21},
+        {"id": 391, "countryName": "Switzerland", "countryNameKR": "스위스", "FIFA_rank": 15},
+        {"id": 1055, "countryName": "Cameroon", "countryNameKR": "카메룬", "FIFA_rank": 43},
+        {"id": 387, "countryName": "Portugal", "countryNameKR": "포르투갈", "FIFA_rank": 9},
+        {"id": 1063, "countryName": "Ghana", "countryNameKR": "가나", "FIFA_rank": 61},
+        {"id": 430, "countryName": "Uruguay", "countryNameKR": "우루과이", "FIFA_rank": 14},
+        {"id": 1235, "countryName": "Korea Republic", "countryNameKR": "대한민국", "FIFA_rank": 28},
     ]
     for kt in k_team:
         if kt["id"] == id:
-            return kt["countryNameKR"]
+            return [kt["countryNameKR"], kt["FIFA_rank"]]
 
 
 ### 선수 포지션

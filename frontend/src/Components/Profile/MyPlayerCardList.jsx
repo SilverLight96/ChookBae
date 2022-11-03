@@ -6,6 +6,7 @@ import PlayerCard from "../common/PlayerCard";
 function MyPlayerCardList() {
   const [playerCards, setPlayerCards] = useState([
     {
+      id: 1,
       title: "손흥민",
       image:
         "https://ichef.bbci.co.uk/news/624/cpsprodpb/4118/production/_119546661_gettyimages-1294130887.jpg.webp",
@@ -48,7 +49,13 @@ function MyPlayerCardList() {
   return (
     <Wrapper>
       {playerCards.map((playerCard) => {
-        return <PlayerCard title={playerCard.title} image={playerCard.image} />;
+        return (
+          <PlayerCard
+            title={playerCard.title}
+            image={playerCard.image}
+            key={playerCard.id}
+          />
+        );
       })}
     </Wrapper>
   );
@@ -59,8 +66,8 @@ export default MyPlayerCardList;
 const Wrapper = styled.div`
   width: 100%;
   display: grid;
-  grid-template-columns: repeat(3, 2fr);
-  grid-gap: 1rem;
-  margin-bottom: 1rem;
+  grid-template-columns: repeat(3, 1fr);
+  grid-gap: 0.1rem;
+  margin-bottom: 0.1rem;
   scroll-behavior: smooth;
 `;

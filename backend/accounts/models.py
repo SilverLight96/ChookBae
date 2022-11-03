@@ -21,3 +21,6 @@ class User(AbstractBaseUser):
     email = models.EmailField(max_length=50, null=False)
     is_active = models.BooleanField(default=False)
     USERNAME_FIELD = 'email'
+    points = models.IntegerField(default=0)
+    value = models.IntegerField(default=0)
+    login_count = models.IntegerField(default=0)
