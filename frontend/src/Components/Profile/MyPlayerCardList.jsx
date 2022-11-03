@@ -8,16 +8,17 @@ import { myInformation } from "../../atoms";
 function MyPlayerCardList() {
   const myInfo = useRecoilState(myInformation);
 
-  console.log(myInfo[0].card_list);
+  console.log(myInfo);
+
   return (
     <Wrapper>
       {myInfo[0].card_list.map((playerCard) => {
         return (
           <PlayerCard
-            title={playerCard[0].fullname}
-            image={playerCard[0].player_image}
-            key={playerCard[0].id}
-            value={playerCard[0].value}
+            title={playerCard.fullname}
+            image={playerCard.player_image}
+            key={playerCard.player_image}
+            value={playerCard.value}
           />
         );
       })}
