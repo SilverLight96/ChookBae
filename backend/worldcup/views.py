@@ -134,7 +134,7 @@ class predicdetail(APIView):
 
         return Response({'win_count': win_count, 'win_total': bet.win, 'win_dang': win_dang,
         'draw_count': draw_count, 'draw_total': bet.draw, 'draw_dang': draw_dang,
-        'lose_count': lose_count, 'lose_total': bet.lose, 'lose_dang': lose_dang,},status=status.HTTP_200_OK)
+        'lose_count': lose_count, 'lose_total': bet.lose, 'lose_dang': lose_dang,'total_point' :total, },status=status.HTTP_200_OK)
 
 #승부 예측 여부 GET
 class predictinfo(APIView):
