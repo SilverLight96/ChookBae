@@ -6,6 +6,7 @@ function PlayerCard(props) {
     <Wrapper>
       <BestCardContainer>
         <Image src={props.image} />
+        <Title2>{props.value}</Title2>
         <Title>{props.title}</Title>
       </BestCardContainer>
     </Wrapper>
@@ -30,7 +31,7 @@ const BestCardContainer = styled.div`
   align-items: center;
   width: 90%;
   height: 91%;
-  border-radius: 5px;
+  border-radius: 3px;
   box-shadow: 5px 5px 15px 1px black;
   overflow: hidden;
   &:hover {
@@ -63,4 +64,22 @@ const Title = styled.div`
   border-bottom-right-radius: 5px;
   position: absolute;
   bottom: 0px;
+`;
+
+const Title2 = styled.div`
+  display: flex;
+
+  width: 100%;
+  height: 30%;
+  font-size: 30px;
+  font-family: "KOTRAHOPE";
+  font-weight: normal;
+  font-style: normal;
+  color: ${(props) => props.theme.colors.white};
+  text-align: center;
+  border-bottom-left-radius: 5px;
+  border-bottom-right-radius: 5px;
+  position: absolute;
+  bottom: 20px;
+  left: 20px;
 `;

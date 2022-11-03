@@ -21,23 +21,12 @@ function MatchPage() {
                     'Content-Type': 'application/json',
                     },
             })
+            console.log(dataAxios.data);
             setGroupData(dataAxios.data)
         }
 
         axiosGetGroup()
     }, [])
-
-    const axiosGetCountry = async(subUrl) => {
-        const dataAxios = await axios
-        .get(baseURL + 'v1/match/team/' + subUrl, {
-            headers: {
-                'Content-Type': 'application/json',
-                },
-            })
-        await setDataCountry(dataAxios.data)
-        console.log(dataAxios.data);
-        }
-
 
     const axiosGet = async(subUrl) => {
         const dataAxios = await axios
@@ -89,7 +78,6 @@ function MatchPage() {
     const [value, onChange] = useState(new Date());
 
     const [dataDate, setDataDate] = useState([])
-    const [dataCountry, setDataCountry] = useState([])
     const [cardState, setCardState] = useState([])
 
     const onChangeTemp = (e) => {
