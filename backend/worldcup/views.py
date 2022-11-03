@@ -11,7 +11,8 @@ from django.db.models import Q
 from rest_framework import status
 from rest_framework.response import Response
 from .Serializers import CardSerializer,UserrankSerializer,goalrankSerializer,matchidSerializer
-from .models import User, Point, Venue, Team, Match, Player, PlayerCard, Prediction, Bet, EmailCert
+from .models import  Point, Venue, Team, Match, Player, PlayerCard, Prediction, Bet, EmailCert
+from accounts.models import User
 from .translation import venue_k, team_k, player_k, player_pos
 from .playervaluesetup import value_p
 import pandas as pd
@@ -32,7 +33,7 @@ class matchpredict(APIView):
 
     @transaction.atomic()
     def get_object(self,user_id, match_id, point, predict):
-
+        point=int(point)
         today=datetime.datetime.now()+datetime.timedelta(minutes=5)
 
         
@@ -41,11 +42,12 @@ class matchpredict(APIView):
 
         match=Match.objects.get(id=match_id)
         user=User.objects.get(id=user_id)
+        
         if(user.points<point):
             return ('보유하고 있는 포인트를 확인해 주세요.')
              
         try:
-            pre=Prediction.objects.get(match_id=match_id,user_id=1)
+            pre=Prediction.objects.get(match_id=match_id,user_id=36)
             return ('이미 예측을 완료한 경기입니다.')
            
         except Prediction.DoesNotExist:
@@ -78,7 +80,7 @@ class matchpredict(APIView):
         # token=request.COOKIES.get('jwt')
         # pay=jwt.decode(token,SECRET_KEY, algorithms=['HS256'])
         # user_id=pay['id']
-        user_id=1
+        user_id=36
         ingredient = self.get_object(user_id,request.data['match_id'],request.data['point'],request.data['predict'])
 
         #print(request.META.get('HTTP_AUTHORIZATION'))
@@ -154,7 +156,7 @@ class predictinfo(APIView):
         # token=request.COOKIES.get('jwt')
         # pay=jwt.decode(token,SECRET_KEY, algorithms=['HS256'])
         # user_id=pay['id']
-        user_id=1
+        user_id=36
         try:
             predict=Prediction.objects.get(match_id=id ,user_id=user_id)
             return Response({False}, status=status.HTTP_200_OK)
@@ -234,7 +236,7 @@ class card(APIView):
         # token=request.COOKIES.get('jwt')
         # pay=jwt.decode(token,SECRET_KEY, algorithms=['HS256'])
         # user_id=pay['id']
-        user_id=1
+        user_id=36
         gacha=self.get_object(user_id,request.data['team_id'],request.data['gacha_count'],request.data['point'])
 
         if(gacha=='보유하고 있는 포인트를 확인해 주세요.'):
@@ -328,7 +330,7 @@ class combine(APIView):
         # token=request.COOKIES.get('jwt')
         # pay=jwt.decode(token,SECRET_KEY, algorithms=['HS256'])
         # user_id=pay['id']
-        user_id=1
+        user_id=36
         comb=self.get_object(user_id,request.data['player_card_id1'],request.data['player_card_id2'])
 
         if(comb=='보유하고 있지 않은 선수카드입니다.' or comb=='뽑을 선수가 없습니다.'):
