@@ -9,10 +9,10 @@ export default function MyPredictionList() {
     { id: 4, match: "한국vs프랑스", date: "2022/10/20", result: "대기중" },
     { id: 5, match: "한국vs영국", date: "2022/10/21", result: "미적중" },
     { id: 6, match: "한국vs가나", date: "2022/10/22", result: "적중" },
-    { id: 5, match: "한국vs영국", date: "2022/10/21", result: "미적중" },
-    { id: 6, match: "한국vs가나", date: "2022/10/22", result: "적중" },
-    { id: 5, match: "한국vs영국", date: "2022/10/21", result: "미적중" },
-    { id: 6, match: "한국vs가나", date: "2022/10/22", result: "적중" },
+    { id: 7, match: "한국vs영국", date: "2022/10/21", result: "미적중" },
+    { id: 8, match: "한국vs가나", date: "2022/10/22", result: "적중" },
+    { id: 9, match: "한국vs영국", date: "2022/10/21", result: "미적중" },
+    { id: 10, match: "한국vs가나", date: "2022/10/22", result: "적중" },
   ];
 
   return (

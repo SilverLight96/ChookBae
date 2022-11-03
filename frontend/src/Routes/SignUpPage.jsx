@@ -1,25 +1,22 @@
-import React, { useMemo, useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import { useForm } from "react-hook-form";
 import { useRef } from "react";
 import { REGEX, REGISTER_MESSAGE, STANDARD } from "../utils/constants/constant";
-import debounce from "../utils/functions/debounce";
 import { userApis } from "../utils/apis/userApis";
 import { fetchData } from "../utils/apis/api";
 import { keyframes } from "styled-components";
-import useSetLoggedIn from "../utils/hooks/useLogin";
 import logo from "../assets/ChookBae_logo.png";
+import { useNavigate } from "react-router-dom";
 
 function SignUpPage() {
   const [userInfo, setUserInfo] = useState({
     email: "",
     nickname: "",
     password: "",
+    password_confirm: "",
   });
-  const [isDuplicatedEmail, setIsDuplicatedEmail] = useState(true);
-  const [duplicatedNickname, setDuplicatedNickname] = useState(false);
-  const [isAuthenticating, setIsAuthenticating] = useState(false);
-
+  const navigate = useNavigate();
   const {
     register,
     watch,
@@ -31,109 +28,38 @@ function SignUpPage() {
       email: "",
       nickname: "",
       password: "",
+      password_confirm: "",
     },
     mode: "onChange",
   });
 
   const onValid = (data) => {
-    // if (isDuplicatedEmail) {
-    //   setError(
-    //     "email",
-    //     { message: REGISTER_MESSAGE.DUPLICATED_EMAIL },
-    //     { shouldFocus: true }
-    //   );
-    //   return;
-    // }
-    // if (duplicatedNickname) {
-    //   setError(
-    //     "nickname",
-    //     { message: REGISTER_MESSAGE.DUPLICATED_NIACKNAME },
-    //     { shouldFocus: true }
-    //   );
-    //   return;
-    // }
     setUserInfo((prev) => ({ ...prev, ...data }));
   };
 
-  // 닉네임 중복 검사
-
-  // const checkNickname = async (value) => {
-  //   if (
-  //     errors?.nickname?.type === "pattern" ||
-  //     !value ||
-  //     value.length < STANDARD.NAME_MIN_LENGTH
-  //   )
-  //     return;
-  //   try {
-  //     const response = await fetchData.get(
-  //       userApis.NICKNAME_DUPLICATE_CHECK_API(value)
-  //     );
-  //     if (response.status === 200) {
-  //       setDuplicatedNickname(false);
-  //     }
-  //   } catch {
-  //     setError(
-  //       "nickname",
-  //       { message: REGISTER_MESSAGE.DUPLICATED_ID },
-  //       { shouldFocus: true }
-  //     );
-  //     setDuplicatedNickname(true);
-  //   }
-  // };
-
-  // const debounceCheckNickname = useMemo(
-  //   () => debounce(async (e) => await checkNickname(e.target.value), 1000),
-  //   []
-  // );
-
-  // const checkMemberInfo = async (value, url, setState, key, errorMessage) => {
-  //   if (!value || errors[key]) return;
-  //   try {
-  //     const response = await fetchData.get(url);
-  //     if (response.status === 200) {
-  //       setState(false);
-  //     }
-  //   } catch {
-  //     setError(key, { message: errorMessage }, { shouldFocus: true });
-  //     setState(true);
-  //   }
-  // };
-
-  // const debounceEmailChange = async (value) =>
-  //   await checkMemberInfo(
-  //     value,
-  //     userApis.EMAIL_DUPLICATE_CHECK_API(value),
-  //     setIsDuplicatedEmail,
-  //     "email",
-  //     REGISTER_MESSAGE.DUPLICATED_EMAIL
-  //   );
-
-  // const debouncedValidateEmail = useMemo(
-  //   () => debounce((e) => debounceEmailChange(e.target.value), 500),
-  //   []
-  // );
   // 비밀번호 확인
   const password = useRef({});
   password.current = watch("password", "");
 
-  const setLoggedIn = useSetLoggedIn();
   useEffect(() => {
     (async () => {
       try {
-        await setLoggedIn(signupregister);
-      } catch (err) {
-        if (err.response.status === 409) {
-          return;
-        }
-      }
+        await signupregister();
+      } catch (err) {}
     })();
   }, [userInfo]);
-  console.log(userInfo);
 
   const signupregister = async () => {
-    return await fetchData.post(userApis.REGISTER, userInfo);
+    return await fetchData
+      .post(userApis.REGISTER, userInfo)
+
+      .then((res) => {
+        console.log(res.data);
+        navigate("/accounts/activate");
+      });
   };
 
+  console.log(userInfo);
   return (
     <Wrapper>
       <LoginBox>
@@ -153,7 +79,6 @@ function SignUpPage() {
                   value: REGEX.EMAIL,
                   message: REGISTER_MESSAGE.EMAIL_STANDARD,
                 },
-                // onChange: debouncedValidateEmail,
               })}
               placeholder=" "
               required
@@ -183,7 +108,6 @@ function SignUpPage() {
                   value: REGEX.NICKNAME,
                   message: REGISTER_MESSAGE.NICKNAME_STANDARD,
                 },
-                // onChange: debounceCheckNickname,
               })}
               placeholder=" "
               required
@@ -229,7 +153,7 @@ function SignUpPage() {
               id="password-check"
               type="password"
               placeholder=" "
-              {...register("passwordCheck", {
+              {...register("password_confirm", {
                 required: REGISTER_MESSAGE.REQUIRED_PASSWORD_CHECK,
                 validate: {
                   passwordMatch: (value) =>
@@ -241,8 +165,8 @@ function SignUpPage() {
               required
             />
             <Label htmlFor="password">비밀번호 확인</Label>
-            {errors?.passwordCheck?.message && (
-              <small role="alert">{errors.passwordCheck.message}</small>
+            {errors?.password_confirm?.message && (
+              <small role="alert">{errors.password_confirm.message}</small>
             )}
           </UserBox>
           <button type={"submit"}>
