@@ -187,13 +187,13 @@ def login(request):
       }
 
     token = jwt.encode({'id': user.id}, SECRET_KEY, algorithm='HS256')
-    res = Response()
-    res.set_cookie(key='jwt',value=token,httponly=True)
-    res.data={
-        'nickname': user.nickname,
-        'jwt':token
-    }
-    return res
+    # res = Response()
+    # res.set_cookie(key='jwt',value=token,httponly=True)
+    # res.data={
+    #     'nickname': user.nickname,
+    #     'jwt':token
+    # }
+    return Response({'token':token},status=status.HTTP_200_OK)
 
 # 토큰을 이용해 로그아웃
 # @api_view(['POST'])
@@ -253,7 +253,6 @@ def update(request):
 @api_view(['GET'])
 def mypage(request):
     token_receive = request.COOKIES.get('jwt')
-
     try:
         payload = jwt.decode(token_receive, SECRET_KEY, algorithms=['HS256'])
         user = User.objects.get(id=payload['id'])
