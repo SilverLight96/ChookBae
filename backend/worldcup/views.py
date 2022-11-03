@@ -207,6 +207,9 @@ class card(APIView):
 
     @transaction.atomic()
     def get_object(self, user_id, team_id,gacha_count,point):
+        point=int(point)
+        gacha_count=int(gacha_count)
+        team_id=int(team_id)
         c_list=[]
         user=User.objects.get(id=user_id)
 
@@ -227,7 +230,7 @@ class card(APIView):
             c_list.append(serializer.data)
         user.points-=point
         user.save()
-        po=Point.objects.create(user_id=user,point=point,info='선수 뽑기')
+        po=Point.objects.create(user_id=user,point=-1*point,info='선수 뽑기')
 
         return (c_list)
 
