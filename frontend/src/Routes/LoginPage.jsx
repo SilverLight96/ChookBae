@@ -16,7 +16,7 @@ function LoginPage() {
     email: "",
     password: "",
   });
-  const [cookies, setCookie] = useCookies(["refresh_token"]);
+  const [cookies, setCookie] = useCookies(["token"]);
   const navigate = useNavigate();
   const setLogged = useSetRecoilState(loggedinState);
   const [loginError, setLoginError] = useState();
@@ -45,7 +45,7 @@ function LoginPage() {
       .post(userApis.LOGIN, userInfo)
       .then((res) => {
         console.log(res);
-        setCookie("refresh_token", res.data.jwt);
+        setCookie("token", res.data.token);
         setLogged(true);
         navigate("/");
       })
