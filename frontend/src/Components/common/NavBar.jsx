@@ -15,7 +15,7 @@ function NavBar() {
           <FaClipboardList size="40px" color="#E5E5E5" />
         </NavButton>
       </Link>
-      <Link to="/prediction">
+      <Link to="/PredictList">
         <NavButton>
           <img src={predictionIcon} alt="경기 예측 아이콘" />
         </NavButton>
