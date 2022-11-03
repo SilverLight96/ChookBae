@@ -1,9 +1,6 @@
-from .models import Player
-from .translation import team_k
-
 # 리그 정보
 def value_p(team):
-    leagues = [
+    leagues = [     # 2022.11.02 기준
         {"pk": 1, "weight": 1.50, "league": "EPL", "rank": 1, "id": 9, "team_name": "Arsenal FC", "logo": "https://dxl9rl52p7hhu.cloudfront.net/media/bearleague/bl15669942151527.png",},
         {"pk": 2, "weight": 1.49, "league": "EPL", "rank": 2, "id": 4, "team_name": "Manchester City", "logo": "https://dxl9rl52p7hhu.cloudfront.net/media/bearleague/bl15524863261959.png",},
         {"pk": 3, "weight": 1.48, "league": "EPL", "rank": 3, "id": 2, "team_name": "Tottenham Hotspur FC", "logo": "https://dxl9rl52p7hhu.cloudfront.net/media/bearleague/bl1552486480602.png",},
@@ -177,4 +174,6 @@ def value_p(team):
     ]
     for t in leagues:
         if t["team_name"] == team:
-            return t["weight"]
+            return t["weight"]      # 소속팀이 리스트에 있으면 그에 해당하는 weight 반환
+    
+    return 1                        # 소속팀이 리스트에 없으면 1 반환
