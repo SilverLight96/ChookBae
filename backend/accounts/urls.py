@@ -7,7 +7,7 @@ urlpatterns = [
     path('', views.signup),
     # path('email/<str:email>/', views.check_email), #이메일 인증 및 중복 확인
     path('login/', views.login), #로그인
-    path('logout/', views.logout), #로그아웃
+    # path('logout/', views.logout), #로그아웃
     # path('check/', views.check), #로그인 확인
     path('mypage/', views.mypage), #마이페이지
     path('update/', views.update), #회원정보 수정')
