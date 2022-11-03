@@ -10,9 +10,11 @@ from django.shortcuts import render
 from django.db.models import Q
 from rest_framework import status
 from rest_framework.response import Response
-from .Serializers import CardSerializer,UserrankSerializer,goalrankSerializer
-from .models import User, Point, Venue, Team, Match, Player, PlayerCard, Prediction, Bet, EmailCert
+from .Serializers import CardSerializer,UserrankSerializer,goalrankSerializer,matchidSerializer
+from .models import  Point, Venue, Team, Match, Player, PlayerCard, Prediction, Bet, EmailCert
+from accounts.models import User
 from .translation import venue_k, team_k, player_k, player_pos
+from .playervaluesetup import value_p
 import pandas as pd
 from chookbae.settings import SECRET_KEY
 
@@ -22,29 +24,30 @@ from chookbae.settings import SECRET_KEY
 # 승부 예측 POST
  
 class matchpredict(APIView):
-    param = openapi.Schema(type=openapi.TYPE_OBJECT, required=['match_pk', 'point', 'predict'],
+    param = openapi.Schema(type=openapi.TYPE_OBJECT, required=['match_id', 'point', 'predict'],
     properties={
-        'match_pk': openapi.Schema(type=openapi.TYPE_NUMBER, description="경기 번호"),
+        'match_id': openapi.Schema(type=openapi.TYPE_NUMBER, description="경기 번호"),
         'point': openapi.Schema(type=openapi.TYPE_NUMBER, description="배팅 포인트"),
         'predict': openapi.Schema(type=openapi.TYPE_NUMBER, description="승부 예측"),
         })
 
     @transaction.atomic()
-    def get_object(self,user_id, match_pk, point, predict):
-
+    def get_object(self,user_id, match_id, point, predict):
+        point=int(point)
         today=datetime.datetime.now()+datetime.timedelta(minutes=5)
 
         
-        if Match.objects.filter(Q(id=match_pk) &Q(start_date=today.date(), start_time__lte=today.time())) :
+        if Match.objects.filter(Q(id=match_id) &Q(start_date=today.date(), start_time__lte=today.time())) :
             return ('예측 가능한 시간이 초과되었습니다.')
 
-        match=Match.objects.get(id=match_pk)
+        match=Match.objects.get(id=match_id)
         user=User.objects.get(id=user_id)
+        
         if(user.points<point):
             return ('보유하고 있는 포인트를 확인해 주세요.')
              
         try:
-            pre=Prediction.objects.get(match_id=match_pk,user_id=1)
+            pre=Prediction.objects.get(match_id=match_id,user_id=36)
             return ('이미 예측을 완료한 경기입니다.')
            
         except Prediction.DoesNotExist:
@@ -55,11 +58,11 @@ class matchpredict(APIView):
            
 
         try:  
-            match_num=Bet.objects.get(id=match_pk)
+            match_num=Bet.objects.get(id=match_id)
         except Bet.DoesNotExist:
             bet=Bet.objects.create(id=match, win=0, draw=0, lose=0)
             
-        bet=Bet.objects.get(id=match_pk)
+        bet=Bet.objects.get(id=match_id)
         
         if(predict==0):
             bet.win+=point
@@ -77,8 +80,8 @@ class matchpredict(APIView):
         # token=request.COOKIES.get('jwt')
         # pay=jwt.decode(token,SECRET_KEY, algorithms=['HS256'])
         # user_id=pay['id']
-        user_id=1
-        ingredient = self.get_object(user_id,request.data['match_pk'],request.data['point'],request.data['predict'])
+        user_id=36
+        ingredient = self.get_object(user_id,request.data['match_id'],request.data['point'],request.data['predict'])
 
         #print(request.META.get('HTTP_AUTHORIZATION'))
         print(ingredient)
@@ -86,7 +89,54 @@ class matchpredict(APIView):
             return Response(ingredient,status=status.HTTP_200_OK)
         else :
             return Response({'error' :ingredient},status=status.HTTP_400_BAD_REQUEST)
+
+#승부 예측 경기 리스트 GET
+class predictlist(APIView):
+    date = openapi.Parameter('id', openapi.IN_PATH, description='date in YYYYMMDD', required=True, type=openapi.TYPE_NUMBER)
+    @swagger_auto_schema(operation_id="경기 정보 조회 (날짜별)", operation_description="날짜 입력으로 경기 조회 (날짜양식: YYYYMMDD)", manual_parameters=[id])
+    def get(self, request, id):
+        match_list=[]
+        id=str(id)
+        match_date = datetime.datetime(int(id[:4]), int(id[4:6]), int(id[6:8]))
+
+        matches = Match.objects.filter(start_date=match_date)
+        for i in matches:
+            serializer = matchidSerializer(i)
+            match_list.append(serializer.data)
         
+        print(match_list)
+        return Response(match_list,status=status.HTTP_200_OK)
+
+#승부 예측 정보 조회 GET
+class predicdetail(APIView):
+    match_id = openapi.Parameter('id', openapi.IN_PATH, description='date in YYYYMMDD', required=True, type=openapi.TYPE_NUMBER)
+    @swagger_auto_schema(operation_id="경기 정보 조회 (날짜별)", operation_description="날짜 입력으로 경기 조회 (날짜양식: YYYYMMDD)", manual_parameters=[id])
+    def get(self, request, id):
+        try:
+            bet=Bet.objects.get(id=id)
+        except:
+            if not Match.objects.filter(id=id):
+                return Response({'error': '경기 정보를 찾을수 없습니다.'},status=status.HTTP_400_BAD_REQUEST)
+            else :
+                bet=Bet.objects.create(id=Match.objects.get(id=id),win=0,draw=0,lose=0)
+                
+        win_dang=0
+        draw_dang=0
+        lose_dang=0
+
+        win_count=Prediction.objects.filter(Q(match_id=id) & Q(predict=0)).count()
+        draw_count=Prediction.objects.filter(Q(match_id=id) & Q(predict=1)).count()
+        lose_count=Prediction.objects.filter(Q(match_id=id) & Q(predict=2)).count()
+
+        total=bet.win+bet.draw+bet.lose
+
+        if(bet.win!=0): win_dang=total/bet.win
+        if(bet.draw!=0): draw_dang=total/bet.draw
+        if(bet.lose!=0): lose_dang=total/bet.lose
+
+        return Response({'win_count': win_count, 'win_total': bet.win, 'win_dang': win_dang,
+        'draw_count': draw_count, 'draw_total': bet.draw, 'draw_dang': draw_dang,
+        'lose_count': lose_count, 'lose_total': bet.lose, 'lose_dang': lose_dang,'total_point' :total, },status=status.HTTP_200_OK)
 
 #승부 예측 여부 GET
 class predictinfo(APIView):
@@ -106,7 +156,7 @@ class predictinfo(APIView):
         # token=request.COOKIES.get('jwt')
         # pay=jwt.decode(token,SECRET_KEY, algorithms=['HS256'])
         # user_id=pay['id']
-        user_id=1
+        user_id=36
         try:
             predict=Prediction.objects.get(match_id=id ,user_id=user_id)
             return Response({False}, status=status.HTTP_200_OK)
@@ -186,7 +236,7 @@ class card(APIView):
         # token=request.COOKIES.get('jwt')
         # pay=jwt.decode(token,SECRET_KEY, algorithms=['HS256'])
         # user_id=pay['id']
-        user_id=1
+        user_id=36
         gacha=self.get_object(user_id,request.data['team_id'],request.data['gacha_count'],request.data['point'])
 
         if(gacha=='보유하고 있는 포인트를 확인해 주세요.'):
@@ -197,6 +247,7 @@ class card(APIView):
     @swagger_auto_schema(operation_id="유저의 보유하고 있는 카드 확인", operation_description="해당 유저가 보유하고 있는 모든 카드의 정보를 가져온다.")
     def get(self, request):
         c_list=[]
+        hashmap = {} 
         country = request.GET.get('country', None)
         if country is not None:
             team=Team.objects.get(country=country)
@@ -204,19 +255,23 @@ class card(APIView):
         # token=request.COOKIES.get('jwt')
         # pay=jwt.decode(token,SECRET_KEY, algorithms=['HS256'])
         # user_id=pay['id']
-        user_id=1
+        user_id=2
 
         card=PlayerCard.objects.filter(user_id=user_id).order_by('player_id')
 
         for i in card:
-            C=Player.objects.get(id=i.player_id.id)
+            if i.player_id.id in hashmap :
+                num=hashmap[i.player_id.id]
+                hashmap[i.player_id.id]=num+1
+            else :
+                hashmap[i.player_id.id]=1
+
+        for i in hashmap.keys():
+            C=Player.objects.get(id=i)
             if country is not None:
                 if(C.team_id != team):
                     continue
-            serializer = CardSerializer(C)
-            
-            c_list.append(serializer.data)
-        
+            c_list.append({'player_image' : C.player_image, 'fullname' : C.fullname, 'value' : C.value, 'count' : hashmap.get(i) })    
         return Response(c_list)       
 
 #선수 합성 POST
@@ -229,7 +284,7 @@ class combine(APIView):
 
 
     @transaction.atomic()
-    def get_object(self, user_id, card1, card2):
+    def get_object(self, user_id, card1, card2):  
         user=User.objects.get(id=user_id)
         first=PlayerCard.objects.get(id=card1)
         second=PlayerCard.objects.get(id=card2)
@@ -275,7 +330,7 @@ class combine(APIView):
         # token=request.COOKIES.get('jwt')
         # pay=jwt.decode(token,SECRET_KEY, algorithms=['HS256'])
         # user_id=pay['id']
-        user_id=1
+        user_id=36
         comb=self.get_object(user_id,request.data['player_card_id1'],request.data['player_card_id2'])
 
         if(comb=='보유하고 있지 않은 선수카드입니다.' or comb=='뽑을 선수가 없습니다.'):
@@ -320,7 +375,7 @@ class GroupInfo(APIView):
         teams = Team.objects.all().values('group', 'id', 'country', 'logo').order_by('group')
         group_info = []
         for t in teams:
-            team_name = team_k(t['id'])
+            team_name = team_k(t['id'])[0]
             curr_team = [t['group'], t['id'], team_name, t['logo']]
             group_info.append(curr_team)
         
@@ -344,7 +399,7 @@ class MatchInfoByTeam(APIView):
         for g in sorted(games):
             match = Match.objects.get(id=g)
             venue_name, address = venue_k(match.venue_id.id)
-            team1_name, team2_name = team_k(match.team1_id.id), team_k(match.team2_id.id)
+            team1_name, team2_name = team_k(match.team1_id.id)[0], team_k(match.team2_id.id)[0]
             curr_info = [match.id, match.start_date, match.start_time, venue_name, address,
                         team1_name, match.team1_id.logo, match.team1_id.group, team2_name, match.team2_id.logo]
             match_list.append(curr_info)
@@ -366,7 +421,7 @@ class MatchInfoByDate(APIView):
         for g in games:
             match = Match.objects.get(id=g.id)
             venue_name, address = venue_k(match.venue_id.id)
-            team1_name, team2_name = team_k(match.team1_id.id), team_k(match.team2_id.id)
+            team1_name, team2_name = team_k(match.team1_id.id)[0], team_k(match.team2_id.id)[0]
             curr_info = [match.id, match.start_date, match.start_time, venue_name, address,
                         team1_name, match.team1_id.logo, match.team1_id.group, team2_name, match.team2_id.logo]
             match_list.append(curr_info)
@@ -383,11 +438,12 @@ class MatchDetail(APIView):
     def get(self, request, id):
         match = Match.objects.get(id=id)
         venue_name, address = venue_k(match.venue_id.id)
-        team1_name, team2_name = team_k(match.team1_id.id), team_k(match.team2_id.id)
+        team1_name, team1_rank = team_k(match.team1_id.id)[0], team_k(match.team1_id.id)[1]
+        team2_name, team2_rank = team_k(match.team2_id.id)[0], team_k(match.team2_id.id)[1]
         match_detail = [match.id, match.start_date, match.start_time, venue_name, address,
-                        match.team1_id.id, team1_name, match.team1_id.logo, match.team1_id.group, match.team1_id.rank, match.team1_id.win, match.team1_id.draw, match.team1_id.loss,
+                        match.team1_id.id, team1_name, match.team1_id.logo, match.team1_id.group, team1_rank, match.team1_id.win, match.team1_id.draw, match.team1_id.loss,
                         match.team1_id.points, match.team1_id.last_five, match.team1_id.goal_diff, match.team1_id.manager, match.team1_id.round,
-                        match.team2_id.id, team2_name, match.team2_id.logo, match.team2_id.group, match.team2_id.rank, match.team2_id.win, match.team2_id.draw, match.team2_id.loss,
+                        match.team2_id.id, team2_name, match.team2_id.logo, match.team2_id.group, team2_rank, match.team2_id.win, match.team2_id.draw, match.team2_id.loss,
                         match.team2_id.points, match.team2_id.last_five, match.team2_id.goal_diff, match.team2_id.manager, match.team2_id.round]
         
         return Response(match_detail)
@@ -401,7 +457,7 @@ class MatchTable(APIView):
         teams = Team.objects.filter(group=id)
         team_table = []
         for t in teams:
-            team_name = team_k(t.id)
+            team_name = team_k(t.id)[0]
             curr_team = [team_name, t.win, t.draw, t.loss, t.points, t.goal_diff, -1*(t.points*100+t.goal_diff)] 
             team_table.append(curr_team)
 
@@ -436,3 +492,34 @@ class TeamInfo(APIView):
             team_info.append([fullnameKR, p.fullname, position, p.number])
         
         return Response(team_info)
+
+
+# 선수 시세 변동 알고리즘       >> AUTO정산에 추가하기 (하루 1회 업데이트)
+class PlayerTest(APIView):
+    @swagger_auto_schema(operation_id="선수 스탯 테스트", operation_description="선수 스탯 테스트", responses={200: '조회 성공'})
+    def get(self, request):
+
+        t1 = datetime.datetime.now()
+        # 선수 기록 수정 코드 (테스트)
+        player = Player.objects.get(id=48)
+        # player.goal += 1      # 1골 추가
+        # player.run_time += 90   # 출장시간 추가
+        # player.save()      # DB 업데이트
+        
+        # 선수 시세 설정 코드
+        players = Player.objects.all()
+        for player in players:
+            # 초기값 설정하기 (소속 국가의 피파랭킹, 소속 팀이 속한 리그)
+            init_value = 100 * (100 - team_k(player.team_id.id)[1]) * value_p(player.current_team)
+            
+            # 월드컵 성적으로 시세 조정하기
+            goal, assist, yellow, red, runtime = player.goal, player.assist, player.yellow_card, player.red_card, player.run_time
+            team = Team.objects.get(id=player.team_id.id)
+            win, draw, loss, goal_diff = team.win, team.draw, team.loss, team.goal_diff
+            player.value = (init_value * (1 + goal * 0.3) * (1 + assist * 0.1) * (1 - yellow * 0.05) * (1 - red * 0.2) * (1 + runtime * 0.002)
+                            + (3000 * win) + (1000 * draw) - (500 * loss) + (100 * goal_diff))
+            player.save()
+        
+        print(datetime.datetime.now() - t1)
+
+        return Response("success")

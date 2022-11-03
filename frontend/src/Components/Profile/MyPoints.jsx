@@ -1,16 +1,12 @@
 import React from "react";
 import styled from "styled-components";
+import { useRecoilState } from "recoil";
+import { myInformation } from "../../atoms";
 
 export default function MyPointList() {
-  const pointlist = [
-    { id: 1, date: "2022/10/17", usage: "예측 경기 적중", points: 134135 },
-    { id: 2, date: "2022/10/18", usage: "선수 1회 뽑기", points: -1000 },
-    { id: 3, date: "2022/10/19", usage: "출석", points: 100 },
-    { id: 4, date: "2022/10/20", usage: "예측 경기 적중", points: 34134 },
-    { id: 5, date: "2022/10/21", usage: "선수 1회 뽑기", points: -1000 },
-    { id: 6, date: "2022/10/22", usage: "출석", points: 100 },
-    { id: 7, date: "2022/10/23", usage: "선수 10회 뽑기", points: -10000 },
-  ];
+  const myInfo = useRecoilState(myInformation);
+
+  console.log(myInfo[0].point_list);
 
   return (
     <Wrapper>
@@ -21,13 +17,13 @@ export default function MyPointList() {
           <div>내역</div>
           <div>포인트</div>
         </PredictionTH>
-        {pointlist.map((pointusage, id) => {
+        {myInfo[0].point_list.map((pointusage, id) => {
           return (
             <PredictionBody key={pointusage.id}>
-              <div>{pointusage.date}</div>
-              <div>{pointusage.usage}</div>
-              <PredictionResult state={pointusage.points}>
-                {pointusage.points}
+              <div>{pointusage.time}</div>
+              <div>{pointusage.info}</div>
+              <PredictionResult state={pointusage.point}>
+                {pointusage.point}
               </PredictionResult>
             </PredictionBody>
           );
@@ -73,8 +69,8 @@ const PredictionResult = styled.div`
   font-weight: bold;
   color: ${(props) =>
     props.state > 0
-      ? props.theme.colors.mainOrange
-      : props.state <= 0
       ? props.theme.colors.pointBlue
+      : props.state <= 0
+      ? props.theme.colors.mainOrange
       : props.theme.colors.pointBlack};
 `;

@@ -15,9 +15,12 @@ from django.core.mail import EmailMessage
 from .tokens import account_activation_token
 from django.utils.encoding import force_bytes, force_text
 from django.contrib import auth
-from rest_framework_simplejwt.tokens import RefreshToken
-from django.contrib.auth.models import update_last_login
 from django.utils import timezone
+
+from worldcup.models import Player, PlayerCard
+from worldcup.models import Prediction
+from worldcup.models import Point
+# from worldcup.models import User
 
 from chookbae.settings import SECRET_KEY
 from .serializers import (
@@ -131,12 +134,11 @@ def login(request):
     User = get_user_model()
     email = request.data.get('email')
     password = request.data.get('password')
-
+    #로그인한 유저의 id를 받아온다
     if not User.objects.filter(email=email).exists():
         return Response({'아이디가 존재하지 않습니다.'}, status=status.HTTP_400_BAD_REQUEST)
 
     user = get_object_or_404(User, email=email)
-
     if not user.check_password(password):
         return Response({'비밀번호가 틀렸습니다.'}, status=status.HTTP_400_BAD_REQUEST)
 
@@ -144,8 +146,40 @@ def login(request):
         return Response({'이메일 인증을 해주세요.'}, status=status.HTTP_400_BAD_REQUEST)
 
     # 토큰 생성
-    user.last_login =  timezone.localtime()
-    user.save(update_fields=['last_login'])
+    # today = datetime.date.today()
+    today = datetime.date.today()
+    #오늘이 최초 회원가입일 경우
+    if user.login_count == 0:
+        user.last_login = timezone.now()
+        print("처음 회원가입 보상 1000포인트 지급")
+        user.points += 1000
+        
+        #포인트 내역에 추가
+        Point.objects.create(user_id=user,point=1000, info="처음 회원가입 보상",time=timezone.now())
+        
+        user.login_count += 1
+        user.save(update_fields=['last_login','login_count', 'points'])
+    #최근 로그인 날짜가 오늘이 아닐 경우
+    elif user.last_login.date() != today:
+        #로그인 횟수 1 증가
+        user.login_count += 1
+        #로그인 횟수를 저장
+        user.last_login = timezone.now()
+        print("출석체크 보상으로 500포인트 지급되었습니다.")
+        
+        #포인트 내역에 추가
+        Point.objects.create(user_id=user,point=500, info="로그인 보상",time=timezone.now())
+        user.points += 500
+
+        user.save(update_fields=['last_login', 'login_count','points'])
+    else:
+        print("오늘은 이미 출석체크를 했습니다.")
+        user.last_login = timezone.now()
+        user.save(update_fields=['last_login'])
+    
+    
+
+    
     payload = {
       'id' : user.id, # 유저의 id
       'exp' : datetime.datetime.now() + datetime.timedelta(minutes=60), # 토큰 유효기간 60분
@@ -153,34 +187,24 @@ def login(request):
       }
 
     token = jwt.encode({'id': user.id}, SECRET_KEY, algorithm='HS256')
-    res = Response()
-    res.set_cookie(key='jwt',value=token,httponly=True)
-    res.data={
-        'jwt':token
-    }
-    return res
-#로그인 유지
-# @api_view(['GET'])
-# def check(request):
-#     token_receive = request.COOKIES.get('jwt')
-#     try:
-#         payload = jwt.decode(token_receive, SECRET_KEY, algorithms=['HS256'])
-#         user = User.objects.get(id=payload['id'])
-#         return Response({'id': user.id, 'nickname': user.nickname, 'email': user.email})
-#     except jwt.ExpiredSignatureError:
-#         return Response({'error': '로그인 시간이 만료되었습니다.'}, status=status.HTTP_400_BAD_REQUEST)
-
+    # res = Response()
+    # res.set_cookie(key='jwt',value=token,httponly=True)
+    # res.data={
+    #     'nickname': user.nickname,
+    #     'jwt':token
+    # }
+    return Response({'token':token},status=status.HTTP_200_OK)
 
 # 토큰을 이용해 로그아웃
-@api_view(['POST'])
-@permission_classes([IsAuthenticated])
-def logout(request):
-    res = Response()
-    res.delete_cookie('jwt')
-    res.data = {
-        'message': '로그아웃 되었습니다.'
-    }
-    return Response(res, status=status.HTTP_200_OK)
+# @api_view(['POST'])
+# @permission_classes([IsAuthenticated])
+# def logout(request):
+#     res = Response()
+#     res.delete_cookie('jwt')
+#     res.data = {
+#         'message': '로그아웃 되었습니다.'
+#     }
+#     return Response(res, status=status.HTTP_200_OK)
 
 
 #회원정보수정
@@ -225,19 +249,30 @@ def update(request):
     
 
 
-#마이페이지 정보: 나 자신의 정보를 담아서 react의 mypage로 정보를 보내줌
+#마이페이지
 @api_view(['GET'])
 def mypage(request):
-    me = get_object_or_404(User, nickname=request.user.nickname)
-    if request.user == me:
-        return render(request,'k7a202.p.ssafy.io/mypage',{'me':me})
+    # token_receive = request.COOKIES.get('jwt')
+    token_receive = request.META.get('HTTP_AUTHORIZATION')
+    try:
+        C_list=[]
+        payload = jwt.decode(token_receive, SECRET_KEY, algorithms=['HS256'])
+        user = User.objects.get(id=payload['id'])
+        #유저가 소유한 카드 리스트
+        card_list = PlayerCard.objects.filter(user_id=user.id)
+        for i in card_list:
+            card=Player.objects.filter(id=i.player_id.id).values('fullname','player_image','value')
+            C_list.append(card)
+        # card_list = Player.objects.filter().values('fullname','player_image','value')
 
+        #유저의 예측 내역 조회
+        predict_match = Prediction.objects.filter(user_id=user.id).values()
 
-#worldcup app에서 현재 나의 보유 선수 조회
-# @api_view(['GET'])
-# def myplayer(request):
-#     me = get_object_or_404(User, nickname=request.user.nickname)
-#     if request.user == me:
-#         myplayers = me.player.all()
-#         serializer = PlayerSerializer(myplayers, many=True)
-#         return Response(serializer.data)
+        #유저의 포인트 사용 내역 전부 가져오기 values()로 가져오면 딕셔너리 형태로 가져옴 튜플은 values_list()
+        point_list = Point.objects.filter(user_id=user.id).values()
+        
+        return Response({'predict_match':predict_match,'nickname':user.nickname,'point':user.points \
+        ,'card_list':C_list,'point_list':point_list},status=status.HTTP_200_OK)
+    except jwt.ExpiredSignatureError:
+        return Response({'error': '토큰이 유효하지 않습니다.'}, status=status.HTTP_400_BAD_REQUEST)
+    

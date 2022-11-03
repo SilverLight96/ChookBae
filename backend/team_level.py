@@ -24,13 +24,13 @@ params = {
 
 teams = []
 # 결과를 받아서 리스트에 저장
-for t in range(1, 300):
+for t in range(1, 10):
     team_id = str(t) + '/'
     response = requests.get(BASE_URL+path+team_id, params=params)
     data = response.json()
 
     if data:
-        curr_team = [t, "", "", data['team']['teamName'], data['team']['logo']]
+        curr_team = [t, "", "", data['team']['teamID'], data['team']['teamName'], data['team']['logo']]
         teams.append(curr_team)
 
         print(t)
@@ -38,5 +38,5 @@ for t in range(1, 300):
 # print(teams)
 
 
-df = pd.DataFrame(teams, columns=['pk', 'weight', 'league', 'team_name', 'logo'])
+df = pd.DataFrame(teams, columns=['pk', 'weight', 'league', 'team_id', 'team_name', 'logo'])
 df.to_csv('teams.csv', encoding='utf-8-sig', index=False)

@@ -1,19 +1,21 @@
 from django.db import models
 
-# Create your models here.
-class User(models.Model):
-    id = models.AutoField(primary_key=True)
-    email = models.CharField(max_length=200)
-    nickname = models.CharField(max_length=200)
-    password = models.CharField(max_length=200)
-    points = models.IntegerField()
-    photo = models.TextField(blank=True, null=True)
-    value = models.IntegerField()
-    login_date = models.DateField()
-    login_count = models.IntegerField()
+from accounts.models import User
 
-    class Meta:
-            db_table='user'
+# Create your models here.
+# class User(models.Model):
+#     id = models.AutoField(primary_key=True)
+#     email = models.CharField(max_length=200)
+#     nickname = models.CharField(max_length=200)
+#     password = models.CharField(max_length=200)
+#     points = models.IntegerField()
+#     photo = models.TextField(blank=True, null=True)
+#     value = models.IntegerField()
+#     login_date = models.DateField()
+#     login_count = models.IntegerField()
+
+#     class Meta:
+#             db_table='user'
 
 class Point(models.Model):
     id = models.AutoField(primary_key=True)
