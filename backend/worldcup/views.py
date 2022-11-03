@@ -47,13 +47,13 @@ class matchpredict(APIView):
             return ('보유하고 있는 포인트를 확인해 주세요.')
              
         try:
-            pre=Prediction.objects.get(match_id=match_id,user_id=36)
+            pre=Prediction.objects.get(match_id=match_id,user_id=user_id)
             return ('이미 예측을 완료한 경기입니다.')
            
         except Prediction.DoesNotExist:
             user.points-=point
             user.save()
-            po=Point.objects.create(user_id=user,point=point,info='경기 결과 예측 배팅')
+            po=Point.objects.create(user_id=user,point=-1*point,info='경기 결과 예측 배팅')
             pred=Prediction.objects.create(user_point=point,predict=predict,match_id=match,user_id=user)
            
 
