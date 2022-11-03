@@ -113,8 +113,11 @@ class predicdetail(APIView):
         try:
             bet=Bet.objects.get(id=id)
         except:
-            return Response({'error': '경기 정보를 찾을수 없습니다.'},status=status.HTTP_400_BAD_REQUEST)
-
+            if not Match.objects.filter(id=id):
+                return Response({'error': '경기 정보를 찾을수 없습니다.'},status=status.HTTP_400_BAD_REQUEST)
+            else :
+                bet=Bet.objects.create(id=Match.objects.get(id=id),win=0,draw=0,lose=0)
+                
         win_dang=0
         draw_dang=0
         lose_dang=0
