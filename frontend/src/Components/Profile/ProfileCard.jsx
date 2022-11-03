@@ -2,35 +2,19 @@ import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { removeCookie } from "../../utils/functions/cookies";
-import { myInformation } from "../../atoms";
-import { loggedinState } from "../../atoms";
 import { useRecoilState, useSetRecoilState } from "recoil";
-import { fetchData } from "../../utils/apis/api";
+import { loggedinState, myInformation } from "../../atoms";
 
 function ProfileCard() {
-  const [profileInfo, setProfileInfo] = useRecoilState(myInformation);
+  const profileInfo = useRecoilState(myInformation);
+
   const setLoggedin = useSetRecoilState(loggedinState);
   const navigate = useNavigate();
-
   const handleLogout = () => {
     setLoggedin(false);
-    removeCookie("jwt");
-    removeCookie("refresh_token");
+    removeCookie("token");
     navigate("/");
   };
-
-  const getUserInfo = async () => {
-    return await (
-      await fetchData.get("/v1/accounts/mypage/")
-    ).then((res) => {
-      console.log(res);
-      setProfileInfo(res);
-    });
-  };
-
-  useEffect(() => {
-    getUserInfo();
-  }, []);
 
   return (
     <Wrapper>
@@ -44,15 +28,12 @@ function ProfileCard() {
       </ButtonConatiner>
       <ProfileImgContainer>
         <ProfileImg>
-          <img
-            src="http://t0.gstatic.com/licensed-image?q=tbn:ANd9GcSIjMZAnE9OcAtov5EVsznvysN1zvXq5jDY7vSZkoqKv59QN306vyoU0ouBEgcHsyih"
-            alt="프로필 이미지"
-          />
+          <img src={profileInfo[0].photo} alt="프로필 이미지" />
         </ProfileImg>
       </ProfileImgContainer>
       <ProfileMain>
-        <NickName>강경은 </NickName>
-        <p>포인트 : 1000만점 </p>
+        <NickName>{profileInfo[0].nickname} </NickName>
+        <p>포인트 : {profileInfo[0].point} 점</p>
       </ProfileMain>
     </Wrapper>
   );
