@@ -6,10 +6,48 @@ import { useRecoilState } from "recoil";
 import { myInformation } from "../../atoms";
 
 function MyPlayerCardList() {
-  const myInfo = useRecoilState(myInformation);
-
-  console.log(myInfo);
-
+  const [playerCards, setPlayerCards] = useState([
+    {
+      id: 1,
+      title: "손흥민",
+      image:
+        "https://ichef.bbci.co.uk/news/624/cpsprodpb/4118/production/_119546661_gettyimages-1294130887.jpg.webp",
+    },
+    {
+      id: 2,
+      title: "손흥민",
+      image:
+        "https://ichef.bbci.co.uk/news/624/cpsprodpb/4118/production/_119546661_gettyimages-1294130887.jpg.webp",
+    },
+    {
+      id: 3,
+      title: "손흥민",
+      image:
+        "https://ichef.bbci.co.uk/news/624/cpsprodpb/4118/production/_119546661_gettyimages-1294130887.jpg.webp",
+    },
+    {
+      id: 4,
+      title: "손흥민",
+      image:
+        "https://ichef.bbci.co.uk/news/624/cpsprodpb/4118/production/_119546661_gettyimages-1294130887.jpg.webp",
+    },
+    {
+      id: 5,
+      title: "손흥민",
+      image:
+        "https://ichef.bbci.co.uk/news/624/cpsprodpb/4118/production/_119546661_gettyimages-1294130887.jpg.webp",
+    },
+  ]);
+  useEffect(() => {
+    // const getCateList = async (url) => {
+    //   return await fetchData.get(url);
+    // };
+    // const res = getCateList(bookListApis.BOOK_CATEGORY_LIST(categoryid.id));
+    // res.then((playerlist) => {
+    //   console.log(playerlist.data);
+    //   setPlayerCards(playerlist.data);
+    // });
+  }, []);
   return (
     <Wrapper>
       {myInfo[0].card_list.map((playerCard) => {
