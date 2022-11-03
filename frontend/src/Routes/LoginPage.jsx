@@ -12,13 +12,13 @@ import { useSetRecoilState } from "recoil";
 import { loggedinState } from "../atoms";
 
 function LoginPage() {
+  const setLogged = useSetRecoilState(loggedinState);
+  const [cookies, setCookie] = useCookies(["token"]);
   const [userInfo, setUserInfo] = useState({
     email: "",
     password: "",
   });
-  const [cookies, setCookie] = useCookies(["token"]);
   const navigate = useNavigate();
-  const setLogged = useSetRecoilState(loggedinState);
   const [loginError, setLoginError] = useState();
   const [isError, setIsError] = useState(false);
 
