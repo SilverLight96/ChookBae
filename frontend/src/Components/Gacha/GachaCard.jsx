@@ -1,15 +1,12 @@
-import React, { useState } from "react";
-import styled, { keyframes } from "styled-components";
+import React from "react";
+import styled from "styled-components";
 
 function GachaCard(props) {
-  const { image, title, isactive } = props;
-  const [isActive, setIsActive] = useState(false);
-
   return (
     <Wrapper>
       <BestCardContainer>
-        <Image src={image} />
-        <Title>{title}</Title>
+        <Image src={props.image} />
+        <Title>{props.title}</Title>
       </BestCardContainer>
     </Wrapper>
   );
@@ -25,9 +22,6 @@ const Wrapper = styled.div`
   width: 100%;
   height: 30vh;
 `;
-const CardPopUp = keyframes`
-    animation-duration: 1s;
-`;
 
 const BestCardContainer = styled.div`
   position: relative;
@@ -39,7 +33,6 @@ const BestCardContainer = styled.div`
   border-radius: 3px;
   box-shadow: 5px 5px 15px 1px black;
   overflow: hidden;
-  scale: 0;
   &:hover {
     transform: scale(1.05);
     transition: transform 0.8s;

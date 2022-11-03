@@ -5,6 +5,7 @@ import { Keyframes } from "styled-components";
 import GachaModal from "../Components/Gacha/GachaModal";
 import { fetchData } from "../utils/apis/api";
 import GachaCard from "../Components/Gacha/GachaCard";
+import PlayerCard from "../Components/common/PlayerCard";
 
 function GachaPage() {
   const [isGacha, setIsGacha] = useState({
@@ -13,29 +14,10 @@ function GachaPage() {
     point: 0,
   });
 
-  const [gachaResult, setGachaResult] = useState(
-    {
-      card_img: "",
-      player_name: "",
-      value: 0,
-    },
-    {
-      card_img: "",
-      player_name: "",
-      value: 0,
-    },
-    {
-      card_img: "",
-      player_name: "",
-      value: 0,
-    }
-  );
-
-  const [playerCards, setPlayerCards] = useState({
-    id: 1,
-    fullname: "손흥민",
-    player_image:
-      "https://ichef.bbci.co.uk/news/624/cpsprodpb/4118/production/_119546661_gettyimages-1294130887.jpg.webp",
+  const [gachaResult, setGachaResult] = useState({
+    card_img: "",
+    player_name: "",
+    value: 0,
   });
 
   const [isModal, setIsModal] = useState(false);
@@ -63,7 +45,7 @@ function GachaPage() {
       console.log("가차요청완료");
     };
   }, [isGacha]);
-  console.log(isGacha);
+  console.log(isGacha.gacha_count);
   const getGacha = async (url) => {
     // const response = await fetchData.post(url, isGacha).then((res) => {
     //   console.log(res);
@@ -71,12 +53,14 @@ function GachaPage() {
     // });
     // return response;
     setGachaResult({
-      card_img: "aa",
-      player_name: "aa",
+      card_img:
+        "https://ichef.bbci.co.uk/news/624/cpsprodpb/4118/production/_119546661_gettyimages-1294130887.jpg.webp",
+      player_name: "손흥민",
       value: 10,
     });
   };
   console.log(gachaResult);
+
   useEffect(() => {
     console.log("모달열기");
     return () => {
@@ -121,9 +105,9 @@ function GachaPage() {
           <div>
             <GachaText>가차 1회 뽑기</GachaText>
             <GachaCard
-              title={playerCards.fullname}
-              image={playerCards.player_image}
-              key={playerCards.id}
+              title={gachaResult.player_name}
+              image={gachaResult.card_image}
+              value={gachaResult.value}
             />
           </div>
         ) : null}
