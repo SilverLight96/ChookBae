@@ -1,19 +1,36 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { removeCookie } from "../../utils/functions/cookies";
+import { myInformation } from "../../atoms";
 import { loggedinState } from "../../atoms";
-import { useSetRecoilState } from "recoil";
+import { useRecoilState, useSetRecoilState } from "recoil";
+import { fetchData } from "../../utils/apis/api";
 
 function ProfileCard() {
+  const [profileInfo, setProfileInfo] = useRecoilState(myInformation);
   const setLoggedin = useSetRecoilState(loggedinState);
   const navigate = useNavigate();
 
   const handleLogout = () => {
     setLoggedin(false);
-    removeCookie("token");
+    removeCookie("jwt");
+    removeCookie("refresh_token");
     navigate("/");
   };
+
+  const getUserInfo = async () => {
+    return await (
+      await fetchData.get("/v1/accounts/mypage/")
+    ).then((res) => {
+      console.log(res);
+      setProfileInfo(res);
+    });
+  };
+
+  useEffect(() => {
+    getUserInfo();
+  }, []);
 
   return (
     <Wrapper>

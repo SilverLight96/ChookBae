@@ -1,14 +1,14 @@
 import axios from 'axios';
-import { getCookie } from '../functions/cookies';
 
 export const instance = axios.create({
   baseURL: "https://k7a202.p.ssafy.io/",
   // baseURL: "http://localhost:8000",
   headers: {
     'Content-Type': 'application/json',
-    'Authorization' : `${getCookie("token")}`,
   },
 });
+
+
 
 export const fetchData = {
   get: async (url, option) => await instance.get(url, option),

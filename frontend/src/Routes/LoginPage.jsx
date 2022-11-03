@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import logo from "../assets/ChookBae_logo.png";
 import { keyframes } from "styled-components";
@@ -16,7 +16,7 @@ function LoginPage() {
     email: "",
     password: "",
   });
-  const [cookies, setCookie] = useCookies(["token"]);
+  const [cookies, setCookie] = useCookies(["refresh_token"]);
   const navigate = useNavigate();
   const setLogged = useSetRecoilState(loggedinState);
   const [loginError, setLoginError] = useState();
@@ -24,8 +24,6 @@ function LoginPage() {
 
   const {
     register,
-    watch,
-    setError,
     handleSubmit,
     formState: { errors },
   } = useForm({
@@ -37,20 +35,17 @@ function LoginPage() {
   });
 
   useEffect(() => {
-    (async () => {
-      try {
-        await login();
-      } catch (err) {}
-    })();
+    return () => {
+      login();
+    };
   }, [userInfo]);
-  console.log(userInfo);
 
   const login = async () => {
     return await fetchData
       .post(userApis.LOGIN, userInfo)
       .then((res) => {
         console.log(res);
-        setCookie("token", res.data.jwt);
+        setCookie("refresh_token", res.data.jwt);
         setLogged(true);
         navigate("/");
       })
