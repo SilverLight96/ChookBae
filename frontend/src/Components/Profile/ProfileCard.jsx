@@ -20,10 +20,8 @@ function ProfileCard() {
   };
 
   const getUserInfo = async () => {
-    return await (
-      await fetchData.get("/v1/accounts/mypage/")
-    ).then((res) => {
-      console.log(res);
+    return await fetchData.get("/v1/accounts/mypage/").then((res) => {
+      console.log(res.data);
       setProfileInfo(res);
     });
   };
