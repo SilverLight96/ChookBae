@@ -5,6 +5,7 @@ import { myInformation } from "../../atoms";
 
 export default function MyPredictionList() {
   const myInfo = useRecoilState(myInformation);
+  console.log(myInfo[0].predict_match);
 
   return (
     <Wrapper>
@@ -18,10 +19,16 @@ export default function MyPredictionList() {
         {myInfo[0].predict_match.map((prediction, id) => {
           return (
             <PredictionBody key={prediction.id}>
-              <div>{prediction.match}</div>
-              <div>{prediction.date}</div>
-              <PredictionResult result={prediction.result}>
-                {prediction.result}
+              <div>{prediction.match_id_id}</div>
+              <div>{prediction.bet_time}</div>
+              <PredictionResult result={prediction.predict}>
+                {prediction.predict === 1 ? (
+                  <div>적중</div>
+                ) : prediction.predict === 2 ? (
+                  <div>미적중</div>
+                ) : (
+                  <div>대기중</div>
+                )}
               </PredictionResult>
             </PredictionBody>
           );
@@ -66,9 +73,9 @@ const PredictionBody = styled.div`
 const PredictionResult = styled.div`
   font-weight: bold;
   color: ${(props) =>
-    props.result === "미적중"
+    props.result === 2
       ? props.theme.colors.mainOrange
-      : props.result === "적중"
+      : props.result === 1
       ? props.theme.colors.pointBlue
       : props.theme.colors.pointBlack};
 `;
