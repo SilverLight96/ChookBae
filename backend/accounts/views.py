@@ -214,8 +214,8 @@ def update(request):
     # User = get_user_model()
     # user = get_object_or_404(User, nickname=request.data['nickname'])
     #토큰 송신
-    # token_receive = request.META.get('HTTP_AUTHORIZATION')
-    token_receive = request.COOKIES.get('jwt')
+    token_receive = request.META.get('HTTP_AUTHORIZATION')
+    # token_receive = request.COOKIES.get('jwt')
     try:
         payload = jwt.decode(token_receive, SECRET_KEY, algorithms=['HS256'])
         user = User.objects.get(id=payload['id'])
@@ -252,7 +252,8 @@ def update(request):
 #마이페이지
 @api_view(['GET'])
 def mypage(request):
-    token_receive = request.COOKIES.get('jwt')
+    # token_receive = request.COOKIES.get('jwt')
+    token_receive = request.META.get('HTTP_AUTHORIZATION')
     try:
         payload = jwt.decode(token_receive, SECRET_KEY, algorithms=['HS256'])
         user = User.objects.get(id=payload['id'])
