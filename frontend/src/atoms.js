@@ -4,17 +4,17 @@ import { getCookie } from './utils/functions/cookies';
 
 export const loggedinState = atom({
   key: "loggedinState",
-  default: getCookie('refresh_token') ? true : false,
+  default: getCookie('token') ? true : false,
 });
 
 export const myInformation = atom({
   key: 'myInformation',
   default: {
-    predict_match: [],
+    predict_match: null,
     nickname: "",
-    photo: "",
+    photo: "http://t0.gstatic.com/licensed-image?q=tbn:ANd9GcSIjMZAnE9OcAtov5EVsznvysN1zvXq5jDY7vSZkoqKv59QN306vyoU0ouBEgcHsyih",
     point: 0,
-    card_list: [],
-    point_list: [],
+    card_list: null,
+    point_list: null,
   },
 });
