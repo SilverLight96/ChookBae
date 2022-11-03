@@ -30,7 +30,7 @@ const BestCardContainer = styled.div`
   align-items: center;
   width: 90%;
   height: 91%;
-  border-radius: 5px;
+  border-radius: 3px;
   box-shadow: 5px 5px 15px 1px black;
   overflow: hidden;
   &:hover {
