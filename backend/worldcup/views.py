@@ -459,10 +459,12 @@ class TeamInfo(APIView):
         return Response(team_info)
 
 
-# 선수 시세 변동 알고리즘
+# 선수 시세 변동 알고리즘       >> AUTO정산에 추가하기 (하루 1회 업데이트)
 class PlayerTest(APIView):
     @swagger_auto_schema(operation_id="선수 스탯 테스트", operation_description="선수 스탯 테스트", responses={200: '조회 성공'})
     def get(self, request):
+
+        t1 = datetime.datetime.now()
         # 선수 기록 수정 코드 (테스트)
         player = Player.objects.get(id=48)
         # player.goal += 1      # 1골 추가
@@ -477,7 +479,12 @@ class PlayerTest(APIView):
             
             # 월드컵 성적으로 시세 조정하기
             goal, assist, yellow, red, runtime = player.goal, player.assist, player.yellow_card, player.red_card, player.run_time
-            player.value = init_value * (1 + goal * 0.3) * (1 + assist * 0.1) * (1 - yellow * 0.05) * (1 - red * 0.2) * (1 + runtime * 0.01)
+            team = Team.objects.get(id=player.team_id.id)
+            win, draw, loss, goal_diff = team.win, team.draw, team.loss, team.goal_diff
+            player.value = (init_value * (1 + goal * 0.3) * (1 + assist * 0.1) * (1 - yellow * 0.05) * (1 - red * 0.2) * (1 + runtime * 0.002)
+                            + (3000 * win) + (1000 * draw) - (500 * loss) + (100 * goal_diff))
             player.save()
+        
+        print(datetime.datetime.now() - t1)
 
         return Response("success")
