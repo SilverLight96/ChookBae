@@ -245,6 +245,7 @@ class card(APIView):
     @swagger_auto_schema(operation_id="유저의 보유하고 있는 카드 확인", operation_description="해당 유저가 보유하고 있는 모든 카드의 정보를 가져온다.")
     def get(self, request):
         c_list=[]
+        hashmap = {} 
         country = request.GET.get('country', None)
         if country is not None:
             team=Team.objects.get(country=country)
@@ -252,7 +253,7 @@ class card(APIView):
         # token=request.COOKIES.get('jwt')
         # pay=jwt.decode(token,SECRET_KEY, algorithms=['HS256'])
         # user_id=pay['id']
-        user_id=1
+        user_id=2
 
         card=PlayerCard.objects.filter(user_id=user_id).order_by('player_id')
 
@@ -261,10 +262,15 @@ class card(APIView):
             if country is not None:
                 if(C.team_id != team):
                     continue
-            serializer = CardSerializer(C)
-            
-            c_list.append(serializer.data)
-        
+            if C.id in hashmap :
+                num=hashmap[C.id]
+                hashmap[C.id]=num+1
+            else :
+                hashmap[C.id]=1
+
+        for i in hashmap.keys():
+            C=Player.objects.get(id=i)
+            c_list.append({'player_image' : C.player_image, 'fullname' : C.fullname, 'value' : C.value, 'count' : hashmap.get(i) })    
         return Response(c_list)       
 
 #선수 합성 POST
@@ -277,7 +283,7 @@ class combine(APIView):
 
 
     @transaction.atomic()
-    def get_object(self, user_id, card1, card2):
+    def get_object(self, user_id, card1, card2):  
         user=User.objects.get(id=user_id)
         first=PlayerCard.objects.get(id=card1)
         second=PlayerCard.objects.get(id=card2)
