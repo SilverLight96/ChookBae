@@ -4,14 +4,47 @@ import { NavLink } from "react-router-dom";
 import { Keyframes } from "styled-components";
 import MixModal from "../Components/Mix/MixModal";
 import { fetchData } from "../utils/apis/api";
+// import GachaCard from "../Components/Gacha/GachaCard";
 
 function MixPage() {
-  const [playerCards, setPlayerCards] = useState({
-    id: 1,
-    fullname: "손흥민",
-    player_image:
-      "https://ichef.bbci.co.uk/news/624/cpsprodpb/4118/production/_119546661_gettyimages-1294130887.jpg.webp",
-  });
+  const [playerCards, setPlayerCards] = useState([
+    {
+      id: 1,
+      fullname: "손흥민",
+      player_image:
+        "https://ichef.bbci.co.uk/news/624/cpsprodpb/4118/production/_119546661_gettyimages-1294130887.jpg.webp",
+    },
+    {
+      id: 2,
+      fullname: "손흥민",
+      player_image:
+        "https://ichef.bbci.co.uk/news/624/cpsprodpb/4118/production/_119546661_gettyimages-1294130887.jpg.webp",
+    },
+    {
+      id: 3,
+      fullname: "손흥민",
+      player_image:
+        "https://ichef.bbci.co.uk/news/624/cpsprodpb/4118/production/_119546661_gettyimages-1294130887.jpg.webp",
+    },
+    {
+      id: 4,
+      fullname: "손흥민",
+      player_image:
+        "https://ichef.bbci.co.uk/news/624/cpsprodpb/4118/production/_119546661_gettyimages-1294130887.jpg.webp",
+    },
+    {
+      id: 5,
+      fullname: "손흥민",
+      player_image:
+        "https://ichef.bbci.co.uk/news/624/cpsprodpb/4118/production/_119546661_gettyimages-1294130887.jpg.webp",
+    },
+    {
+      id: 6,
+      fullname: "손흥민",
+      player_image:
+        "https://ichef.bbci.co.uk/news/624/cpsprodpb/4118/production/_119546661_gettyimages-1294130887.jpg.webp",
+    },
+  ]);
   const [mixSelect, setMixSelect] = useState(0);
   const [isModal, setIsModal] = useState(false);
   const [playerList, setPlayerList] = useState({
@@ -65,25 +98,31 @@ function MixPage() {
   // 왼쪽인지 오른쪽인지 구분해서 카드 클릭하면 그쪽에 선수 등록
   const addCardLeft = (e) => {
     console.log("왼쪽 카드 클릭");
-    console.log(e.target.id);
+    console.log(e);
     setSelectCombine((prev) => {
       return { ...prev, player_card_id1: e.target.id };
     });
-
-    ModalHandler();
-    console.log(selectCombine);
   };
   const addCardRight = (e) => {
+    console.log(e);
     console.log("오른쪽 카드 클릭");
     setSelectCombine((prev) => {
-      return { prev, player_card_id2: e.target.id };
+      return { ...prev, player_card_id2: e.target.id };
     });
-
-    ModalHandler();
   };
+
+  console.log(selectCombine);
+  useEffect(() => {
+    ModalHandler();
+    console.log("모달열기");
+    return () => {
+      console.log("모달열기 완료");
+    };
+  }, [selectCombine]);
 
   const ModalHandler = () => {
     setIsModal((prev) => !prev);
+    setMixSelect(0);
   };
 
   const mixCard = () => {
@@ -126,35 +165,31 @@ function MixPage() {
       </MixMain>
       <MixModal open={isModal} close={ModalHandler}>
         {mixSelect === 1 ? (
-          <div>
+          <ModalBody>
             <MixText>왼쪽 선수 등록</MixText>
-            <GachaCard onClick={addCardLeft}>
-              <BestCardContainer>
-                <Image src={playerCards.player_image} />
-                <Title>{playerList.fullname}</Title>
-              </BestCardContainer>
-            </GachaCard>
-          </div>
+            {playerCards.map((players) => {
+              return (
+                <GachaCard onClick={addCardLeft} key={players.id}>
+                  <title>{players.fullname}</title>
+                  <img src={players.player_image} alt="" id={players.id} />
+                </GachaCard>
+              );
+            })}
+          </ModalBody>
         ) : null}
         {mixSelect === 2 ? (
-          <div>
+          <ModalBody>
             <MixText>오른쪽 선수 등록</MixText>
-            <GachaCard
-              onClick={addCardRight}
-              title={playerCards.fullname}
-              image={playerCards.player_image}
-              key={playerCards.id}
-            />
-          </div>
+            {playerCards.map((players) => {
+              return (
+                <GachaCard onClick={addCardRight} key={players.id}>
+                  <title>{players.fullname}</title>
+                  <img src={players.player_image} alt="" id={players.id} />
+                </GachaCard>
+              );
+            })}
+          </ModalBody>
         ) : null}
-
-        {/* {gachaResult.map((gachacard) => {
-          <div>
-            <div>{gachacard.card_img}</div>
-            <div>{gachacard.player_name}</div>
-            <div>{gachacard.value}</div>
-          </div>;
-        })} */}
       </MixModal>
     </Wrapper>
   );
@@ -494,4 +529,10 @@ const Title = styled.div`
   border-bottom-right-radius: 5px;
   position: absolute;
   bottom: 0px;
+`;
+
+const ModalBody = styled.div`
+  overflow-y: initial !important ;
+  height: 250px;
+  overflow-y: auto;
 `;

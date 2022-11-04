@@ -448,11 +448,11 @@ const GachaText = styled.p`
 const GachaList = styled.div`
   display: grid;
   grid-template-columns: repeat(5, 1fr);
+  height: 50vh;
 `;
 
 const GachaOneList = styled.div`
-  width: 40%;
-  height: 100%;
+  width: 100%;
 
   margin: auto;
 `;

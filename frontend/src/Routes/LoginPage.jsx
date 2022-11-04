@@ -25,6 +25,7 @@ function LoginPage() {
   const {
     register,
     handleSubmit,
+    watch,
     formState: { errors },
   } = useForm({
     defaultValues: {
@@ -35,22 +36,18 @@ function LoginPage() {
   });
 
   useEffect(() => {
-    return () => {
-      login();
-    };
+    login();
   }, [userInfo]);
 
-  const login = async () => {
-    return await fetchData
+  const login = () => {
+    return fetchData
       .post(userApis.LOGIN, userInfo)
       .then((res) => {
-        console.log(res);
         setCookie("token", res.data.token);
         setLogged(true);
         navigate("/");
       })
       .catch((error) => {
-        console.log(error.response.data);
         setLoginError(error.response.data);
       });
   };
@@ -61,13 +58,11 @@ function LoginPage() {
     },
     [loginError]
   );
-  console.log(isError);
 
   const onValid = (data) => {
     setUserInfo((prev) => ({ ...prev, ...data }));
   };
-  console.log(cookies);
-  console.log(userInfo);
+
   return (
     <Wrapper>
       <LoginBox>
@@ -90,6 +85,7 @@ function LoginPage() {
               })}
               placeholder=" "
               required
+              // onChange={handleEmail}
             />
             <Label htmlFor="email">이메일</Label>
             {errors.email && <small role="alert">{errors.email.message}</small>}
@@ -118,6 +114,7 @@ function LoginPage() {
               })}
               placeholder=" "
               required
+              // onChange={handlePassword}
             />
             <Label htmlFor="password">비밀번호</Label>
             {errors?.password?.message && (
