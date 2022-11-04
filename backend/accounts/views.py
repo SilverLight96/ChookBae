@@ -16,6 +16,7 @@ from .tokens import account_activation_token
 from django.utils.encoding import force_bytes, force_text
 from django.contrib import auth
 from django.utils import timezone
+from worldcup.translation import venue_k, team_k, player_k, player_pos
 
 from worldcup.models import Player, PlayerCard
 from worldcup.models import Prediction
@@ -254,6 +255,7 @@ def update(request):
 def mypage(request):
     # token_receive = request.COOKIES.get('jwt')
     token_receive = request.META.get('HTTP_AUTHORIZATION')
+    print(token_receive)
     try:
         C_list=[]
         payload = jwt.decode(token_receive, SECRET_KEY, algorithms=['HS256'])
@@ -261,8 +263,9 @@ def mypage(request):
         #유저가 소유한 카드 리스트
         card_list = PlayerCard.objects.filter(user_id=user.id)
         for i in card_list:
-            card=Player.objects.filter(id=i.player_id.id).values('fullname','player_image','value')
-            C_list.append(card)
+            card=Player.objects.get(id=i.player_id.id)
+            player_name= player_k(i.player_id.id)
+            C_list.append({'player_image' : card.player_image, 'fullname' : player_name, 'value' : card.value, })
         # card_list = Player.objects.filter().values('fullname','player_image','value')
 
         #유저의 예측 내역 조회

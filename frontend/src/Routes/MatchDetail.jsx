@@ -3,19 +3,18 @@ import styled from "styled-components";
 import { Route, Link, useLocation, useNavigate } from 'react-router-dom';
 import MatchDeatilTable from '../Components/MatchPage/MatchDetailTable'
 import MatchDetailChart from '../Components/MatchPage/MatchDetailChart'
-
+// useNavigate Link 로 바꾸기
 function MatchDetail() {
     const location = useLocation()
     const navigate = useNavigate()
 
-    console.log(location.state)
     const propData = location.state.firstData
     const propDataSecond = location.state.secondData
 
     const state = {
         match_id: location.state.firstData.match_id,
         team1_country: location.state.firstData.team1_country,
-        team2_country: location.state.firstData.team2_country
+        team2_country: location.state.firstData.team2_country,
     }
 
     const detailData_1 = [
@@ -24,7 +23,6 @@ function MatchDetail() {
         propData.team1_last_five,
         // propData.team1_manager,
         'Manager',
-        `${propData.team1_country} 대표팀`,
     ]
 
     const detailData_2 = [
@@ -33,7 +31,6 @@ function MatchDetail() {
         propData.team2_last_five,
         // propData.team2_manager,
         'Manager',
-        `${propData.team2_country} 대표팀`,
     ]
 
     Object.keys(propDataSecond).map(elem => {
@@ -52,6 +49,7 @@ function MatchDetail() {
         '감독',
         '선수단',
     ]
+
     return(
         <Container>
             <DescriptionContainer>
@@ -85,6 +83,12 @@ function MatchDetail() {
                             <p key={idx}>{elem}</p>
                         )
                     })}
+                    <StyledLink 
+                    to= {'/TeamInfo'}
+                    state= {{team_id: propData.team1_id, team_name: propData.team1_country}}
+                    >
+                        <p>{propData.team1_country} 대표팀</p>
+                    </StyledLink>
                 </Data>
                 <Data>
                     {detailDataHeader.map((elem, idx) => {
@@ -99,6 +103,12 @@ function MatchDetail() {
                             <p key={idx}>{elem}</p>
                         )
                     })}
+                    <StyledLink 
+                    to= {'/TeamInfo'}
+                    state= {{team_id: propData.team2_id, team_name: propData.team2_country}}
+                    >
+                        <p>{propData.team2_country} 대표팀</p>
+                    </StyledLink>
                 </Data>
             </DataContainer>
 
@@ -153,6 +163,8 @@ const DataContainer = styled.div`
     top: 35%;
     right: 0;
 
+    z-index: 1;
+    
     border: 1px solid black;
 `
 
@@ -260,4 +272,10 @@ const ChartContainer = styled.div`
     right: 0; */
 
     border: 1px solid black;
+`
+
+const StyledLink = styled(Link)`
+    text-decoration: none;
+    font-weight: bold;
+    color: red;
 `

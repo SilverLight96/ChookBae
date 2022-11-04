@@ -10,7 +10,7 @@ from django.shortcuts import render
 from django.db.models import Q
 from rest_framework import status
 from rest_framework.response import Response
-from .Serializers import CardSerializer,UserrankSerializer,goalrankSerializer,matchidSerializer
+from .Serializers import UserrankSerializer,matchidSerializer
 from .models import  Point, Venue, Team, Match, Player, PlayerCard, Prediction, Bet, EmailCert
 from accounts.models import User
 from .translation import venue_k, team_k, player_k, player_pos
@@ -47,13 +47,13 @@ class matchpredict(APIView):
             return ('보유하고 있는 포인트를 확인해 주세요.')
              
         try:
-            pre=Prediction.objects.get(match_id=match_id,user_id=36)
+            pre=Prediction.objects.get(match_id=match_id,user_id=user_id)
             return ('이미 예측을 완료한 경기입니다.')
            
         except Prediction.DoesNotExist:
             user.points-=point
             user.save()
-            po=Point.objects.create(user_id=user,point=point,info='경기 결과 예측 배팅')
+            po=Point.objects.create(user_id=user,point=-1*point,info='경기 결과 예측 배팅')
             pred=Prediction.objects.create(user_point=point,predict=predict,match_id=match,user_id=user)
            
 
@@ -207,6 +207,9 @@ class card(APIView):
 
     @transaction.atomic()
     def get_object(self, user_id, team_id,gacha_count,point):
+        point=int(point)
+        gacha_count=int(gacha_count)
+        team_id=int(team_id)
         c_list=[]
         user=User.objects.get(id=user_id)
 
@@ -223,11 +226,12 @@ class card(APIView):
             if(find==0):
                 user.value+=card.value
             new_card=PlayerCard.objects.create(player_id=card, user_id=user)
-            serializer = CardSerializer(card)
-            c_list.append(serializer.data)
+            player_name= player_k(card.id)
+            list={'fullname' : player_name, 'player_image' : card.player_image, 'value' : card.value }
+            c_list.append(list)
         user.points-=point
         user.save()
-        po=Point.objects.create(user_id=user,point=point,info='선수 뽑기')
+        po=Point.objects.create(user_id=user,point=-1*point,info='선수 뽑기')
 
         return (c_list)
 
@@ -255,7 +259,7 @@ class card(APIView):
         # token=request.COOKIES.get('jwt')
         # pay=jwt.decode(token,SECRET_KEY, algorithms=['HS256'])
         # user_id=pay['id']
-        user_id=2
+        user_id=36
 
         card=PlayerCard.objects.filter(user_id=user_id).order_by('player_id')
 
@@ -267,11 +271,13 @@ class card(APIView):
                 hashmap[i.player_id.id]=1
 
         for i in hashmap.keys():
+            print(i)
             C=Player.objects.get(id=i)
             if country is not None:
                 if(C.team_id != team):
                     continue
-            c_list.append({'player_image' : C.player_image, 'fullname' : C.fullname, 'value' : C.value, 'count' : hashmap.get(i) })    
+            player_name=player_k(C.id)
+            c_list.append({'player_image' : C.player_image, 'fullname' : player_name, 'value' : C.value, 'count' : hashmap.get(i) })    
         return Response(c_list)       
 
 #선수 합성 POST
@@ -322,8 +328,10 @@ class combine(APIView):
         first.delete()
         second.delete()
         new_card=PlayerCard.objects.create(player_id=card, user_id=user)
-        serializer = CardSerializer(card)
-        return (serializer.data)
+        player_name= player_k(card.id)
+        list={'fullname' : player_name, 'player_image' : card.player_image, 'value' : card.value }
+
+        return (list)
 
     @swagger_auto_schema(operation_id="카드 합성", operation_description="기존의 선수 합성하여 새 선수 뽑기", request_body=param)
     def post(self, request, format=None):
@@ -356,8 +364,9 @@ class rank(APIView):
         elif(type=='player'):
             player=Player.objects.all().order_by('-goal')
             for i in player:
-                serializer=goalrankSerializer(i)
-                R_list.append(serializer.data)
+                player_name= player_k(i.id)
+                list={'fullname' : player_name, 'goal' : i.goal, 'value' : i.value }
+                R_list.append(list)
 
         return (R_list)   
 
