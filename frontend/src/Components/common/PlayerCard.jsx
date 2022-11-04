@@ -42,7 +42,7 @@ const BestCardContainer = styled.div`
 
 const Image = styled.img`
   width: 100%;
-  height: 100%;
+
   border-radius: 5px;
   object-fit: cover !important;
 `;
@@ -54,7 +54,7 @@ const Title = styled.div`
   align-items: center;
   width: 100%;
   height: 30%;
-  font-size: 30px;
+  font-size: 20x;
   font-family: "KOTRAHOPE";
   font-weight: normal;
   font-style: normal;
@@ -71,7 +71,7 @@ const Title2 = styled.div`
 
   width: 100%;
   height: 30%;
-  font-size: 30px;
+  font-size: 20px;
   font-family: "KOTRAHOPE";
   font-weight: normal;
   font-style: normal;
