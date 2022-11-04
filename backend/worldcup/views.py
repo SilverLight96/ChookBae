@@ -16,6 +16,7 @@ from accounts.models import User
 from .translation import venue_k, team_k, player_k, player_pos
 from .playervaluesetup import value_p
 import pandas as pd
+import jwt
 from chookbae.settings import SECRET_KEY
 
 
@@ -77,10 +78,9 @@ class matchpredict(APIView):
             
     @swagger_auto_schema(operation_id="승부 예측", operation_description="승부 예측하기", request_body=param)
     def post(self, request, format=None):
-        # token=request.COOKIES.get('jwt')
-        # pay=jwt.decode(token,SECRET_KEY, algorithms=['HS256'])
-        # user_id=pay['id']
-        user_id=36
+        token=request.META.get('HTTP_AUTHORIZATION')
+        pay=jwt.decode(token,SECRET_KEY, algorithms=['HS256'])
+        user_id=pay['id']
         ingredient = self.get_object(user_id,request.data['match_id'],request.data['point'],request.data['predict'])
 
         #print(request.META.get('HTTP_AUTHORIZATION'))
@@ -144,19 +144,21 @@ class predictinfo(APIView):
     @swagger_auto_schema(operation_id="유저의 승부 예측 여부를 조회", operation_description="제공 받은 토큰 값을 기준으로 유저를 파악하고 해당 유저가 승부 예측을 했는지 확인한다", manual_parameters=[id])
     def get(self, request, id):
 
+        token=request.META.get('HTTP_AUTHORIZATION')
+        pay=jwt.decode(token,SECRET_KEY, algorithms=['HS256'])
+        user_id=pay['id']
+        
         today=datetime.datetime.now()+datetime.timedelta(minutes=5)
 
         
-        if Match.objects.filter(Q(id=id) &Q(start_date=today.date(), start_time__lte=time.time())) :
+        if Match.objects.filter(Q(id=id) &Q(start_date=today.date(), start_time__lte=today.time())) :
             return Response({False},status=status.HTTP_200_OK)
 
         if not Match.objects.filter(id=id) :
             return Response({False},status=status.HTTP_400_BAD_REQUEST)
 
-        # token=request.COOKIES.get('jwt')
-        # pay=jwt.decode(token,SECRET_KEY, algorithms=['HS256'])
-        # user_id=pay['id']
-        user_id=36
+        
+
         try:
             predict=Prediction.objects.get(match_id=id ,user_id=user_id)
             return Response({False}, status=status.HTTP_200_OK)
@@ -195,6 +197,18 @@ def predictcalc():
             user.points+=(dang*pre.user_point)
             user.save()
             po=Point.objects.create(user_id=user,point=dang*pre.user_point,info='경기 예측 성공')
+
+class teamlist(APIView):
+    @swagger_auto_schema(operation_id="전체 팀의 간단한 정보를 가져온다.", operation_description="유저가 국가를 선택하여 뽑기를 희망하는 경우 국가에 대한 간략한 정보를 보여준다")
+    def get(self, request):
+        teams = Team.objects.all().order_by('group')
+        g_list = []
+        for t in teams:
+            team_name = team_k(t.id)[0]
+            g_list.append({'id': t.id,  'country' : team_name, 'logo' : t.logo})
+        
+        return Response(g_list,status=status.HTTP_200_OK)
+        
 
 #선수 뽑기 POST
 class card(APIView):
@@ -237,10 +251,9 @@ class card(APIView):
 
     @swagger_auto_schema(operation_id="카드 뽑기", operation_description="새로운 선수카드 뽑기", request_body=param)
     def post(self, request, format=None):
-        # token=request.COOKIES.get('jwt')
-        # pay=jwt.decode(token,SECRET_KEY, algorithms=['HS256'])
-        # user_id=pay['id']
-        user_id=36
+        token=request.META.get('HTTP_AUTHORIZATION')
+        pay=jwt.decode(token,SECRET_KEY, algorithms=['HS256'])
+        user_id=pay['id']
         gacha=self.get_object(user_id,request.data['team_id'],request.data['gacha_count'],request.data['point'])
 
         if(gacha=='보유하고 있는 포인트를 확인해 주세요.'):
@@ -256,10 +269,9 @@ class card(APIView):
         if country is not None:
             team=Team.objects.get(country=country)
         
-        # token=request.COOKIES.get('jwt')
-        # pay=jwt.decode(token,SECRET_KEY, algorithms=['HS256'])
-        # user_id=pay['id']
-        user_id=36
+        token=request.META.get('HTTP_AUTHORIZATION')
+        pay=jwt.decode(token,SECRET_KEY, algorithms=['HS256'])
+        user_id=pay['id']
 
         card=PlayerCard.objects.filter(user_id=user_id).order_by('player_id')
 
@@ -335,10 +347,9 @@ class combine(APIView):
 
     @swagger_auto_schema(operation_id="카드 합성", operation_description="기존의 선수 합성하여 새 선수 뽑기", request_body=param)
     def post(self, request, format=None):
-        # token=request.COOKIES.get('jwt')
-        # pay=jwt.decode(token,SECRET_KEY, algorithms=['HS256'])
-        # user_id=pay['id']
-        user_id=36
+        token=request.META.get('HTTP_AUTHORIZATION')
+        pay=jwt.decode(token,SECRET_KEY, algorithms=['HS256'])
+        user_id=pay['id']
         comb=self.get_object(user_id,request.data['player_card_id1'],request.data['player_card_id2'])
 
         if(comb=='보유하고 있지 않은 선수카드입니다.' or comb=='뽑을 선수가 없습니다.'):
@@ -355,18 +366,19 @@ class rank(APIView):
 
     def get_object(self, type):
         R_list=[]
+        num=1
         if(type=='value'):
             user=User.objects.all().order_by('-value')
             for i in user:
-                serializer = UserrankSerializer(i)
-                R_list.append(serializer.data)
+                R_list.append({'nickname' : i.nickname, 'value' : i.value, 'rank' : num })  
+                num+=1
             
         elif(type=='player'):
-            player=Player.objects.all().order_by('-goal')
+            player=Player.objects.all().order_by('-value')
             for i in player:
                 player_name= player_k(i.id)
-                list={'fullname' : player_name, 'goal' : i.goal, 'value' : i.value }
-                R_list.append(list)
+                R_list.append({'fullname' : player_name, 'goal' : i.goal, 'value' : i.value ,'rank' : num })
+                num+=1
 
         return (R_list)   
 
