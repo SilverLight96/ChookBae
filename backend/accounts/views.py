@@ -17,12 +17,11 @@ from django.utils.encoding import force_bytes, force_text
 from django.contrib import auth
 from django.utils import timezone
 from worldcup.translation import venue_k, team_k, player_k, player_pos
-
 from worldcup.models import Player, PlayerCard
 from worldcup.models import Prediction
 from worldcup.models import Point
 # from worldcup.models import User
-
+from django.conf import settings
 from chookbae.settings import SECRET_KEY
 from .serializers import (
     UserSerializer,
@@ -34,8 +33,7 @@ from django.core.mail import EmailMessage
 import re
 import string
 import random
-import jwt, datetime
-
+import jwt, datetime,base64,boto3
 def make_random_code():
     code_list = string.ascii_uppercase + '0123456789'
     code = ''
@@ -222,11 +220,12 @@ def update(request):
         user = User.objects.get(id=payload['id'])
         #토큰 값의 유저 닉네임을 변경
         user.nickname = request.data['new_nickname']
+        user.profile_image = request.data.get('new_profile_image')
         user.save()
         password = request.data.get('password')
         new_password = request.data.get('new_password')
         new_password_confirm = request.data.get('new_password_confirm')
-
+        
  
         serializer = UserUpdateSerializer(user, data=request.data)
 
@@ -243,7 +242,8 @@ def update(request):
 
             me.set_password(new_password)
             me.save()
-        return Response({'id': user.id, 'new_nickname': user.nickname, 'email': user.email,'password':user.password},status=status.HTTP_200_OK)
+        return Response({'id': user.id, 'new_nickname': user.nickname,'image':user.profile_image.url,\
+             'email': user.email,'password':user.password},status=status.HTTP_200_OK)
     except jwt.ExpiredSignatureError:
         return Response({'error': '토큰이 유효하지 않습니다.'}, status=status.HTTP_400_BAD_REQUEST)
 
@@ -255,27 +255,41 @@ def update(request):
 def mypage(request):
     # token_receive = request.COOKIES.get('jwt')
     token_receive = request.META.get('HTTP_AUTHORIZATION')
-    print(token_receive)
     try:
         C_list=[]
+        hashmap = {}
+
         payload = jwt.decode(token_receive, SECRET_KEY, algorithms=['HS256'])
         user = User.objects.get(id=payload['id'])
+        #user = User.objects.get(id=36)
         #유저가 소유한 카드 리스트
-        card_list = PlayerCard.objects.filter(user_id=user.id)
+        card_list = PlayerCard.objects.filter(user_id=user.id).order_by('player_id')
+
         for i in card_list:
-            card=Player.objects.get(id=i.player_id.id)
-            player_name= player_k(i.player_id.id)
-            C_list.append({'player_image' : card.player_image, 'fullname' : player_name, 'value' : card.value, })
-        # card_list = Player.objects.filter().values('fullname','player_image','value')
+            if i.player_id.id in hashmap :
+                num=hashmap[i.player_id.id]
+                hashmap[i.player_id.id]=num+1
+            else :
+                hashmap[i.player_id.id]=1
+
+        for i in hashmap.keys():
+            C=Player.objects.get(id=i)
+            player_name=player_k(C.id)
+            C_list.append({'player_image' : C.player_image, 'fullname' : player_name, 'value' : C.value, 'count' : hashmap.get(i) })  
 
         #유저의 예측 내역 조회
         predict_match = Prediction.objects.filter(user_id=user.id).values()
 
         #유저의 포인트 사용 내역 전부 가져오기 values()로 가져오면 딕셔너리 형태로 가져옴 튜플은 values_list()
         point_list = Point.objects.filter(user_id=user.id).values()
-        
+        profile = user.profile_image
+        #unicodeDecodeError: 'utf-8' codec can't decode byte 0xff in position 0: invalid start byte
+        #이미지를 바이트로 변환
+        print(profile.url)
+        print(1)
+        # profile = base64.b64encode(profile).decode('utf-16')
         return Response({'predict_match':predict_match,'nickname':user.nickname,'point':user.points \
-        ,'card_list':C_list,'point_list':point_list},status=status.HTTP_200_OK)
+        ,'card_list':C_list,'profile':profile.url,'point_list':point_list},status=status.HTTP_200_OK)
     except jwt.ExpiredSignatureError:
-        return Response({'error': '토큰이 유효하지 않습니다.'}, status=status.HTTP_400_BAD_REQUEST)
+        return Response({'error': ''}, status=status.HTTP_400_BAD_REQUEST)
     

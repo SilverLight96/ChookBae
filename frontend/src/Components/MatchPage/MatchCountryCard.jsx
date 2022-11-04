@@ -16,6 +16,7 @@ function MatchCountryCard(props) {
         })
         props.setState(dataAxios.data)
         props.selectedCard(name)
+        console.log(props);
     }
     const data = {}
 

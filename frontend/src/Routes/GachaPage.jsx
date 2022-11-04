@@ -1,9 +1,85 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import styled, { keyframes } from "styled-components";
 import { NavLink } from "react-router-dom";
 import { Keyframes } from "styled-components";
+import GachaModal from "../Components/Gacha/GachaModal";
+import { fetchData } from "../utils/apis/api";
 
 function GachaPage() {
+  const [isGacha, setIsGacha] = useState({
+    team_id: "",
+    gacha_count: 0,
+    point: 0,
+  });
+
+  const [gachaResult, setGachaResult] = useState(
+    {
+      card_img: "",
+      player_name: "",
+      value: 0,
+    },
+    {
+      card_img: "",
+      player_name: "",
+      value: 0,
+    },
+    {
+      card_img: "",
+      player_name: "",
+      value: 0,
+    }
+  );
+  const [isModal, setIsModal] = useState(false);
+
+  const oneGacha = () => {
+    setIsGacha({
+      team_id: "",
+      gacha_count: 1,
+      point: 1000,
+    });
+  };
+
+  const tenGacha = () => {
+    setIsGacha({
+      team_id: "",
+      gacha_count: 10,
+      point: 10000,
+    });
+  };
+
+  useEffect(() => {
+    console.log("가차요청");
+    return () => {
+      getGacha();
+      console.log("가차요청완료");
+    };
+  }, [isGacha]);
+  console.log(isGacha);
+  const getGacha = async (url) => {
+    // const response = await fetchData.post(url, isGacha).then((res) => {
+    //   console.log(res);
+    //   setGachaResult(res);
+    // });
+    // return response;
+    setGachaResult({
+      card_img: "aa",
+      player_name: "aa",
+      value: 10,
+    });
+  };
+  console.log(gachaResult);
+  useEffect(() => {
+    console.log("모달열기");
+    return () => {
+      ModalHandler();
+      console.log("모달열기 완료");
+    };
+  }, [gachaResult]);
+
+  const ModalHandler = () => {
+    setIsModal((prev) => !prev);
+  };
+
   return (
     <Wrapper>
       <ButtonContainer>
@@ -27,10 +103,26 @@ function GachaPage() {
         </GachaCardContainer>
 
         <GachaButtonContainer>
-          <button>1회 뽑기</button>
-          <button>10회 뽑기</button>
+          <button onClick={oneGacha}>1회 뽑기</button>
+          <button onClick={tenGacha}>10회 뽑기</button>
         </GachaButtonContainer>
       </GachaMain>
+      <GachaModal open={isModal} close={ModalHandler}>
+        {isGacha.gacha_count === 1 ? (
+          <GachaText>가차 1회 뽑기</GachaText>
+        ) : null}
+        {isGacha.gacha_count === 10 ? (
+          <GachaText>가차 10회 뽑기</GachaText>
+        ) : null}
+
+        {/* {gachaResult.map((gachacard) => {
+          <div>
+            <div>{gachacard.card_img}</div>
+            <div>{gachacard.player_name}</div>
+            <div>{gachacard.value}</div>
+          </div>;
+        })} */}
+      </GachaModal>
     </Wrapper>
   );
 }
@@ -261,4 +353,9 @@ const GachaButtonContainer = styled.div`
       top: 6px;
     }
   }
+`;
+
+const GachaText = styled.p`
+  font-size: 30px;
+  color: white;
 `;

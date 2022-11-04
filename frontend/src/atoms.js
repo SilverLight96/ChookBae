@@ -1,8 +1,6 @@
-import { atom, atomFamily } from 'recoil';
+import { atom } from 'recoil';
 import { getCookie } from './utils/functions/cookies';
-import { recoilPersist } from 'recoil-persist';
 
-const { persistAtom } = recoilPersist();
 
 export const loggedinState = atom({
   key: "loggedinState",
@@ -12,8 +10,11 @@ export const loggedinState = atom({
 export const myInformation = atom({
   key: 'myInformation',
   default: {
-    memberId: '',
-    nickname: '',
-    memberSeq: '',
+    predict_match: [],
+    nickname: "",
+    photo: "http://t0.gstatic.com/licensed-image?q=tbn:ANd9GcSIjMZAnE9OcAtov5EVsznvysN1zvXq5jDY7vSZkoqKv59QN306vyoU0ouBEgcHsyih",
+    point: 0,
+    card_list:[],
+    point_list: [],
   },
 });

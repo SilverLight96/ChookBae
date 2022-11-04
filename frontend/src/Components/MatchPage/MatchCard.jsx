@@ -73,7 +73,7 @@ function MatchData(props) {
         <>
         <StyledCard onClick={() => clickCard(props.match_id, props.team1_group)}>
                 <TextDiv>
-                    <p>{props.start_time}</p>
+                    <p>{props.start_date} | {props.start_time.slice(0,-3)}</p>
                     <p>{props.venue_address}</p>
                 </TextDiv>
 

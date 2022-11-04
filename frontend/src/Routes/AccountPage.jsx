@@ -49,7 +49,6 @@ export default function AccountPage() {
   const updateuser = async () => {
     return await fetchData.patch(userApis.UPDATE_USER, userInfo);
   };
-  console.log(fetchData.patch.header);
 
   // 비밀번호 확인
   const password = useRef({});
@@ -69,8 +68,8 @@ export default function AccountPage() {
           </ProfileImgContainer>
           <UserBox>
             <Input
-              name="nickname_new"
-              id="nickname_new"
+              name="new_nickname"
+              id="new_nickname"
               type="text"
               autoComplete="off"
               maxLength={STANDARD.NAME_MAX_LENGTH}

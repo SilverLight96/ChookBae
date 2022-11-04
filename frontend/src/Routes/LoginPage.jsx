@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import logo from "../assets/ChookBae_logo.png";
 import { keyframes } from "styled-components";
@@ -24,8 +24,6 @@ function LoginPage() {
 
   const {
     register,
-    watch,
-    setError,
     handleSubmit,
     formState: { errors },
   } = useForm({
@@ -37,20 +35,17 @@ function LoginPage() {
   });
 
   useEffect(() => {
-    (async () => {
-      try {
-        await login();
-      } catch (err) {}
-    })();
+    return () => {
+      login();
+    };
   }, [userInfo]);
-  console.log(userInfo);
 
   const login = async () => {
     return await fetchData
       .post(userApis.LOGIN, userInfo)
       .then((res) => {
         console.log(res);
-        setCookie("token", res.data.jwt);
+        setCookie("token", res.data.token);
         setLogged(true);
         navigate("/");
       })
