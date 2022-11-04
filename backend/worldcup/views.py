@@ -366,18 +366,19 @@ class rank(APIView):
 
     def get_object(self, type):
         R_list=[]
+        num=1
         if(type=='value'):
             user=User.objects.all().order_by('-value')
             for i in user:
-                serializer = UserrankSerializer(i)
-                R_list.append(serializer.data)
+                R_list.append({'nickname' : i.nickname, 'value' : i.value, 'rank' : num })  
+                num+=1
             
         elif(type=='player'):
-            player=Player.objects.all().order_by('-goal')
+            player=Player.objects.all().order_by('-value')
             for i in player:
                 player_name= player_k(i.id)
-                list={'fullname' : player_name, 'goal' : i.goal, 'value' : i.value }
-                R_list.append(list)
+                R_list.append({'fullname' : player_name, 'goal' : i.goal, 'value' : i.value ,'rank' : num })
+                num+=1
 
         return (R_list)   
 
