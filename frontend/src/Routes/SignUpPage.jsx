@@ -20,7 +20,6 @@ function SignUpPage() {
   const {
     register,
     watch,
-    setError,
     handleSubmit,
     formState: { errors },
   } = useForm({
@@ -42,11 +41,9 @@ function SignUpPage() {
   password.current = watch("password", "");
 
   useEffect(() => {
-    (async () => {
-      try {
-        await signupregister();
-      } catch (err) {}
-    })();
+    return () => {
+      signupregister();
+    };
   }, [userInfo]);
 
   const signupregister = async () => {
