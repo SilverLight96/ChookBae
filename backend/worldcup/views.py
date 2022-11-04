@@ -196,6 +196,18 @@ def predictcalc():
             user.save()
             po=Point.objects.create(user_id=user,point=dang*pre.user_point,info='경기 예측 성공')
 
+class teamlist(APIView):
+    @swagger_auto_schema(operation_id="전체 팀의 간단한 정보를 가져온다.", operation_description="유저가 국가를 선택하여 뽑기를 희망하는 경우 국가에 대한 간략한 정보를 보여준다")
+    def get(self, request):
+        teams = Team.objects.all().order_by('group')
+        g_list = []
+        for t in teams:
+            team_name = team_k(t.id)[0]
+            g_list.append({'id': t.id,  'country' : team_name, 'logo' : t.logo})
+        
+        return Response(g_list,status=status.HTTP_200_OK)
+        
+
 #선수 뽑기 POST
 class card(APIView):
     param = openapi.Schema(type=openapi.TYPE_OBJECT, required=['team_id', 'gacha_count', 'point'],
