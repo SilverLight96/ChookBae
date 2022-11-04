@@ -11,6 +11,7 @@ urlpatterns = [
     path('predict/info/<int:id>', views.predicdetail.as_view()),
     path('card', views.card.as_view()),
     path('card/combine', views.combine.as_view()),
+    path('card/team',views.teamlist.as_view()),
     path('rank', views.rank.as_view()),
     path('match/group', views.GroupInfo.as_view()),
     path('match/team/<int:id>', views.MatchInfoByTeam.as_view()),
