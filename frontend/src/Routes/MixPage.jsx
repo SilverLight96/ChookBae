@@ -1,9 +1,140 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import styled, { keyframes } from "styled-components";
 import { NavLink } from "react-router-dom";
 import { Keyframes } from "styled-components";
+import MixModal from "../Components/Mix/MixModal";
+import { fetchData } from "../utils/apis/api";
+// import GachaCard from "../Components/Gacha/GachaCard";
 
 function MixPage() {
+  const [playerCards, setPlayerCards] = useState([
+    {
+      id: 1,
+      fullname: "손흥민",
+      player_image:
+        "https://ichef.bbci.co.uk/news/624/cpsprodpb/4118/production/_119546661_gettyimages-1294130887.jpg.webp",
+    },
+    {
+      id: 2,
+      fullname: "손흥민",
+      player_image:
+        "https://ichef.bbci.co.uk/news/624/cpsprodpb/4118/production/_119546661_gettyimages-1294130887.jpg.webp",
+    },
+    {
+      id: 3,
+      fullname: "손흥민",
+      player_image:
+        "https://ichef.bbci.co.uk/news/624/cpsprodpb/4118/production/_119546661_gettyimages-1294130887.jpg.webp",
+    },
+    {
+      id: 4,
+      fullname: "손흥민",
+      player_image:
+        "https://ichef.bbci.co.uk/news/624/cpsprodpb/4118/production/_119546661_gettyimages-1294130887.jpg.webp",
+    },
+    {
+      id: 5,
+      fullname: "손흥민",
+      player_image:
+        "https://ichef.bbci.co.uk/news/624/cpsprodpb/4118/production/_119546661_gettyimages-1294130887.jpg.webp",
+    },
+    {
+      id: 6,
+      fullname: "손흥민",
+      player_image:
+        "https://ichef.bbci.co.uk/news/624/cpsprodpb/4118/production/_119546661_gettyimages-1294130887.jpg.webp",
+    },
+  ]);
+  const [mixSelect, setMixSelect] = useState(0);
+  const [isModal, setIsModal] = useState(false);
+  const [playerList, setPlayerList] = useState({
+    card_img: "",
+    player_name: "",
+    value: "",
+  });
+  const [selectCombine, setSelectCombine] = useState({
+    player_card_id1: 0,
+    player_card_id2: 0,
+  });
+  const [combinedCard, setCombinedCard] = useState({
+    card_img: "",
+    player_name: "",
+    value: "",
+  });
+
+  const addLeft = () => {
+    setMixSelect(1);
+  };
+  const addRight = () => {
+    setMixSelect(2);
+  };
+
+  useEffect(() => {
+    console.log("선수 목록 요청");
+    return () => {
+      getPlayerList();
+      console.log("선수 목록 요청완료");
+    };
+  }, [mixSelect]);
+
+  const getPlayerList = async (url) => {
+    // const response = await fetchData.get(url).then((res) => {
+    //   console.log(res);
+    //   setPlayerList(res);
+    // });
+    // return response;
+    setPlayerList({
+      cardlist: "aa",
+    });
+  };
+
+  useEffect(() => {
+    ModalHandler();
+    console.log("모달열기");
+    return () => {
+      console.log("모달열기 완료");
+    };
+  }, [playerList]);
+  // 왼쪽인지 오른쪽인지 구분해서 카드 클릭하면 그쪽에 선수 등록
+  const addCardLeft = (e) => {
+    console.log("왼쪽 카드 클릭");
+    console.log(e);
+    setSelectCombine((prev) => {
+      return { ...prev, player_card_id1: e.target.id };
+    });
+  };
+  const addCardRight = (e) => {
+    console.log(e);
+    console.log("오른쪽 카드 클릭");
+    setSelectCombine((prev) => {
+      return { ...prev, player_card_id2: e.target.id };
+    });
+  };
+
+  console.log(selectCombine);
+  useEffect(() => {
+    ModalHandler();
+    console.log("모달열기");
+    return () => {
+      console.log("모달열기 완료");
+    };
+  }, [selectCombine]);
+
+  const ModalHandler = () => {
+    setIsModal((prev) => !prev);
+    setMixSelect(0);
+  };
+
+  const mixCard = () => {
+    const cardCombine = async (url) => {
+      await fetchData.post(url, selectCombine).then((res) => {
+        console.log(res);
+        setCombinedCard(res.data);
+      });
+    };
+    cardCombine();
+  };
+
   return (
     <Wrapper>
       <ButtonContainer>
@@ -25,13 +156,41 @@ function MixPage() {
           <GachaCardListContainer></GachaCardListContainer>
         </GachaCardContainer>
         <MixButtonWrapper>
-          <MixButton>합성하기</MixButton>
+          <MixButton onClick={mixCard}>합성하기</MixButton>
         </MixButtonWrapper>
         <MixButtonContainer>
-          <button>선수 등록 1</button>
-          <button>선수 등록 2</button>
+          <button onClick={addLeft}>선수 등록 1</button>
+          <button onClick={addRight}>선수 등록 2</button>
         </MixButtonContainer>
       </MixMain>
+      <MixModal open={isModal} close={ModalHandler}>
+        {mixSelect === 1 ? (
+          <ModalBody>
+            <MixText>왼쪽 선수 등록</MixText>
+            {playerCards.map((players) => {
+              return (
+                <GachaCard onClick={addCardLeft} key={players.id}>
+                  <title>{players.fullname}</title>
+                  <img src={players.player_image} alt="" id={players.id} />
+                </GachaCard>
+              );
+            })}
+          </ModalBody>
+        ) : null}
+        {mixSelect === 2 ? (
+          <ModalBody>
+            <MixText>오른쪽 선수 등록</MixText>
+            {playerCards.map((players) => {
+              return (
+                <GachaCard onClick={addCardRight} key={players.id}>
+                  <title>{players.fullname}</title>
+                  <img src={players.player_image} alt="" id={players.id} />
+                </GachaCard>
+              );
+            })}
+          </ModalBody>
+        ) : null}
+      </MixModal>
     </Wrapper>
   );
 }
@@ -314,4 +473,66 @@ const CardPack = styled.div`
   justify-content: center;
   font-size: 130px;
   color: white;
+`;
+
+const MixText = styled.p`
+  font-size: 30px;
+  color: white;
+`;
+
+const GachaCard = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 30vh;
+`;
+
+const BestCardContainer = styled.div`
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 90%;
+  height: 91%;
+  border-radius: 3px;
+  box-shadow: 5px 5px 15px 1px black;
+  overflow: hidden;
+  &:hover {
+    transform: scale(1.05);
+    transition: transform 0.8s;
+  }
+`;
+
+const Image = styled.img`
+  width: 100%;
+  height: 100%;
+  border-radius: 5px;
+  object-fit: cover !important;
+`;
+
+const Title = styled.div`
+  display: flex;
+  background: linear-gradient(to bottom, rgba(1, 0, 0, 0), rgba(1, 1, 1, 0.8));
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 30%;
+  font-size: 30px;
+  font-family: "KOTRAHOPE";
+  font-weight: normal;
+  font-style: normal;
+  color: ${(props) => props.theme.colors.white};
+  text-align: center;
+  border-bottom-left-radius: 5px;
+  border-bottom-right-radius: 5px;
+  position: absolute;
+  bottom: 0px;
+`;
+
+const ModalBody = styled.div`
+  overflow-y: initial !important ;
+  height: 250px;
+  overflow-y: auto;
 `;
