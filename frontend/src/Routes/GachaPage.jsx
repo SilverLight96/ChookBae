@@ -23,7 +23,7 @@ function GachaPage() {
     setIsGacha({
       team_id: 0,
       gacha_count: 1,
-      point: 1000,
+      point: 0,
     });
   };
 
@@ -31,7 +31,7 @@ function GachaPage() {
     setIsGacha({
       team_id: 0,
       gacha_count: 10,
-      point: 10000,
+      point: 0,
     });
   };
 

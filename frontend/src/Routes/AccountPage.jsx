@@ -10,11 +10,11 @@ import { keyframes } from "styled-components";
 
 export default function AccountPage() {
   const [userInfo, setUserInfo] = useState({
-    image: "",
     new_nickname: "",
     new_password: "",
     new_password_confirm: "",
   });
+  const [selectImg, setSelectImg] = useState("");
 
   const {
     register,
@@ -24,7 +24,6 @@ export default function AccountPage() {
     formState: { errors },
   } = useForm({
     defaultValues: {
-      image: "",
       new_nickname: "",
       new_password: "",
       new_password_confirm: "",
@@ -32,6 +31,10 @@ export default function AccountPage() {
     mode: "onChange",
   });
 
+  const selectFile = (e) => {
+    setSelectImg(e.target.files[0]);
+  };
+  console.log(selectImg);
   // 회원 정보 수정
   const onValid = (data) => {
     setUserInfo((prev) => ({ ...prev, ...data }));
@@ -57,6 +60,7 @@ export default function AccountPage() {
     <Wrapper>
       <LoginBox>
         <h2>회원 정보 수정</h2>
+        <input type="file" accept="image/*" onChange={selectFile}></input>
         <form onSubmit={handleSubmit(onValid)}>
           <ProfileImgContainer>
             <ProfileImg>
