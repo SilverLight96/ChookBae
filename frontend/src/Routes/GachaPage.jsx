@@ -14,11 +14,18 @@ function GachaPage() {
     point: 0,
   });
 
-  const [gachaResult, setGachaResult] = useState({
-    card_img: "",
-    player_name: "",
-    value: 0,
-  });
+  const [gachaResult, setGachaResult] = useState([
+    {
+      card_img: "",
+      player_name: "",
+      value: 0,
+    },
+    {
+      card_img: "",
+      player_name: "",
+      value: 0,
+    },
+  ]);
 
   const [isModal, setIsModal] = useState(false);
 
@@ -52,12 +59,68 @@ function GachaPage() {
     //   setGachaResult(res);
     // });
     // return response;
-    setGachaResult({
-      card_img:
-        "https://ichef.bbci.co.uk/news/624/cpsprodpb/4118/production/_119546661_gettyimages-1294130887.jpg.webp",
-      player_name: "손흥민",
-      value: 10,
-    });
+    setGachaResult([
+      {
+        card_img:
+          "https://ichef.bbci.co.uk/news/624/cpsprodpb/4118/production/_119546661_gettyimages-1294130887.jpg.webp",
+        player_name: "손흥민",
+        value: 10,
+      },
+      // {
+      //   card_img:
+      //     "https://ichef.bbci.co.uk/news/624/cpsprodpb/4118/production/_119546661_gettyimages-1294130887.jpg.webp",
+      //   player_name: "손흥민",
+      //   value: 10,
+      // },
+      // {
+      //   card_img:
+      //     "https://ichef.bbci.co.uk/news/624/cpsprodpb/4118/production/_119546661_gettyimages-1294130887.jpg.webp",
+      //   player_name: "손흥민",
+      //   value: 10,
+      // },
+      // {
+      //   card_img:
+      //     "https://ichef.bbci.co.uk/news/624/cpsprodpb/4118/production/_119546661_gettyimages-1294130887.jpg.webp",
+      //   player_name: "손흥민",
+      //   value: 10,
+      // },
+      // {
+      //   card_img:
+      //     "https://ichef.bbci.co.uk/news/624/cpsprodpb/4118/production/_119546661_gettyimages-1294130887.jpg.webp",
+      //   player_name: "손흥민",
+      //   value: 10,
+      // },
+      // {
+      //   card_img:
+      //     "https://ichef.bbci.co.uk/news/624/cpsprodpb/4118/production/_119546661_gettyimages-1294130887.jpg.webp",
+      //   player_name: "손흥민",
+      //   value: 10,
+      // },
+      // {
+      //   card_img:
+      //     "https://ichef.bbci.co.uk/news/624/cpsprodpb/4118/production/_119546661_gettyimages-1294130887.jpg.webp",
+      //   player_name: "손흥민",
+      //   value: 10,
+      // },
+      // {
+      //   card_img:
+      //     "https://ichef.bbci.co.uk/news/624/cpsprodpb/4118/production/_119546661_gettyimages-1294130887.jpg.webp",
+      //   player_name: "손흥민",
+      //   value: 10,
+      // },
+      // {
+      //   card_img:
+      //     "https://ichef.bbci.co.uk/news/624/cpsprodpb/4118/production/_119546661_gettyimages-1294130887.jpg.webp",
+      //   player_name: "손흥민",
+      //   value: 10,
+      // },
+      // {
+      //   card_img:
+      //     "https://ichef.bbci.co.uk/news/624/cpsprodpb/4118/production/_119546661_gettyimages-1294130887.jpg.webp",
+      //   player_name: "손흥민",
+      //   value: 10,
+      // },
+    ]);
   };
   console.log(gachaResult);
 
@@ -69,6 +132,7 @@ function GachaPage() {
     };
   }, [gachaResult]);
 
+  console.log(gachaResult);
   const ModalHandler = () => {
     setIsModal((prev) => !prev);
   };
@@ -104,15 +168,36 @@ function GachaPage() {
         {isGacha.gacha_count === 1 ? (
           <div>
             <GachaText>가차 1회 뽑기</GachaText>
-            <GachaCard
-              title={gachaResult.player_name}
-              image={gachaResult.card_image}
-              value={gachaResult.value}
-            />
+            <GachaOneList>
+              {gachaResult.map((playerCard) => {
+                return (
+                  <PlayerCard
+                    title={playerCard.player_name}
+                    image={playerCard.card_img}
+                    key={playerCard.card_img}
+                    value={playerCard.value}
+                  />
+                );
+              })}
+            </GachaOneList>
           </div>
         ) : null}
         {isGacha.gacha_count === 10 ? (
-          <GachaText>가차 10회 뽑기</GachaText>
+          <div>
+            <GachaText>가차 10회 뽑기</GachaText>
+            <GachaList>
+              {gachaResult.map((playerCard) => {
+                return (
+                  <PlayerCard
+                    title={playerCard.player_name}
+                    image={playerCard.card_img}
+                    key={playerCard.card_img}
+                    value={playerCard.value}
+                  />
+                );
+              })}
+            </GachaList>
+          </div>
         ) : null}
 
         {/* {gachaResult.map((gachacard) => {
@@ -358,4 +443,16 @@ const GachaButtonContainer = styled.div`
 const GachaText = styled.p`
   font-size: 30px;
   color: white;
+`;
+
+const GachaList = styled.div`
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  height: 50vh;
+`;
+
+const GachaOneList = styled.div`
+  width: 100%;
+
+  margin: auto;
 `;
