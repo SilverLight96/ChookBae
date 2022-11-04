@@ -2,10 +2,11 @@ from django.db import models
 from django.contrib.auth.models import AbstractBaseUser
 from imagekit.models import ProcessedImageField
 from imagekit.processors import ResizeToFill
-
-
+from secret.apikey import API_KEY
+from django.conf import settings
 def profile_image_path(instance, filename):
     return f'user/{instance.pk}/{filename}'
+    # return f'/user/{instance.pk}/{filename}'
 
 
 class User(AbstractBaseUser):
@@ -13,10 +14,11 @@ class User(AbstractBaseUser):
     profile_image = ProcessedImageField(
         upload_to=profile_image_path,
         processors=[ResizeToFill(250, 250)],
-        format='JPEG',
+        format='PNG',
         options={'quality': 100},
-        null=True,
+        null=True, 
         blank=True,
+        default='user/default.png'
     )
     email = models.EmailField(max_length=50, null=False)
     is_active = models.BooleanField(default=False)
