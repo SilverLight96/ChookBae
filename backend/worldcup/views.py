@@ -247,6 +247,8 @@ class card(APIView):
         user.save()
         po=Point.objects.create(user_id=user,point=-1*point,info='선수 뽑기')
 
+        c_list.sort(key=lambda x: x["fullname"])
+
         return (c_list)
 
     @swagger_auto_schema(operation_id="카드 뽑기", operation_description="새로운 선수카드 뽑기", request_body=param)
@@ -283,13 +285,14 @@ class card(APIView):
                 hashmap[i.player_id.id]=1
 
         for i in hashmap.keys():
-            print(i)
             C=Player.objects.get(id=i)
             if country is not None:
                 if(C.team_id != team):
                     continue
             player_name=player_k(C.id)
-            c_list.append({'player_image' : C.player_image, 'fullname' : player_name, 'value' : C.value, 'count' : hashmap.get(i) })    
+            c_list.append({'player_image' : C.player_image, 'fullname' : player_name, 'value' : C.value, 'count' : hashmap.get(i) })
+
+        c_list.sort(key=lambda x: x["fullname"])    
         return Response(c_list)       
 
 #선수 합성 POST
