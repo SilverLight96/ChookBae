@@ -119,7 +119,7 @@ params = {
     }
 
 player_list_tmp = []
-for num in [2, 10]:
+for num in [2, 10]:     # 토트넘 & 뉴캐슬 선수 추출
     team_id = str(num) + '/'
     response = requests.get(BASE_URL+path+team_id, params=params)
     data = response.json()
