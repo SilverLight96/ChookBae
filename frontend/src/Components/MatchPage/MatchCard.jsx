@@ -4,10 +4,11 @@ import { Route, Link, useLocation, useNavigate } from 'react-router-dom';
 import axios from 'axios'
 
 function MatchData(props) {
+    // navigate ------------------------------------------------
     const navigate = useNavigate()
-
+    // value ---------------------------------------------------
     const baseURL = "https://k7a202.p.ssafy.io/"
-
+    // axios ---------------------------------------------------
     const clickCard = async(id, group) => {
         const dataAxios = await axios
         .get(baseURL + 'v1/match/detail/' + id, {
@@ -67,14 +68,13 @@ function MatchData(props) {
             })
         navigate('/Match/Detail', {state})
     }
-
-
+    // return match list --------------------------------------
     return (
         <>
         <StyledCard onClick={() => clickCard(props.match_id, props.team1_group)}>
                 <TextDiv>
-                    <p>{props.start_date} | {props.start_time.slice(0,-3)}</p>
-                    <p>{props.venue_address}</p>
+                    <StyledP>{props.start_date} | {props.start_time.slice(0,-3)}</StyledP>
+                    <StyledP>{props.venue_address}</StyledP>
                 </TextDiv>
 
                 <FlagDiv>
@@ -100,22 +100,30 @@ const StyledCard = styled.div`
     width: 90vw;
     margin-left: auto;
     margin-right: auto;
+    margin-bottom: 3%;
 
+    padding: 10px 5px;
+
+    background-color: #760D27;
     position: relative;
 
-    border: 1px solid black;
+    border-radius: 10px;
+
 `
 
 const TextDiv = styled.div`
-    height: 5vh;
+    height: auto;
     width: 50vw;
     margin-left: auto;
     margin-right: auto;
-    font-size: 5%;
     text-align: center;
+`
 
-    border: 1px solid black;
-
+const StyledP = styled.p`
+    font-size: 1em;
+    color: white;
+    height: auto;
+    margin: 0;
 `
 
 const FlagDiv = styled.div`
@@ -131,7 +139,6 @@ const FlagDiv = styled.div`
     position: absolute;
     bottom: 15%;
 
-    border: 1px solid black;
 `
 
 const FlagContainer = styled.div`
@@ -142,17 +149,11 @@ const FlagContainer = styled.div`
     flex-direction: column;
     justify-content: space-between;
     align-items: center;
-
-    border: 1px solid black;
-
 `
 
 const Flag = styled.img`
     height: 80%;
     width: 80%;
-
-    border: 1px solid black;
-
 `
 
 const FlagName = styled.div`
@@ -160,11 +161,11 @@ const FlagName = styled.div`
     width: 100%;
     font-size: 5%;
     text-align: center;
-
-    border: 1px solid black;
-
+    color: white;
 `
 
 const Group = styled.p`
-    
+    color: white;
+    font-size: 3em
+    margin: 0;
 `

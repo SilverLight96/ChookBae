@@ -27,7 +27,7 @@ export default function MatchDetailChart (props) {
                 maxWidth: 10,
             },
             title: {
-                display: true,
+                display: false,
                 text: '경기 그래프'
             }
         },
