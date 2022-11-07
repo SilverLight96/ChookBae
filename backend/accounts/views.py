@@ -219,7 +219,7 @@ def update(request):
         user = User.objects.get(id=payload['id'])
         #토큰 값의 유저 닉네임을 변경
         user.nickname = request.data['new_nickname']
-        user.profile_image = request.data.get('new_profile_image')
+        # user.profile_image = request.data.get('new_profile_image')
         user.save()
         password = request.data.get('password')
         new_password = request.data.get('new_password')
@@ -292,9 +292,11 @@ def mypage(request):
 
   
   
-class Image(APIView):
-    def post(self,request,format=None):
-        serializers = PhotoSerializer(data=request.data)
-        if serializers.is_valid():
-            return Response(serializers.data,status=status.HTTP_201_CREATED)
-        return Response(serializers.errors,status=status.HTTP_400_BAD_REQUEST)
+# class Image(APIView):
+#     def post(self,request,format=None):
+#         serializers = PhotoSerializer(data=request.data)
+#         if serializers.is_valid():
+#             serializers.save()
+            
+#             return Response(serializers.data,status=status.HTTP_201_CREATED)
+#         return Response(serializers.errors,status=status.HTTP_400_BAD_REQUEST)
