@@ -268,7 +268,7 @@ def mypage(request):
         profile = user.profile_image
         #unicodeDecodeError: 'utf-8' codec can't decode byte 0xff in position 0: invalid start byte
         return Response({'predict_match':predict_match,'nickname':user.nickname,'point':user.points \
-        ,'card_list':C_list,'profile':profile.url,'point_list':point_list},status=status.HTTP_200_OK)
+        ,'card_list':C_list,'profile':profile,'point_list':point_list},status=status.HTTP_200_OK)
     except jwt.ExpiredSignatureError:
         return Response({'error': ''}, status=status.HTTP_400_BAD_REQUEST)
     
