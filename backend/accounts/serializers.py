@@ -32,15 +32,16 @@ class UserUpdateSerializer(UserSerializer):
     new_nickname = nickname
     new_password = password
     new_password_confirm = password
-    new_profile_image = ProcessedImageField(
-        upload_to=profile_image_path,
-        processors=[ResizeToFill(250, 250)],
-        format='PNG',
-        options={'quality': 100},
-        null=True, 
-        blank=True,
-        default='user/default.png'
-    )
+    # new_profile_image = ProcessedImageField(
+    #     upload_to=profile_image_path,
+    #     processors=[ResizeToFill(250, 250)],
+    #     format='PNG',
+    #     options={'quality': 100},
+    #     null=True, 
+    #     blank=True,
+    #     default='user/default.png'
+    # )
+    new_profile_image = serializers.FileField(required=False)
     class Meta:
         model = get_user_model()
         fields = ('nickname','new_nickname', 'password', 'new_password', 'new_password_confirm', 'new_profile_image', )
