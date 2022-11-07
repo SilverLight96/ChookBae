@@ -23,11 +23,10 @@ from worldcup.models import Point
 # from worldcup.models import User
 from django.conf import settings
 from chookbae.settings import SECRET_KEY
-from .serializers import (
-    UserSerializer,
-    AuthenticateSerializer,
-    UserUpdateSerializer
-)
+from .serializers import UserSerializer, AuthenticateSerializer, UserUpdateSerializer, PhotoSerializer
+
+from rest_framework.views import APIView
+
 from .models import User, profile_image_path
 from django.core.mail import EmailMessage
 import re
@@ -242,7 +241,8 @@ def update(request):
 
             me.set_password(new_password)
             me.save()
-        return Response({'id': user.id, 'new_nickname': user.nickname,'image':user.profile_image.url,\
+            # 'image':user.profile_image.url 일단 봉인
+        return Response({'id': user.id, 'new_nickname': user.nickname,\
              'email': user.email,'password':user.password},status=status.HTTP_200_OK)
     except jwt.ExpiredSignatureError:
         return Response({'error': '토큰이 유효하지 않습니다.'}, status=status.HTTP_400_BAD_REQUEST)
@@ -261,7 +261,7 @@ def mypage(request):
 
         payload = jwt.decode(token_receive, SECRET_KEY, algorithms=['HS256'])
         user = User.objects.get(id=payload['id'])
-        #user = User.objects.get(id=36)
+        user = User.objects.get(id=36)
         #유저가 소유한 카드 리스트
         card_list = PlayerCard.objects.filter(user_id=user.id).order_by('player_id')
 
@@ -277,6 +277,7 @@ def mypage(request):
             player_name=player_k(C.id)
             C_list.append({'player_image' : C.player_image, 'fullname' : player_name, 'value' : C.value, 'count' : hashmap.get(i) })  
 
+        C_list.sort(key=lambda x: (-x['count'], x['fullname']))
         #유저의 예측 내역 조회
         predict_match = Prediction.objects.filter(user_id=user.id).values()
 
@@ -293,3 +294,13 @@ def mypage(request):
     except jwt.ExpiredSignatureError:
         return Response({'error': ''}, status=status.HTTP_400_BAD_REQUEST)
     
+
+  
+    
+class Image(APIView):
+    def post(self,request,format=None):
+        serializers = PhotoSerializer(data=request.data)
+        if serializers.is_valid():
+            serializers.save()
+            return Response(serializers.data,status=status.HTTP_201_CREATED)
+        return Response(serializers.errors,status=status.HTTP_400_BAD_REQUEST)
