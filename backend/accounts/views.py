@@ -33,6 +33,7 @@ import re
 import string
 import random
 import jwt, datetime,base64,boto3
+import uuid
 def make_random_code():
     code_list = string.ascii_uppercase + '0123456789'
     code = ''
@@ -291,10 +292,36 @@ def mypage(request):
     
 
   
-  
+
 class Image(APIView):
+
     def post(self,request,format=None):
-        serializers = PhotoSerializer(data=request.data)
-        if serializers.is_valid():
-            return Response(serializers.data,status=status.HTTP_201_CREATED)
-        return Response(serializers.errors,status=status.HTTP_400_BAD_REQUEST)
+
+        file = request.FILES['img']
+        
+        s3_client = boto3.client(
+            's3',
+            aws_access_key_id     = settings.AWS_ACCESS_KEY_ID,
+            aws_secret_access_key = settings.AWS_SECRET_ACCESS_KEY
+        )
+        url = 'img'+'/'+uuid.uuid1().hex
+        
+        s3_client.upload_fileobj(
+            file, 
+            "chookbae", 
+            url, 
+            ExtraArgs={
+                "ContentType": file.content_type
+            }
+        )   
+        return Response(url,status=status.HTTP_201_CREATED)
+
+
+
+    # def post(self,request,format=None):
+    #     print(request.data)
+    #     serializers = PhotoSerializer(data=request.data)
+        
+    #     print(serializers.data)
+    #     return Response(serializers.data,status=status.HTTP_201_CREATED)
+    #    # return Response(serializers.errors,status=status.HTTP_400_BAD_REQUEST)
