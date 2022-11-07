@@ -91,7 +91,7 @@ export default function AccountPage() {
         <h2>회원 정보 수정</h2>
         <ProfileImgContainer>
           <ProfileImg>
-            <img src={profileInfo[0].profile} alt="프로필 이미지" />
+            <img src={userInfo.new_profile_image} alt="프로필 이미지" />
           </ProfileImg>
           <form>
             <label htmlFor="profile-upload">프로필 사진 등록 :</label>
