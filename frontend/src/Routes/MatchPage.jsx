@@ -17,7 +17,7 @@ function MatchPage() {
     const [cardState, setCardState] = useState([])
     const [selectCard, setSelectCard] = useState()
     const [type, setType] = useState('country')
-    // value
+    // value ----------------------------------------------------
     const baseURL = "https://k7a202.p.ssafy.io/"
     const valueMoment = moment(value).format("YYYY-MM-DD")
     // useEffect - get prepare data countries with group --------
@@ -61,8 +61,14 @@ function MatchPage() {
         return(
             <>
                 <BtnContainer>
-                    <StyledButton onClick={changeCountry}>국가별</StyledButton>
-                    <StyledButton onClick={changeDate}>날짜별</StyledButton>
+                    <CountrydButton
+                    onClick={changeCountry}
+                    backColor={type === 'country'? '#760D27' : 'black' }
+                    fw={type === 'country'? 'bold' : 'normal' }>국가별</CountrydButton>
+                    <DateButton 
+                    onClick={changeDate}
+                    backColor={type === 'date'? '#760D27' : 'black' }
+                    fw={type === 'date'? 'bold' : 'normal' }>날짜별</DateButton>
                 </BtnContainer>
             </>
     )}
@@ -75,8 +81,7 @@ function MatchPage() {
     // click country button -----------------------------------------
     if (type ==='country'){
         return (
-            <>
-            <div>
+            <Container>
             <Tableheader />
                 <hr />
                 <MatchCountryCard 
@@ -84,8 +89,8 @@ function MatchPage() {
                 setState={setCardState}
                 selectedCard={setSelectCard}
                 />
-                <hr />
-                <h1>{selectCard}</h1>
+                <StyledHr />
+                <SelectedCard>{selectCard}</SelectedCard>
 
                 <div>
                     {cardState.map((match, index) => {
@@ -107,21 +112,21 @@ function MatchPage() {
                         }
                     )}
                 </div>
-            </div>
-            <BlankDiv><br /><br /><br /></BlankDiv>
-            </>
+            <BlankDiv height='100%'><br /><br /><br /></BlankDiv>
+            </Container>
         )
     }
     // click data button ------------------------------------------
     else {
         return (
-            <>
-            <div>
+            <Container>
                 <Tableheader />
                 <StyledCalendarContainer>
-                    <Calendar onChange={onChangeTemp} value={value} />
+                    <StyledCalendar onChange={onChangeTemp} value={value} />
                 </StyledCalendarContainer>
+                <StyledHr />
                 <h1>{valueMoment}</h1>
+                {dataDate.length > 0 ? null : <BlankDiv height='30vh'></BlankDiv>}
                 {dataDate.map((match, index) => {
                     if (match[1] === valueMoment) {
                     return (
@@ -142,9 +147,8 @@ function MatchPage() {
                         </>
                     )
                 }})}
-            </div>
-            <BlankDiv><br /><br /><br /></BlankDiv>
-            </>
+            <BlankDiv height='100%'><br /><br /><br /></BlankDiv>
+            </Container>
         )
     }
 }
@@ -162,19 +166,90 @@ const StyledCalendarContainer = styled.div`
 `
 
 const BlankDiv = styled.div`
-    height: 100%;
+    height: ${props => props.height};
 `
-const StyledButton = styled.button`
-    width: '10em';
-    height: '5em';
+const CountrydButton = styled.button`
+    &:hover {
+        color: white;
+    }
+    width: 50%;
+    height: 50px;
+
+    color: white;
+    font-weight: ${props => props.fw};
+    font-size: 120%;
+
+    background-color: ${props => props.backColor};
+`
+const DateButton = styled.button`
+    &:hover {
+        color: white;
+    }
+    width: 50%;
+    height: 50px;
+
+    color: white;
+    font-weight: ${props => props.fw};
+    font-size: 120%;
+
+    background-color: ${props => props.backColor};
 `
 
 const BtnContainer= styled.div`
-    margin-top: '3%';
-    margin-bottom: '3%';
+    width: 100%;
+    height: auto;
+    margin-bottom: 3%;
     display: flex;
     justify-content: space-evenly;
 `
 
+const SelectedCard = styled.p`
+    display: inline-block;
 
+    align-self: center;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 0;
+    margin-bottom: 3%;
+    text-align: center;
+    color: white;
+
+    width: 90vw;
+    height: auto;
+
+    font-size: 3em;
+    background-color: #914154;
+
+    border-radius: 10px;
+`
+
+const Container = styled.div`
+    width: 100%;
+    height: auto;
+    background-color: ${(props) => props.theme.colors.mainBlack};
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    color: white;
+
+    border-bottom: 10px solid black;
+
+    position: absolute;
+    top: 0;
+    left: 0;
+`
+
+const StyledHr = styled.hr`
+    width: 100%;
+    height: 0;
+    background-color: #914154;
+    border: 1px solid #914154;
+`
+
+const StyledCalendar = styled(Calendar)`
+    background-color: white;
+    border-radius: 10px;
+    border: 5px solid #914154;
+    color: black;
+`
     // return axiosGet('match/date/' + convertedDate)
