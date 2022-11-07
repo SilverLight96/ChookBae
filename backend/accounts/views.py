@@ -205,7 +205,6 @@ def update(request):
         user.nickname = request.data['new_nickname']
         user.profile_image = request.data.get('new_profile_image')
         user.save()
-        password = request.data.get('password')
         new_password = request.data.get('new_password')
         new_password_confirm = request.data.get('new_password_confirm')
         
@@ -216,7 +215,7 @@ def update(request):
             me = serializer.save()
 
         if new_password:
-            if password == new_password or new_password != new_password_confirm:
+            if new_password != new_password_confirm:
                 return Response({'password mismatch'}, status.HTTP_400_BAD_REQUEST)
 
             if len(new_password) < 8 or len(new_password) > 20 or not re.findall('[a-z]', new_password) \
@@ -269,7 +268,7 @@ def mypage(request):
         profile = user.profile_image
         #unicodeDecodeError: 'utf-8' codec can't decode byte 0xff in position 0: invalid start byte
         return Response({'predict_match':predict_match,'nickname':user.nickname,'point':user.points \
-        ,'card_list':C_list,'profile':profile.url,'point_list':point_list},status=status.HTTP_200_OK)
+        ,'card_list':C_list,'profile':profile,'point_list':point_list},status=status.HTTP_200_OK)
     except jwt.ExpiredSignatureError:
         return Response({'error': ''}, status=status.HTTP_400_BAD_REQUEST)
     
