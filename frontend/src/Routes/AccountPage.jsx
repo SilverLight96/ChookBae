@@ -1,12 +1,13 @@
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import { useForm } from "react-hook-form";
 import { useRef } from "react";
 import { REGEX, REGISTER_MESSAGE, STANDARD } from "../utils/constants/constant";
-import debounce from "../utils/functions/debounce";
 import { userApis } from "../utils/apis/userApis";
 import { fetchData } from "../utils/apis/api";
 import { keyframes } from "styled-components";
+import { upload } from "@testing-library/user-event/dist/upload";
+import axios from "axios";
 
 export default function AccountPage() {
   const [userInfo, setUserInfo] = useState({
@@ -14,7 +15,6 @@ export default function AccountPage() {
     new_password: "",
     new_password_confirm: "",
   });
-  const [selectImg, setSelectImg] = useState("");
 
   const {
     register,
@@ -31,10 +31,22 @@ export default function AccountPage() {
     mode: "onChange",
   });
 
-  const selectFile = (e) => {
-    setSelectImg(e.target.files[0]);
+  const selectFile = async (e) => {
+    const uploadFile = e.target.files[0];
+    const formData = new FormData();
+    formData.append("files", uploadFile);
+    console.log(uploadFile);
+
+    await axios({
+      method: "post",
+      url: "/v1/accounts/image",
+      data: formData,
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    });
   };
-  console.log(selectImg);
+
   // 회원 정보 수정
   const onValid = (data) => {
     setUserInfo((prev) => ({ ...prev, ...data }));
@@ -60,16 +72,19 @@ export default function AccountPage() {
     <Wrapper>
       <LoginBox>
         <h2>회원 정보 수정</h2>
-        <input type="file" accept="image/*" onChange={selectFile}></input>
+        <ProfileImgContainer>
+          <ProfileImg>
+            <img
+              src="http://t0.gstatic.com/licensed-image?q=tbn:ANd9GcSIjMZAnE9OcAtov5EVsznvysN1zvXq5jDY7vSZkoqKv59QN306vyoU0ouBEgcHsyih"
+              alt="프로필 이미지"
+            />
+          </ProfileImg>
+          <form htmlFor="profile-upload">
+            <label htmlFor="profile-upload">프로필 사진 변경 : </label>
+            <input type="file" accept="image/*" onChange={selectFile} />
+          </form>
+        </ProfileImgContainer>
         <form onSubmit={handleSubmit(onValid)}>
-          <ProfileImgContainer>
-            <ProfileImg>
-              <img
-                src="http://t0.gstatic.com/licensed-image?q=tbn:ANd9GcSIjMZAnE9OcAtov5EVsznvysN1zvXq5jDY7vSZkoqKv59QN306vyoU0ouBEgcHsyih"
-                alt="프로필 이미지"
-              />
-            </ProfileImg>
-          </ProfileImgContainer>
           <UserBox>
             <Input
               name="new_nickname"
@@ -335,8 +350,18 @@ const ProfileImgContainer = styled.div`
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  margin-left: 10px;
+
   margin-bottom: 20px;
+  border-bottom: 1px solid white;
+  > form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    > label {
+      color: white;
+      font-size: 16px;
+    }
+  }
 `;
 
 const ProfileImg = styled.main`
