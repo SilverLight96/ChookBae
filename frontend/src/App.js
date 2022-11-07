@@ -27,7 +27,7 @@ function App() {
   const loggedin = useRecoilValue(loggedinState);
   return (
     <CookiesProvider>
-      <BrowserRouter>    
+      <BrowserRouter >    
       <NavBar/>
       <Routes>  
           <Route path="/login" element={<LoginPage/>}/>
