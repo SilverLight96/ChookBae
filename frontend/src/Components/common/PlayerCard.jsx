@@ -3,7 +3,6 @@ import styled from "styled-components";
 import "./jongeun2.scss";
 
 function PlayerCard(props) {
-  console.log(props);
   return (
     <main id="app">
       <section class="cards">

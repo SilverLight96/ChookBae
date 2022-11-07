@@ -1,32 +1,47 @@
 import React, { useRef, useState, useMemo } from "react";
 import styled from "styled-components";
-import { Route, Link, useLocation } from 'react-router-dom';
+import { Route, Link, useLocation, useNavigate } from 'react-router-dom';
 import MatchDeatilTable from '../Components/MatchPage/MatchDetailTable'
 import MatchDetailChart from '../Components/MatchPage/MatchDetailChart'
-
+// useNavigate Link 로 바꾸기
 function MatchDetail() {
     const location = useLocation()
-    console.log(location.state)
+    const navigate = useNavigate()
+
     const propData = location.state.firstData
     const propDataSecond = location.state.secondData
 
+    const state = {
+        match_id: location.state.firstData.match_id,
+        team1_country: location.state.firstData.team1_country,
+        team2_country: location.state.firstData.team2_country,
+    }
+
     const detailData_1 = [
+        '',
         propData.team1_rank,
-        'FIFA Rank',
         propData.team1_last_five,
         // propData.team1_manager,
         'Manager',
-        `${propData.team1_country} 대표팀`,
     ]
 
     const detailData_2 = [
+        '',
         propData.team2_rank,
-        'FIFA Rank',
         propData.team2_last_five,
         // propData.team2_manager,
         'Manager',
-        `${propData.team2_country} 대표팀`,
     ]
+
+    Object.keys(propDataSecond).map(elem => {
+        if (propDataSecond[elem][1] === propData.team1_country) {
+            detailData_1[0] = elem[0]
+        }
+        if (propDataSecond[elem][1] === propData.team2_country) {
+            detailData_2[0] = elem[0]
+        }
+    })
+
     const detailDataHeader = [
         '조별 순위',
         '피파 랭킹',
@@ -34,6 +49,7 @@ function MatchDetail() {
         '감독',
         '선수단',
     ]
+
     return(
         <Container>
             <DescriptionContainer>
@@ -50,7 +66,9 @@ function MatchDetail() {
                         <h1>{propData.team1_group}</h1>
                     </Group>
 
-                    <PredictBtn>
+                    <PredictBtn
+                    onClick={() => navigate('/PredictDetail', {state})}
+                    >
                         <p>승부예측</p>
                     </PredictBtn>
                 </Predict>
@@ -65,6 +83,12 @@ function MatchDetail() {
                             <p key={idx}>{elem}</p>
                         )
                     })}
+                    <StyledLink 
+                    to= {'/TeamInfo'}
+                    state= {{team_id: propData.team1_id, team_name: propData.team1_country}}
+                    >
+                        <p>{propData.team1_country} 대표팀</p>
+                    </StyledLink>
                 </Data>
                 <Data>
                     {detailDataHeader.map((elem, idx) => {
@@ -79,6 +103,12 @@ function MatchDetail() {
                             <p key={idx}>{elem}</p>
                         )
                     })}
+                    <StyledLink 
+                    to= {'/TeamInfo'}
+                    state= {{team_id: propData.team2_id, team_name: propData.team2_country}}
+                    >
+                        <p>{propData.team2_country} 대표팀</p>
+                    </StyledLink>
                 </Data>
             </DataContainer>
 
@@ -133,6 +163,8 @@ const DataContainer = styled.div`
     top: 35%;
     right: 0;
 
+    z-index: 1;
+    
     border: 1px solid black;
 `
 
@@ -240,4 +272,10 @@ const ChartContainer = styled.div`
     right: 0; */
 
     border: 1px solid black;
+`
+
+const StyledLink = styled(Link)`
+    text-decoration: none;
+    font-weight: bold;
+    color: red;
 `

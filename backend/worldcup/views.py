@@ -10,8 +10,9 @@ from django.shortcuts import render
 from django.db.models import Q
 from rest_framework import status
 from rest_framework.response import Response
-from .Serializers import CardSerializer,UserrankSerializer,goalrankSerializer,matchidSerializer
-from .models import User, Point, Venue, Team, Match, Player, PlayerCard, Prediction, Bet, EmailCert
+from .Serializers import UserrankSerializer,matchidSerializer
+from .models import  Point, Venue, Team, Match, Player, PlayerCard, Prediction, Bet, EmailCert
+from accounts.models import User
 from .translation import venue_k, team_k, player_k, player_pos
 from .playervaluesetup import value_p
 import pandas as pd
@@ -32,7 +33,7 @@ class matchpredict(APIView):
 
     @transaction.atomic()
     def get_object(self,user_id, match_id, point, predict):
-
+        point=int(point)
         today=datetime.datetime.now()+datetime.timedelta(minutes=5)
 
         
@@ -41,17 +42,18 @@ class matchpredict(APIView):
 
         match=Match.objects.get(id=match_id)
         user=User.objects.get(id=user_id)
+        
         if(user.points<point):
             return ('보유하고 있는 포인트를 확인해 주세요.')
              
         try:
-            pre=Prediction.objects.get(match_id=match_id,user_id=1)
+            pre=Prediction.objects.get(match_id=match_id,user_id=user_id)
             return ('이미 예측을 완료한 경기입니다.')
            
         except Prediction.DoesNotExist:
             user.points-=point
             user.save()
-            po=Point.objects.create(user_id=user,point=point,info='경기 결과 예측 배팅')
+            po=Point.objects.create(user_id=user,point=-1*point,info='경기 결과 예측 배팅')
             pred=Prediction.objects.create(user_point=point,predict=predict,match_id=match,user_id=user)
            
 
@@ -78,7 +80,7 @@ class matchpredict(APIView):
         # token=request.COOKIES.get('jwt')
         # pay=jwt.decode(token,SECRET_KEY, algorithms=['HS256'])
         # user_id=pay['id']
-        user_id=1
+        user_id=36
         ingredient = self.get_object(user_id,request.data['match_id'],request.data['point'],request.data['predict'])
 
         #print(request.META.get('HTTP_AUTHORIZATION'))
@@ -154,7 +156,7 @@ class predictinfo(APIView):
         # token=request.COOKIES.get('jwt')
         # pay=jwt.decode(token,SECRET_KEY, algorithms=['HS256'])
         # user_id=pay['id']
-        user_id=1
+        user_id=36
         try:
             predict=Prediction.objects.get(match_id=id ,user_id=user_id)
             return Response({False}, status=status.HTTP_200_OK)
@@ -205,6 +207,9 @@ class card(APIView):
 
     @transaction.atomic()
     def get_object(self, user_id, team_id,gacha_count,point):
+        point=int(point)
+        gacha_count=int(gacha_count)
+        team_id=int(team_id)
         c_list=[]
         user=User.objects.get(id=user_id)
 
@@ -221,11 +226,12 @@ class card(APIView):
             if(find==0):
                 user.value+=card.value
             new_card=PlayerCard.objects.create(player_id=card, user_id=user)
-            serializer = CardSerializer(card)
-            c_list.append(serializer.data)
+            player_name= player_k(card.id)
+            list={'fullname' : player_name, 'player_image' : card.player_image, 'value' : card.value }
+            c_list.append(list)
         user.points-=point
         user.save()
-        po=Point.objects.create(user_id=user,point=point,info='선수 뽑기')
+        po=Point.objects.create(user_id=user,point=-1*point,info='선수 뽑기')
 
         return (c_list)
 
@@ -234,7 +240,7 @@ class card(APIView):
         # token=request.COOKIES.get('jwt')
         # pay=jwt.decode(token,SECRET_KEY, algorithms=['HS256'])
         # user_id=pay['id']
-        user_id=1
+        user_id=36
         gacha=self.get_object(user_id,request.data['team_id'],request.data['gacha_count'],request.data['point'])
 
         if(gacha=='보유하고 있는 포인트를 확인해 주세요.'):
@@ -245,6 +251,7 @@ class card(APIView):
     @swagger_auto_schema(operation_id="유저의 보유하고 있는 카드 확인", operation_description="해당 유저가 보유하고 있는 모든 카드의 정보를 가져온다.")
     def get(self, request):
         c_list=[]
+        hashmap = {} 
         country = request.GET.get('country', None)
         if country is not None:
             team=Team.objects.get(country=country)
@@ -252,19 +259,25 @@ class card(APIView):
         # token=request.COOKIES.get('jwt')
         # pay=jwt.decode(token,SECRET_KEY, algorithms=['HS256'])
         # user_id=pay['id']
-        user_id=1
+        user_id=36
 
         card=PlayerCard.objects.filter(user_id=user_id).order_by('player_id')
 
         for i in card:
-            C=Player.objects.get(id=i.player_id.id)
+            if i.player_id.id in hashmap :
+                num=hashmap[i.player_id.id]
+                hashmap[i.player_id.id]=num+1
+            else :
+                hashmap[i.player_id.id]=1
+
+        for i in hashmap.keys():
+            print(i)
+            C=Player.objects.get(id=i)
             if country is not None:
                 if(C.team_id != team):
                     continue
-            serializer = CardSerializer(C)
-            
-            c_list.append(serializer.data)
-        
+            player_name=player_k(C.id)
+            c_list.append({'player_image' : C.player_image, 'fullname' : player_name, 'value' : C.value, 'count' : hashmap.get(i) })    
         return Response(c_list)       
 
 #선수 합성 POST
@@ -277,7 +290,7 @@ class combine(APIView):
 
 
     @transaction.atomic()
-    def get_object(self, user_id, card1, card2):
+    def get_object(self, user_id, card1, card2):  
         user=User.objects.get(id=user_id)
         first=PlayerCard.objects.get(id=card1)
         second=PlayerCard.objects.get(id=card2)
@@ -315,15 +328,17 @@ class combine(APIView):
         first.delete()
         second.delete()
         new_card=PlayerCard.objects.create(player_id=card, user_id=user)
-        serializer = CardSerializer(card)
-        return (serializer.data)
+        player_name= player_k(card.id)
+        list={'fullname' : player_name, 'player_image' : card.player_image, 'value' : card.value }
+
+        return (list)
 
     @swagger_auto_schema(operation_id="카드 합성", operation_description="기존의 선수 합성하여 새 선수 뽑기", request_body=param)
     def post(self, request, format=None):
         # token=request.COOKIES.get('jwt')
         # pay=jwt.decode(token,SECRET_KEY, algorithms=['HS256'])
         # user_id=pay['id']
-        user_id=1
+        user_id=36
         comb=self.get_object(user_id,request.data['player_card_id1'],request.data['player_card_id2'])
 
         if(comb=='보유하고 있지 않은 선수카드입니다.' or comb=='뽑을 선수가 없습니다.'):
@@ -349,8 +364,9 @@ class rank(APIView):
         elif(type=='player'):
             player=Player.objects.all().order_by('-goal')
             for i in player:
-                serializer=goalrankSerializer(i)
-                R_list.append(serializer.data)
+                player_name= player_k(i.id)
+                list={'fullname' : player_name, 'goal' : i.goal, 'value' : i.value }
+                R_list.append(list)
 
         return (R_list)   
 
@@ -487,10 +503,12 @@ class TeamInfo(APIView):
         return Response(team_info)
 
 
-# 선수 시세 변동 알고리즘
+# 선수 시세 변동 알고리즘       >> AUTO정산에 추가하기 (하루 1회 업데이트)
 class PlayerTest(APIView):
     @swagger_auto_schema(operation_id="선수 스탯 테스트", operation_description="선수 스탯 테스트", responses={200: '조회 성공'})
     def get(self, request):
+
+        t1 = datetime.datetime.now()
         # 선수 기록 수정 코드 (테스트)
         player = Player.objects.get(id=48)
         # player.goal += 1      # 1골 추가
@@ -505,7 +523,12 @@ class PlayerTest(APIView):
             
             # 월드컵 성적으로 시세 조정하기
             goal, assist, yellow, red, runtime = player.goal, player.assist, player.yellow_card, player.red_card, player.run_time
-            player.value = init_value * (1 + goal * 0.3) * (1 + assist * 0.1) * (1 - yellow * 0.05) * (1 - red * 0.2) * (1 + runtime * 0.01)
+            team = Team.objects.get(id=player.team_id.id)
+            win, draw, loss, goal_diff = team.win, team.draw, team.loss, team.goal_diff
+            player.value = (init_value * (1 + goal * 0.3) * (1 + assist * 0.1) * (1 - yellow * 0.05) * (1 - red * 0.2) * (1 + runtime * 0.002)
+                            + (3000 * win) + (1000 * draw) - (500 * loss) + (100 * goal_diff))
             player.save()
+        
+        print(datetime.datetime.now() - t1)
 
         return Response("success")

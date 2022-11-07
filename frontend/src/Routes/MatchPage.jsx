@@ -10,9 +10,17 @@ import axios from "axios"
 
 
 function MatchPage() {
-    const baseURL = "https://k7a202.p.ssafy.io/"
+    // state ----------------------------------------------------
     const [groupData, setGroupData] = useState([])
-
+    const [value, onChange] = useState(new Date());
+    const [dataDate, setDataDate] = useState([])
+    const [cardState, setCardState] = useState([])
+    const [selectCard, setSelectCard] = useState()
+    const [type, setType] = useState('country')
+    // value
+    const baseURL = "https://k7a202.p.ssafy.io/"
+    const valueMoment = moment(value).format("YYYY-MM-DD")
+    // useEffect - get prepare data countries with group --------
     useEffect(() => {
         const axiosGetGroup = async() => {
             const dataAxios = await axios
@@ -21,24 +29,13 @@ function MatchPage() {
                     'Content-Type': 'application/json',
                     },
             })
+            console.log(dataAxios.data);
             setGroupData(dataAxios.data)
         }
 
         axiosGetGroup()
     }, [])
-
-    const axiosGetCountry = async(subUrl) => {
-        const dataAxios = await axios
-        .get(baseURL + 'v1/match/team/' + subUrl, {
-            headers: {
-                'Content-Type': 'application/json',
-                },
-            })
-        await setDataCountry(dataAxios.data)
-        console.log(dataAxios.data);
-        }
-
-
+    // axios - get data countries with date-----------------------
     const axiosGet = async(subUrl) => {
         const dataAxios = await axios
         .get(baseURL + 'v1/' + subUrl, {
@@ -48,81 +45,34 @@ function MatchPage() {
             })
         await setDataDate(dataAxios.data)
         }
-
     const getDataDate = (date) => {
         const convertedDate = date.split('-').join('')
         return axiosGet('match/date/' + convertedDate)
     }
-    const thStyle={
-        width: '100em',
-        height: 'auto',
-    }
-
-    const btnDivStyle={
-        marginTop: '3%',
-        marginBottom: '3%',
-        display: 'flex',
-        justifyContent: 'space-evenly'
-    }
-
-    const btnStyle={
-        width: '10em',
-        height: '5em',
-    }
-
-    const calendarStyle={
-        width: '100%',
-    }
-
-    const header = [
-        'id',
-        'pk',
-        'match_name',
-        'match_type',
-        'team1_pk',
-        'team2_pk',
-        'start_time',
-        'venue_pk',
-        'team1_score',
-        'team2_score',
-    ]
-    const [value, onChange] = useState(new Date());
-
-    const [dataDate, setDataDate] = useState([])
-    const [dataCountry, setDataCountry] = useState([])
-    const [cardState, setCardState] = useState([])
-
+    // calender --------------------------------------------------
     const onChangeTemp = (e) => {
         const valueMoment = moment(e).format("YYYY-MM-DD")
         getDataDate(valueMoment)
         onChange(e)
         console.log(dataDate)
         }
-
-    const valueMoment = moment(value).format("YYYY-MM-DD")
-
-    const [selectCard, setSelectCard] = useState()
-
+    // top position two button ----------------------------------- 
     const Tableheader = () => {
         return(
             <>
-                <div style={btnDivStyle}>
-                    <button style={btnStyle} onClick={changeCountry}>국가별</button>
-                    <button style={btnStyle} onClick={changeDate}>날짜별</button>
-                </div>
+                <BtnContainer>
+                    <StyledButton onClick={changeCountry}>국가별</StyledButton>
+                    <StyledButton onClick={changeDate}>날짜별</StyledButton>
+                </BtnContainer>
             </>
     )}
-    const [type, setType] = useState(
-        'country'
-        )
     const changeCountry = () => {
         setType('country')
     }
     const changeDate = () => {
         setType('date')
     }
-
-    console.log(cardState);
+    // click country button -----------------------------------------
     if (type ==='country'){
         return (
             <>
@@ -162,6 +112,7 @@ function MatchPage() {
             </>
         )
     }
+    // click data button ------------------------------------------
     else {
         return (
             <>
@@ -199,7 +150,7 @@ function MatchPage() {
 }
 
 export default MatchPage;
-
+// style --------------------------------------------------------
 const StyledCalendarContainer = styled.div`
     /* container styles */
     margin-left: auto;
@@ -213,7 +164,17 @@ const StyledCalendarContainer = styled.div`
 const BlankDiv = styled.div`
     height: 100%;
 `
+const StyledButton = styled.button`
+    width: '10em';
+    height: '5em';
+`
 
+const BtnContainer= styled.div`
+    margin-top: '3%';
+    margin-bottom: '3%';
+    display: flex;
+    justify-content: space-evenly;
+`
 
 
     // return axiosGet('match/date/' + convertedDate)
