@@ -212,7 +212,7 @@ AWS_S3_OBJECT_PARAMETERS = {
 AWS_DEFAULT_ACL = 'public-read'
 AWS_LOCATION = 'static'
 DEFAULT_FILE_STORAGE = 'chookbae.asset_storage.MediaStorage' # 파일 저장소를 S3로 설정
-STATIC_URL = 'https://%s/%s/' % (AWS_S3_CUSTOM_DOMAIN, AWS_LOCATION)
+STATIC_URL = 'https://%s/' % (AWS_S3_CUSTOM_DOMAIN)
 STATICFILES_STORAGE = 'chookbae.asset_storage.MediaStorage'
 STATICFILES_DIRS = [
     BASE_DIR/'static'

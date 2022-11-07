@@ -11,15 +11,16 @@ def profile_image_path(instance, filename):
 
 class User(AbstractBaseUser):
     nickname = models.CharField(max_length=11, blank=True)
-    profile_image = ProcessedImageField(
-        upload_to=profile_image_path,
-        processors=[ResizeToFill(250, 250)],
-        format='PNG',
-        options={'quality': 100},
-        null=True, 
-        blank=True,
-        default='user/default.png'
-    )
+    # profile_image = ProcessedImageField(
+    #     upload_to=profile_image_path,
+    #     processors=[ResizeToFill(250, 250)],
+    #     format='PNG',
+    #     options={'quality': 100},
+    #     null=True, 
+    #     blank=True,
+    #     default='user/default.png'
+    # )
+    profile_image = models.FileField(upload_to=profile_image_path, null=True, blank=True)
     email = models.EmailField(max_length=50, null=False)
     is_active = models.BooleanField(default=False)
     USERNAME_FIELD = 'email'
