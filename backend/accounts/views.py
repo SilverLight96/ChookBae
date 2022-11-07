@@ -186,25 +186,8 @@ def login(request):
       }
 
     token = jwt.encode({'id': user.id}, SECRET_KEY, algorithm='HS256')
-    # res = Response()
-    # res.set_cookie(key='jwt',value=token,httponly=True)
-    # res.data={
-    #     'nickname': user.nickname,
-    #     'jwt':token
-    # }
+
     return Response({'token':token},status=status.HTTP_200_OK)
-
-# 토큰을 이용해 로그아웃
-# @api_view(['POST'])
-# @permission_classes([IsAuthenticated])
-# def logout(request):
-#     res = Response()
-#     res.delete_cookie('jwt')
-#     res.data = {
-#         'message': '로그아웃 되었습니다.'
-#     }
-#     return Response(res, status=status.HTTP_200_OK)
-
 
 #회원정보수정
 #update user's password
@@ -220,7 +203,7 @@ def update(request):
         user = User.objects.get(id=payload['id'])
         #토큰 값의 유저 닉네임을 변경
         user.nickname = request.data['new_nickname']
-        # user.profile_image = request.data.get('new_profile_image')
+        user.profile_image = request.data.get('new_profile_image')
         user.save()
         password = request.data.get('password')
         new_password = request.data.get('new_password')
