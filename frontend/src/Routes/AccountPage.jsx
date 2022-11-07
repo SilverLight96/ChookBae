@@ -6,14 +6,18 @@ import { REGEX, REGISTER_MESSAGE, STANDARD } from "../utils/constants/constant";
 import { userApis } from "../utils/apis/userApis";
 import { fetchData } from "../utils/apis/api";
 import { keyframes } from "styled-components";
-import { upload } from "@testing-library/user-event/dist/upload";
+import { useRecoilState } from "recoil";
+import { myInformation } from "../atoms";
 import axios from "axios";
+import { getCookie } from "../utils/functions/cookies";
 
 export default function AccountPage() {
+  const profileInfo = useRecoilState(myInformation);
   const [userInfo, setUserInfo] = useState({
-    new_nickname: "",
+    new_nickname: profileInfo[0].nickname,
     new_password: "",
     new_password_confirm: "",
+    new_profile_image: profileInfo[0].profile,
   });
 
   const {
@@ -37,6 +41,10 @@ export default function AccountPage() {
 
     formData.append("profile_image", uploadFile);
     console.log(uploadFile);
+    const getToken = () => {
+      const accessToken = getCookie("token");
+      return accessToken;
+    };
 
     await axios({
       method: "post",
@@ -44,9 +52,14 @@ export default function AccountPage() {
       data: formData,
       headers: {
         "Content-Type": "multipart/form-data",
+        Authorization: `${getToken()}`,
       },
     }).then((res) => {
-      console.log(res);
+      console.log(res.data.profile_image);
+      setUserInfo((prev) => ({
+        ...prev,
+        new_profile_image: res.data.profile_image,
+      }));
     });
   };
 
@@ -62,11 +75,12 @@ export default function AccountPage() {
       } catch (err) {}
     })();
   }, [userInfo]);
-  console.log(userInfo);
 
   const updateuser = async () => {
     return await fetchData.patch(userApis.UPDATE_USER, userInfo);
+    // console.log(userInfo);
   };
+  console.log(userInfo);
 
   // 비밀번호 확인
   const password = useRef({});
@@ -77,13 +91,10 @@ export default function AccountPage() {
         <h2>회원 정보 수정</h2>
         <ProfileImgContainer>
           <ProfileImg>
-            <img
-              src="http://t0.gstatic.com/licensed-image?q=tbn:ANd9GcSIjMZAnE9OcAtov5EVsznvysN1zvXq5jDY7vSZkoqKv59QN306vyoU0ouBEgcHsyih"
-              alt="프로필 이미지"
-            />
+            <img src={profileInfo[0].profile} alt="프로필 이미지" />
           </ProfileImg>
-          <form htmlFor="profile-upload">
-            <label htmlFor="profile-upload">프로필 사진 변경 : </label>
+          <form>
+            <label htmlFor="profile-upload">프로필 사진 등록 :</label>
             <input type="file" accept="image/*" onChange={selectFile} />
           </form>
         </ProfileImgContainer>

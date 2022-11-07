@@ -28,7 +28,7 @@ function ProfileCard() {
       </ButtonConatiner>
       <ProfileImgContainer>
         <ProfileImg>
-          <img src={profileInfo[0].photo} alt="프로필 이미지" />
+          <img src={profileInfo[0].profile} alt="프로필 이미지" />
         </ProfileImg>
       </ProfileImgContainer>
       <ProfileMain>
