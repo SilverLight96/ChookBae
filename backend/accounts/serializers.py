@@ -41,6 +41,7 @@ class UserUpdateSerializer(UserSerializer):
     #     blank=True,
     #     default='user/default.png'
     # )
+    #serializer에서는 imagefield를 지원하지 않는다. 그래서 imagekit을 사용해야한다.
     new_profile_image = serializers.FileField(required=False)
     class Meta:
         model = get_user_model()
