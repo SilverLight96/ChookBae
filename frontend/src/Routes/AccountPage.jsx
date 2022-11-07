@@ -34,16 +34,19 @@ export default function AccountPage() {
   const selectFile = async (e) => {
     const uploadFile = e.target.files[0];
     const formData = new FormData();
-    formData.append("files", uploadFile);
+
+    formData.append("profile_image", uploadFile);
     console.log(uploadFile);
 
     await axios({
       method: "post",
-      url: "/v1/accounts/image",
+      url: "https://k7a202.p.ssafy.io/v1/accounts/image/",
       data: formData,
       headers: {
         "Content-Type": "multipart/form-data",
       },
+    }).then((res) => {
+      console.log(res);
     });
   };
 
