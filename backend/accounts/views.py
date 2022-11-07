@@ -33,6 +33,7 @@ import re
 import string
 import random
 import jwt, datetime,base64,boto3
+import uuid
 def make_random_code():
     code_list = string.ascii_uppercase + '0123456789'
     code = ''
@@ -185,25 +186,8 @@ def login(request):
       }
 
     token = jwt.encode({'id': user.id}, SECRET_KEY, algorithm='HS256')
-    # res = Response()
-    # res.set_cookie(key='jwt',value=token,httponly=True)
-    # res.data={
-    #     'nickname': user.nickname,
-    #     'jwt':token
-    # }
+
     return Response({'token':token},status=status.HTTP_200_OK)
-
-# 토큰을 이용해 로그아웃
-# @api_view(['POST'])
-# @permission_classes([IsAuthenticated])
-# def logout(request):
-#     res = Response()
-#     res.delete_cookie('jwt')
-#     res.data = {
-#         'message': '로그아웃 되었습니다.'
-#     }
-#     return Response(res, status=status.HTTP_200_OK)
-
 
 #회원정보수정
 #update user's password
@@ -221,7 +205,6 @@ def update(request):
         user.nickname = request.data['new_nickname']
         user.profile_image = request.data.get('new_profile_image')
         user.save()
-        password = request.data.get('password')
         new_password = request.data.get('new_password')
         new_password_confirm = request.data.get('new_password_confirm')
         
@@ -232,7 +215,7 @@ def update(request):
             me = serializer.save()
 
         if new_password:
-            if password == new_password or new_password != new_password_confirm:
+            if new_password != new_password_confirm:
                 return Response({'password mismatch'}, status.HTTP_400_BAD_REQUEST)
 
             if len(new_password) < 8 or len(new_password) > 20 or not re.findall('[a-z]', new_password) \
@@ -285,16 +268,59 @@ def mypage(request):
         profile = user.profile_image
         #unicodeDecodeError: 'utf-8' codec can't decode byte 0xff in position 0: invalid start byte
         return Response({'predict_match':predict_match,'nickname':user.nickname,'point':user.points \
-        ,'card_list':C_list,'profile':profile.url,'point_list':point_list},status=status.HTTP_200_OK)
+        ,'card_list':C_list,'profile':profile,'point_list':point_list},status=status.HTTP_200_OK)
     except jwt.ExpiredSignatureError:
         return Response({'error': ''}, status=status.HTTP_400_BAD_REQUEST)
     
 
-  
-  
 class Image(APIView):
+    # def post(self,request,format=None):
+    #     serializers = PhotoSerializer(data=request.data)
+    #     if serializers.is_valid():
+    #         serializers.save()
+    #         return Response(serializers.data,status=status.HTTP_201_CREATED)
+    #     return Response(serializers.errors,status=status.HTTP_400_BAD_REQUEST)  
+
+
+    # def post(self, request) :
+    #     try :
+    #         files = request.FILES.getlist('files')
+    #         host_id = request.GET.get('host_id')
+    #         s3r = boto3.resource('s3', aws_access_key_id= settings.AWS_ACCESS_KEY_ID, aws_secret_access_key= settings.AWS_SECRET_ACCESS_KEY)
+    #         key = "%s" %(host_id)
+
+    #         for file in files :
+    #             file._set_name(str(uuid.uuid4()))
+    #             s3r.Bucket(settings.AWS_STORAGE_BUCKET_NAME).put_object( Key=key+'/%s'%(file), Body=file, ContentType='jpg')
+    #             Image.objects.create(
+    #                 image_url = settings.STATIC_URL+"%s/%s"%(host_id, file),
+    #                 host_id = host_id
+    #             )
+    #         return Response({"MESSGE" : "SUCCESS"}, status=200)
+
+    #     except Exception as e :
+    #         return Response({"ERROR" : e.message})
+
+
     def post(self,request,format=None):
-        serializers = PhotoSerializer(data=request.data)
-        if serializers.is_valid():
-            return Response(serializers.data,status=status.HTTP_201_CREATED)
-        return Response(serializers.errors,status=status.HTTP_400_BAD_REQUEST)
+
+        file = request.FILES['profile_image']
+        
+        s3_client = boto3.client(
+            's3',
+            aws_access_key_id     = settings.AWS_ACCESS_KEY_ID,
+            aws_secret_access_key = settings.AWS_SECRET_ACCESS_KEY
+        )
+        url = 'img'+'/'+uuid.uuid1().hex
+        # url = 'img'+'/'
+        s3_client.upload_fileobj(
+            file, 
+            "chookbae", 
+            url, 
+            ExtraArgs={
+                "ContentType": file.content_type
+            }
+        )
+        url=settings.STATIC_URL+url   
+        return Response({'profile_image':url},status=status.HTTP_201_CREATED)
+
