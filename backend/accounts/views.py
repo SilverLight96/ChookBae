@@ -17,25 +17,23 @@ from django.utils.encoding import force_bytes, force_text
 from django.contrib import auth
 from django.utils import timezone
 from worldcup.translation import venue_k, team_k, player_k, player_pos
-
 from worldcup.models import Player, PlayerCard
 from worldcup.models import Prediction
 from worldcup.models import Point
 # from worldcup.models import User
-
+from django.conf import settings
 from chookbae.settings import SECRET_KEY
-from .serializers import (
-    UserSerializer,
-    AuthenticateSerializer,
-    UserUpdateSerializer
-)
+from .serializers import UserSerializer, AuthenticateSerializer, UserUpdateSerializer, PhotoSerializer
+
+from rest_framework.views import APIView
+
 from .models import User, profile_image_path
 from django.core.mail import EmailMessage
 import re
 import string
 import random
-import jwt, datetime
-
+import jwt, datetime,base64,boto3
+import uuid
 def make_random_code():
     code_list = string.ascii_uppercase + '0123456789'
     code = ''
@@ -188,25 +186,8 @@ def login(request):
       }
 
     token = jwt.encode({'id': user.id}, SECRET_KEY, algorithm='HS256')
-    # res = Response()
-    # res.set_cookie(key='jwt',value=token,httponly=True)
-    # res.data={
-    #     'nickname': user.nickname,
-    #     'jwt':token
-    # }
+
     return Response({'token':token},status=status.HTTP_200_OK)
-
-# 토큰을 이용해 로그아웃
-# @api_view(['POST'])
-# @permission_classes([IsAuthenticated])
-# def logout(request):
-#     res = Response()
-#     res.delete_cookie('jwt')
-#     res.data = {
-#         'message': '로그아웃 되었습니다.'
-#     }
-#     return Response(res, status=status.HTTP_200_OK)
-
 
 #회원정보수정
 #update user's password
@@ -222,11 +203,11 @@ def update(request):
         user = User.objects.get(id=payload['id'])
         #토큰 값의 유저 닉네임을 변경
         user.nickname = request.data['new_nickname']
+        user.profile_image = request.data.get('new_profile_image')
         user.save()
-        password = request.data.get('password')
         new_password = request.data.get('new_password')
         new_password_confirm = request.data.get('new_password_confirm')
-
+        
  
         serializer = UserUpdateSerializer(user, data=request.data)
 
@@ -234,7 +215,7 @@ def update(request):
             me = serializer.save()
 
         if new_password:
-            if password == new_password or new_password != new_password_confirm:
+            if new_password != new_password_confirm:
                 return Response({'password mismatch'}, status.HTTP_400_BAD_REQUEST)
 
             if len(new_password) < 8 or len(new_password) > 20 or not re.findall('[a-z]', new_password) \
@@ -243,7 +224,9 @@ def update(request):
 
             me.set_password(new_password)
             me.save()
-        return Response({'id': user.id, 'new_nickname': user.nickname, 'email': user.email,'password':user.password},status=status.HTTP_200_OK)
+            # 'image':user.profile_image.url 일단 봉인
+        return Response({'id': user.id, 'new_nickname': user.nickname,\
+             'email': user.email,'password':user.password},status=status.HTTP_200_OK)
     except jwt.ExpiredSignatureError:
         return Response({'error': '토큰이 유효하지 않습니다.'}, status=status.HTTP_400_BAD_REQUEST)
 
@@ -255,27 +238,89 @@ def update(request):
 def mypage(request):
     # token_receive = request.COOKIES.get('jwt')
     token_receive = request.META.get('HTTP_AUTHORIZATION')
-    print(token_receive)
     try:
         C_list=[]
+        hashmap = {}
+
         payload = jwt.decode(token_receive, SECRET_KEY, algorithms=['HS256'])
         user = User.objects.get(id=payload['id'])
         #유저가 소유한 카드 리스트
-        card_list = PlayerCard.objects.filter(user_id=user.id)
-        for i in card_list:
-            card=Player.objects.get(id=i.player_id.id)
-            player_name= player_k(i.player_id.id)
-            C_list.append({'player_image' : card.player_image, 'fullname' : player_name, 'value' : card.value, })
-        # card_list = Player.objects.filter().values('fullname','player_image','value')
+        card_list = PlayerCard.objects.filter(user_id=user.id).order_by('player_id')
 
+        for i in card_list:
+            if i.player_id.id in hashmap :
+                num=hashmap[i.player_id.id]
+                hashmap[i.player_id.id]=num+1
+            else :
+                hashmap[i.player_id.id]=1
+
+        for i in hashmap.keys():
+            C=Player.objects.get(id=i)
+            player_name=player_k(C.id)
+            C_list.append({'player_image' : C.player_image, 'fullname' : player_name, 'value' : C.value, 'count' : hashmap.get(i) })  
+
+        C_list.sort(key=lambda x: (-x['count'], x['fullname']))
         #유저의 예측 내역 조회
         predict_match = Prediction.objects.filter(user_id=user.id).values()
 
         #유저의 포인트 사용 내역 전부 가져오기 values()로 가져오면 딕셔너리 형태로 가져옴 튜플은 values_list()
         point_list = Point.objects.filter(user_id=user.id).values()
-        
+        profile = user.profile_image
+        #unicodeDecodeError: 'utf-8' codec can't decode byte 0xff in position 0: invalid start byte
         return Response({'predict_match':predict_match,'nickname':user.nickname,'point':user.points \
-        ,'card_list':C_list,'point_list':point_list},status=status.HTTP_200_OK)
+        ,'card_list':C_list,'profile':profile,'point_list':point_list},status=status.HTTP_200_OK)
     except jwt.ExpiredSignatureError:
-        return Response({'error': '토큰이 유효하지 않습니다.'}, status=status.HTTP_400_BAD_REQUEST)
+        return Response({'error': ''}, status=status.HTTP_400_BAD_REQUEST)
     
+
+class Image(APIView):
+    # def post(self,request,format=None):
+    #     serializers = PhotoSerializer(data=request.data)
+    #     if serializers.is_valid():
+    #         serializers.save()
+    #         return Response(serializers.data,status=status.HTTP_201_CREATED)
+    #     return Response(serializers.errors,status=status.HTTP_400_BAD_REQUEST)  
+
+
+    # def post(self, request) :
+    #     try :
+    #         files = request.FILES.getlist('files')
+    #         host_id = request.GET.get('host_id')
+    #         s3r = boto3.resource('s3', aws_access_key_id= settings.AWS_ACCESS_KEY_ID, aws_secret_access_key= settings.AWS_SECRET_ACCESS_KEY)
+    #         key = "%s" %(host_id)
+
+    #         for file in files :
+    #             file._set_name(str(uuid.uuid4()))
+    #             s3r.Bucket(settings.AWS_STORAGE_BUCKET_NAME).put_object( Key=key+'/%s'%(file), Body=file, ContentType='jpg')
+    #             Image.objects.create(
+    #                 image_url = settings.STATIC_URL+"%s/%s"%(host_id, file),
+    #                 host_id = host_id
+    #             )
+    #         return Response({"MESSGE" : "SUCCESS"}, status=200)
+
+    #     except Exception as e :
+    #         return Response({"ERROR" : e.message})
+
+
+    def post(self,request,format=None):
+
+        file = request.FILES['profile_image']
+        
+        s3_client = boto3.client(
+            's3',
+            aws_access_key_id     = settings.AWS_ACCESS_KEY_ID,
+            aws_secret_access_key = settings.AWS_SECRET_ACCESS_KEY
+        )
+        url = 'img'+'/'+uuid.uuid1().hex
+        # url = 'img'+'/'
+        s3_client.upload_fileobj(
+            file, 
+            "chookbae", 
+            url, 
+            ExtraArgs={
+                "ContentType": file.content_type
+            }
+        )
+        url=settings.STATIC_URL+url   
+        return Response({'profile_image':url},status=status.HTTP_201_CREATED)
+

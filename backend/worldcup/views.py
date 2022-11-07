@@ -1,3 +1,4 @@
+import requests
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from drf_yasg import openapi
@@ -16,7 +17,9 @@ from accounts.models import User
 from .translation import venue_k, team_k, player_k, player_pos
 from .playervaluesetup import value_p
 import pandas as pd
+import jwt
 from chookbae.settings import SECRET_KEY
+from secret.apikey import API_KEY
 
 
 # Create your views here.
@@ -77,10 +80,9 @@ class matchpredict(APIView):
             
     @swagger_auto_schema(operation_id="승부 예측", operation_description="승부 예측하기", request_body=param)
     def post(self, request, format=None):
-        # token=request.COOKIES.get('jwt')
-        # pay=jwt.decode(token,SECRET_KEY, algorithms=['HS256'])
-        # user_id=pay['id']
-        user_id=36
+        token=request.META.get('HTTP_AUTHORIZATION')
+        pay=jwt.decode(token,SECRET_KEY, algorithms=['HS256'])
+        user_id=pay['id']
         ingredient = self.get_object(user_id,request.data['match_id'],request.data['point'],request.data['predict'])
 
         #print(request.META.get('HTTP_AUTHORIZATION'))
@@ -144,19 +146,21 @@ class predictinfo(APIView):
     @swagger_auto_schema(operation_id="유저의 승부 예측 여부를 조회", operation_description="제공 받은 토큰 값을 기준으로 유저를 파악하고 해당 유저가 승부 예측을 했는지 확인한다", manual_parameters=[id])
     def get(self, request, id):
 
+        token=request.META.get('HTTP_AUTHORIZATION')
+        pay=jwt.decode(token,SECRET_KEY, algorithms=['HS256'])
+        user_id=pay['id']
+        
         today=datetime.datetime.now()+datetime.timedelta(minutes=5)
 
         
-        if Match.objects.filter(Q(id=id) &Q(start_date=today.date(), start_time__lte=time.time())) :
+        if Match.objects.filter(Q(id=id) &Q(start_date=today.date(), start_time__lte=today.time())) :
             return Response({False},status=status.HTTP_200_OK)
 
         if not Match.objects.filter(id=id) :
             return Response({False},status=status.HTTP_400_BAD_REQUEST)
 
-        # token=request.COOKIES.get('jwt')
-        # pay=jwt.decode(token,SECRET_KEY, algorithms=['HS256'])
-        # user_id=pay['id']
-        user_id=36
+        
+
         try:
             predict=Prediction.objects.get(match_id=id ,user_id=user_id)
             return Response({False}, status=status.HTTP_200_OK)
@@ -196,6 +200,18 @@ def predictcalc():
             user.save()
             po=Point.objects.create(user_id=user,point=dang*pre.user_point,info='경기 예측 성공')
 
+class teamlist(APIView):
+    @swagger_auto_schema(operation_id="전체 팀의 간단한 정보를 가져온다.", operation_description="유저가 국가를 선택하여 뽑기를 희망하는 경우 국가에 대한 간략한 정보를 보여준다")
+    def get(self, request):
+        teams = Team.objects.all().order_by('group')
+        g_list = []
+        for t in teams:
+            team_name = team_k(t.id)[0]
+            g_list.append({'id': t.id,  'country' : team_name, 'logo' : t.logo})
+        
+        return Response(g_list,status=status.HTTP_200_OK)
+        
+
 #선수 뽑기 POST
 class card(APIView):
     param = openapi.Schema(type=openapi.TYPE_OBJECT, required=['team_id', 'gacha_count', 'point'],
@@ -233,14 +249,15 @@ class card(APIView):
         user.save()
         po=Point.objects.create(user_id=user,point=-1*point,info='선수 뽑기')
 
+        c_list.sort(key=lambda x: x["fullname"])
+
         return (c_list)
 
     @swagger_auto_schema(operation_id="카드 뽑기", operation_description="새로운 선수카드 뽑기", request_body=param)
     def post(self, request, format=None):
-        # token=request.COOKIES.get('jwt')
-        # pay=jwt.decode(token,SECRET_KEY, algorithms=['HS256'])
-        # user_id=pay['id']
-        user_id=36
+        token=request.META.get('HTTP_AUTHORIZATION')
+        pay=jwt.decode(token,SECRET_KEY, algorithms=['HS256'])
+        user_id=pay['id']
         gacha=self.get_object(user_id,request.data['team_id'],request.data['gacha_count'],request.data['point'])
 
         if(gacha=='보유하고 있는 포인트를 확인해 주세요.'):
@@ -256,10 +273,9 @@ class card(APIView):
         if country is not None:
             team=Team.objects.get(country=country)
         
-        # token=request.COOKIES.get('jwt')
-        # pay=jwt.decode(token,SECRET_KEY, algorithms=['HS256'])
-        # user_id=pay['id']
-        user_id=36
+        token=request.META.get('HTTP_AUTHORIZATION')
+        pay=jwt.decode(token,SECRET_KEY, algorithms=['HS256'])
+        user_id=pay['id']
 
         card=PlayerCard.objects.filter(user_id=user_id).order_by('player_id')
 
@@ -271,13 +287,14 @@ class card(APIView):
                 hashmap[i.player_id.id]=1
 
         for i in hashmap.keys():
-            print(i)
             C=Player.objects.get(id=i)
             if country is not None:
                 if(C.team_id != team):
                     continue
             player_name=player_k(C.id)
-            c_list.append({'player_image' : C.player_image, 'fullname' : player_name, 'value' : C.value, 'count' : hashmap.get(i) })    
+            c_list.append({'player_image' : C.player_image, 'fullname' : player_name, 'value' : C.value, 'count' : hashmap.get(i) })
+
+        c_list.sort(key=lambda x: x["fullname"])    
         return Response(c_list)       
 
 #선수 합성 POST
@@ -335,10 +352,9 @@ class combine(APIView):
 
     @swagger_auto_schema(operation_id="카드 합성", operation_description="기존의 선수 합성하여 새 선수 뽑기", request_body=param)
     def post(self, request, format=None):
-        # token=request.COOKIES.get('jwt')
-        # pay=jwt.decode(token,SECRET_KEY, algorithms=['HS256'])
-        # user_id=pay['id']
-        user_id=36
+        token=request.META.get('HTTP_AUTHORIZATION')
+        pay=jwt.decode(token,SECRET_KEY, algorithms=['HS256'])
+        user_id=pay['id']
         comb=self.get_object(user_id,request.data['player_card_id1'],request.data['player_card_id2'])
 
         if(comb=='보유하고 있지 않은 선수카드입니다.' or comb=='뽑을 선수가 없습니다.'):
@@ -355,18 +371,19 @@ class rank(APIView):
 
     def get_object(self, type):
         R_list=[]
+        num=1
         if(type=='value'):
             user=User.objects.all().order_by('-value')
             for i in user:
-                serializer = UserrankSerializer(i)
-                R_list.append(serializer.data)
+                R_list.append({'nickname' : i.nickname, 'value' : i.value, 'rank' : num })  
+                num+=1
             
         elif(type=='player'):
-            player=Player.objects.all().order_by('-goal')
+            player=Player.objects.all().order_by('-value')
             for i in player:
                 player_name= player_k(i.id)
-                list={'fullname' : player_name, 'goal' : i.goal, 'value' : i.value }
-                R_list.append(list)
+                R_list.append({'fullname' : player_name, 'goal' : i.goal, 'value' : i.value ,'rank' : num })
+                num+=1
 
         return (R_list)   
 
@@ -478,8 +495,8 @@ class MatchTable(APIView):
 
         rank_table = []
         for i in range(len(new_table)):
-            new_table[i].insert(0, int(new_table[i][-1]))
-            rank_table.append(new_table[i][:-2])
+            new_table[i].insert(0, int(new_table[i][-1]))   # 조별순위를 0번 인덱스에 추가하기
+            rank_table.append(new_table[i][:-2])            # 필요한 부분만 슬라이싱 후 rank_table에 삽입
         
         rank_table = sorted(rank_table, key=operator.itemgetter(0))
         
@@ -492,7 +509,7 @@ class TeamInfo(APIView):
     @swagger_auto_schema(operation_id="팀 정보 조회", operation_description="팀 고유번호로 정보 조회", manual_parameters=[id], responses={200: '조회 성공'})
     def get(self, request, id):
         team = Team.objects.get(id=id)
-        team_info = [["감독님", team.manager, 0, 0]]
+        team_info = [["감독님", team.manager, "FM", 0]]
 
         players = Player.objects.filter(team_id=id)
         for p in players:
@@ -503,7 +520,7 @@ class TeamInfo(APIView):
         return Response(team_info)
 
 
-# 선수 시세 변동 알고리즘       >> AUTO정산에 추가하기 (하루 1회 업데이트)
+# 선수 시세 변동 알고리즘       >> AUTO정산(~ Line 167)에 추가하기 (하루 1회 업데이트)
 class PlayerTest(APIView):
     @swagger_auto_schema(operation_id="선수 스탯 테스트", operation_description="선수 스탯 테스트", responses={200: '조회 성공'})
     def get(self, request):
@@ -531,4 +548,163 @@ class PlayerTest(APIView):
         
         print(datetime.datetime.now() - t1)
 
+        return Response("success")
+
+# 경기 정보 업데이트 코드       >> KST 18시 ~ 익일 7시 동안 1분 주기로 자동 업데이트 (12시간 x 60회 = 720회 갱신)
+class MatchUpdate(APIView):
+    @swagger_auto_schema(operation_id="경기 정보 업데이트", operation_description="경기 정보 업데이트", responses={200: '조회 성공'})
+    def get(self, request):
+        pending_result = []     # 경기 결과는 나왔지만 경기 상세 정보가 미제공인 경기들의 id 리스트
+        
+        # 실시간 경기 정보 API로 받아오기
+        BASE_URL = 'https://api.statorium.com/api/v1/matches/live/'
+        params = {'apikey': API_KEY}
+        response = requests.get(BASE_URL, params=params)
+        data = response.json()
+
+        # 임시 데이터 (월드컵 live matches가 없을때 테스트용)
+        import json
+        data = json.load(open('worldcup/livematchtest.json'))
+
+        # match list 구하기
+        match_list = []
+        matches = Match.objects.all()
+        for match in matches:
+            match_list.append([match.id, match.match_status])
+        
+        # 실시간 경기 API에서 종료된 경기들을 받아와서 DB 경기 데이터와 대조 후 내용 업데이트
+        for m in data['matches']:
+            if ([int(m['matchID']), 0] in match_list) and (m['matchStatus']['value'] == "1"):
+                pending_result.append(int(m['matchID'])) # 우선 경기 상세 정보는 아직 미제공이라고 간주하고 pending_result 리스트에 누적 (다음 for문에서 처리 예정)
+
+                t1_id = int(m['homeParticipant']['participantID'])
+                t1_score = int(m['homeParticipant']['score'])
+                t2_id = int(m['awayParticipant']['participantID'])
+                t2_score = int(m['awayParticipant']['score'])
+                
+                # Match 테이블에 정보 업데이트
+                match = Match.objects.get(id=m['matchID'])
+                match.match_status = 1
+                match.team1_score = t1_score
+                match.team2_score = t2_score
+                match.save()
+
+                # Team 테이블에 홈팀 정보 업데이트
+                team1 = Team.objects.get(id=t1_id)
+                if t1_score > t2_score:
+                    team1.win += 1
+                    team1.points += 3
+                elif t1_score == t2_score:
+                    team1.draw += 1
+                    team1.points += 1
+                elif t1_score < t2_score:
+                    team1.loss += 1
+                team1.goal_diff += (t1_score - t2_score)
+                team1.save()
+
+                # Team 테이블에 원정팀 정보 업데이트
+                team2 = Team.objects.get(id=t2_id)
+                if t2_score > t1_score:
+                    team2.win += 1
+                    team2.points += 3
+                elif t2_score == t1_score:
+                    team2.draw += 1
+                    team2.points += 1
+                elif t2_score < t1_score:
+                    team2.loss += 1
+                team2.goal_diff += (t2_score - t1_score)
+                team2.save()
+        
+        # 종료된 경기지만 상세 정보 미입력인 경우 API를 통해 상세정보 받아와서 선수 스탯 업데이트
+        for match_id in pending_result:
+            # 경기 상세 정보 API로 받아오기
+            BASE_URL = 'https://api.statorium.com/api/v1/matches/'
+            params = {'apikey': API_KEY}
+            response = requests.get(BASE_URL+str(match_id)+'/', params=params)
+            data = response.json()
+
+            # 임시 데이터 (종료된 월드컵 경기가 없을때 테스트용)
+            import json
+            data = json.load(open('worldcup/matchdetailtest.json'))
+
+            if data["match"]["matchStatus"]["statusID"] == "1":
+                # 경기 시간 변수 설정
+                game_time = int(data["match"]["matchDuration"])
+
+                # 홈팀 선수 출장시간 업데이트
+                home_runtime = []    # 선수 출장시간 담을 리스트
+                for p in data["match"]["homeParticipant"]["squad"]["lineup"]:
+                    home_runtime.append([int(p["playerID"]), game_time])
+                for s in data["match"]["homeParticipant"]["squad"]["subs"]:
+                    home_runtime.append([int(s["playerIN"]), game_time - int(s["minute"])])
+                    for player in home_runtime:
+                        if player[0] == int(s["playerOUT"]):
+                            player[1] -= (game_time - int(s["minute"]))     # 교체출전한 선수가 다시 교체 되는 경우를 감안한 코드
+                
+                # 홈팀 선수 이벤트 업데이트 (골, 어시스트, 옐로우카드, 레드카드)
+                home_event = []     # 선수 이벤트 담을 리스트
+                for p in data["match"]["homeParticipant"]["events"]:
+                    if p['eventId'] == "1":     # 골
+                        home_event.append([int(p["playerID"]), 1, 0, 0, 0])
+                        home_event.append([int(p["assist"][0]["playerID"]), 0, 1, 0, 0])
+                    elif p['eventId'] == "4":   # 페널티 골
+                        home_event.append([int(p["playerID"]), 1, 0, 0, 0])
+                    elif p['eventId'] == "5":   # 옐로우카드
+                        home_event.append([int(p["playerID"]), 0, 0, 1, 0])
+                    elif p['eventId'] == "6" or "7":   # 레드카드
+                        home_event.append([int(p["playerID"]), 0, 0, 0, 1])
+                
+                # Player 테이블에 홈팀 선수 출장시간 업데이트 
+                for p_id, runtime in home_runtime:
+                    player = Player.objects.get(id=p_id)
+                    player.run_time += runtime
+                    player.save()
+                
+                # Player 테이블에 홈팀 선수 이벤트 업데이트
+                for p_id, goal, assist, yellow, red in home_event:
+                    player = Player.objects.get(id=p_id)
+                    player.goal += goal
+                    player.assist += assist
+                    player.yellow_card += yellow
+                    player.red_card += red
+                    player.save()
+                
+                # 원정팀 선수 출장시간 업데이트
+                away_runtime = []    # 선수 출장시간 담을 리스트
+                for p in data["match"]["awayParticipant"]["squad"]["lineup"]:
+                    away_runtime.append([int(p["playerID"]), game_time])
+                for s in data["match"]["awayParticipant"]["squad"]["subs"]:
+                    away_runtime.append([int(s["playerIN"]), game_time - int(s["minute"])])
+                    for player in away_runtime:
+                        if player[0] == int(s["playerOUT"]):
+                            player[1] -= (game_time - int(s["minute"]))     # 교체출전한 선수가 다시 교체 되는 경우를 감안한 코드
+                
+                # 원정팀 선수 이벤트 업데이트 (골, 어시스트, 옐로우카드, 레드카드)
+                away_event = []     # 선수 이벤트 담을 리스트
+                for p in data["match"]["awayParticipant"]["events"]:
+                    if p['eventId'] == "1":     # 골
+                        away_event.append([int(p["playerID"]), 1, 0, 0, 0])
+                        away_event.append([int(p["assist"][0]["playerID"]), 0, 1, 0, 0])
+                    elif p['eventId'] == "4":   # 페널티 골
+                        away_event.append([int(p["playerID"]), 1, 0, 0, 0])
+                    elif p['eventId'] == "5":   # 옐로우카드
+                        away_event.append([int(p["playerID"]), 0, 0, 1, 0])
+                    elif p['eventId'] == "6" or "7":   # 레드카드
+                        away_event.append([int(p["playerID"]), 0, 0, 0, 1])
+                
+                # Player 테이블에 홈팀 선수 출장시간 업데이트 
+                for p_id, runtime in away_runtime:
+                    player = Player.objects.get(id=p_id)
+                    player.run_time += runtime
+                    player.save()
+                
+                # Player 테이블에 홈팀 선수 이벤트 업데이트
+                for p_id, goal, assist, yellow, red in away_event:
+                    player = Player.objects.get(id=p_id)
+                    player.goal += goal
+                    player.assist += assist
+                    player.yellow_card += yellow
+                    player.red_card += red
+                    player.save()
+            
         return Response("success")
