@@ -261,7 +261,6 @@ def mypage(request):
 
         payload = jwt.decode(token_receive, SECRET_KEY, algorithms=['HS256'])
         user = User.objects.get(id=payload['id'])
-        user = User.objects.get(id=36)
         #유저가 소유한 카드 리스트
         card_list = PlayerCard.objects.filter(user_id=user.id).order_by('player_id')
 
@@ -285,10 +284,6 @@ def mypage(request):
         point_list = Point.objects.filter(user_id=user.id).values()
         profile = user.profile_image
         #unicodeDecodeError: 'utf-8' codec can't decode byte 0xff in position 0: invalid start byte
-        #이미지를 바이트로 변환
-        print(profile.url)
-        print(1)
-        # profile = base64.b64encode(profile).decode('utf-16')
         return Response({'predict_match':predict_match,'nickname':user.nickname,'point':user.points \
         ,'card_list':C_list,'profile':profile.url,'point_list':point_list},status=status.HTTP_200_OK)
     except jwt.ExpiredSignatureError:
@@ -296,7 +291,7 @@ def mypage(request):
     
 
   
-    
+@permission_classes([IsAuthenticated])    
 class Image(APIView):
     def post(self,request,format=None):
         serializers = PhotoSerializer(data=request.data)
