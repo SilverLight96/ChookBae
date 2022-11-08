@@ -273,7 +273,7 @@ const ChartContainer = styled.div`
     height: auto;
 
     margin-top: 3%;
-    margin-bottom: 40%;
+    margin-bottom: 35vh;
     background-color: white;
 
     display: flex;

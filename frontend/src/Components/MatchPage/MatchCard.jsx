@@ -154,6 +154,8 @@ const FlagContainer = styled.div`
 const Flag = styled.img`
     height: 80%;
     width: 80%;
+
+    /* position: absolute; */
 `
 
 const FlagName = styled.div`
@@ -166,6 +168,10 @@ const FlagName = styled.div`
 
 const Group = styled.p`
     color: white;
-    font-size: 3em
+    font-size: 1.5em;
     margin: 0;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
 `

@@ -167,7 +167,7 @@ export default function PredictDetail () {
                 reload = {setReload}
                 />
             </PredictAccountDiv>
-            <BlankDiv height="15vh"></BlankDiv>
+            <BlankDiv height="20vh"></BlankDiv>
             </>
             }
         </Container>
