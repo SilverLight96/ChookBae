@@ -296,7 +296,7 @@ class card(APIView):
                 if(C.team_id != team):
                     continue
             player_name=player_k(C.id)
-            c_list.append({'player_image' : C.player_image, 'fullname' : player_name, 'value' : C.value, 'count' : hashmap.get(i) })
+            c_list.append({'id' : C.id, 'player_image' : C.player_image, 'fullname' : player_name, 'value' : C.value, 'count' : hashmap.get(i) })
 
         c_list.sort(key=lambda x: x["fullname"])    
         return Response(c_list)       
