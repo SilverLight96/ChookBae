@@ -110,21 +110,18 @@ function GachaPage() {
           </div>
         ) : null}
         {isGacha.gacha_count === 10 ? (
-          <div>
-            <GachaText>가차 10회 뽑기</GachaText>
-            <GachaList>
-              {gachaResult.map((playerCard, idx) => {
-                return (
-                  <PlayerCard
-                    title={playerCard.fullname}
-                    image={playerCard.player_image}
-                    key={idx}
-                    value={playerCard.value}
-                  />
-                );
-              })}
-            </GachaList>
-          </div>
+          <GachaList>
+            {gachaResult.map((playerCard, idx) => {
+              return (
+                <PlayerCard
+                  title={playerCard.fullname}
+                  image={playerCard.player_image}
+                  key={idx}
+                  value={playerCard.value}
+                />
+              );
+            })}
+          </GachaList>
         ) : null}
       </GachaModal>
     </Wrapper>
@@ -365,13 +362,13 @@ const GachaText = styled.p`
 `;
 
 const GachaList = styled.div`
+  margin-top: 10%;
   display: grid;
   grid-template-columns: repeat(5, 1fr);
-  height: 70vh;
+  grid-gap: 0px;
 `;
 
 const GachaOneList = styled.div`
   width: 100%;
-
   margin: auto;
 `;
