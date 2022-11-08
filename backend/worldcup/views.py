@@ -111,9 +111,13 @@ class predictlist(APIView):
 
 #승부 예측 정보 조회 GET
 class predicdetail(APIView):
-    match_id = openapi.Parameter('id', openapi.IN_PATH, description='date in YYYYMMDD', required=True, type=openapi.TYPE_NUMBER)
-    @swagger_auto_schema(operation_id="경기 정보 조회 (날짜별)", operation_description="날짜 입력으로 경기 조회 (날짜양식: YYYYMMDD)", manual_parameters=[id])
     def get(self, request, id):
+        token=request.META.get('HTTP_AUTHORIZATION')
+        pay=jwt.decode(token,SECRET_KEY, algorithms=['HS256'])
+        user_id=pay['id']
+        user=User.objects.get(id=user_id)
+        point=user.points
+        
         try:
             bet=Bet.objects.get(id=id)
         except:
@@ -138,7 +142,7 @@ class predicdetail(APIView):
 
         return Response({'win_count': win_count, 'win_total': bet.win, 'win_dang': win_dang,
         'draw_count': draw_count, 'draw_total': bet.draw, 'draw_dang': draw_dang,
-        'lose_count': lose_count, 'lose_total': bet.lose, 'lose_dang': lose_dang,'total_point' :total, },status=status.HTTP_200_OK)
+        'lose_count': lose_count, 'lose_total': bet.lose, 'lose_dang': lose_dang,'total_point' :total, 'point' : point,},status=status.HTTP_200_OK)
 
 #승부 예측 여부 GET
 class predictinfo(APIView):
@@ -520,191 +524,184 @@ class TeamInfo(APIView):
         return Response(team_info)
 
 
-# 선수 시세 변동 알고리즘       >> AUTO정산(~ Line 167)에 추가하기 (하루 1회 업데이트)
-class PlayerTest(APIView):
-    @swagger_auto_schema(operation_id="선수 스탯 테스트", operation_description="선수 스탯 테스트", responses={200: '조회 성공'})
-    def get(self, request):
-
-        t1 = datetime.datetime.now()
-        # 선수 기록 수정 코드 (테스트)
-        player = Player.objects.get(id=48)
-        # player.goal += 1      # 1골 추가
-        # player.run_time += 90   # 출장시간 추가
-        # player.save()      # DB 업데이트
+# 선수 시세 변동 알고리즘 및 자동 반영      >> 하루 1회 업데이트 @ 오후 12시
+def playerValueUpdate():
+    
+    # 선수 시세 설정 코드
+    players = Player.objects.all()
+    for player in players:
+        # 초기값 설정하기 (소속 국가의 피파랭킹, 소속 팀이 속한 리그)
+        init_value = 100 * (100 - team_k(player.team_id.id)[1]) * value_p(player.current_team)
         
-        # 선수 시세 설정 코드
-        players = Player.objects.all()
-        for player in players:
-            # 초기값 설정하기 (소속 국가의 피파랭킹, 소속 팀이 속한 리그)
-            init_value = 100 * (100 - team_k(player.team_id.id)[1]) * value_p(player.current_team)
+        # 월드컵 성적으로 시세 조정하기
+        goal, assist, yellow, red, runtime = player.goal, player.assist, player.yellow_card, player.red_card, player.run_time
+        team = Team.objects.get(id=player.team_id.id)
+        win, draw, loss, goal_diff = team.win, team.draw, team.loss, team.goal_diff
+        player.value = (init_value * (1 + goal * 0.3) * (1 + assist * 0.1) * (1 - yellow * 0.05) * (1 - red * 0.2) * (1 + runtime * 0.002)
+                        + (3000 * win) + (1000 * draw) - (500 * loss) + (100 * goal_diff))
+        player.save()
+
+
+# 경기 정보 자동 업데이트       >> KST 18시 ~ 익일 7시 동안 1분 주기로 자동 업데이트 (12시간 x 60회 = 720회 갱신)
+def matchUpdate():
+    pending_result = []     # 경기 결과는 나왔지만 경기 상세 정보가 미제공인 경기들의 id 리스트
+    
+    # 실시간 경기 정보 API로 받아오기
+    BASE_URL = 'https://api.statorium.com/api/v1/matches/live/'
+    params = {'apikey': API_KEY}
+    response = requests.get(BASE_URL, params=params)
+    data = response.json()
+
+    ##### 임시 데이터 (월드컵 live matches가 없을때 테스트용) #####
+    import json
+    data = json.load(open('worldcup/livematchtest.json'))
+    ##### 임시 데이터 끝 ########################################
+
+    # match list 구하기
+    match_list = []
+    matches = Match.objects.all()
+    for match in matches:
+        match_list.append([match.id, match.match_status])
+    
+    # 실시간 경기 API에서 종료된 경기들을 받아와서 DB 경기 데이터와 대조 후 내용 업데이트
+    for m in data['matches']:
+        if m['matchStatus']['value'] == "-1":       # -1 = 진행중인 경기
+            # Match 테이블에 실시간 스코어 업데이트
+            match = Match.objects.get(id=m['matchID'])
+            match.team1_score = t1_score
+            match.team2_score = t2_score
+            match.save()
+
+        elif ((m['matchStatus']['value'] == "1") and [int(m['matchID']), 0] in match_list):     # 1 = 종료된 경기
+            pending_result.append(int(m['matchID'])) # 우선 경기 상세 정보는 아직 미제공이라고 간주하고 pending_result 리스트에 누적 (다음 for문에서 처리 예정)
+
+            t1_id = int(m['homeParticipant']['participantID'])
+            t1_score = int(m['homeParticipant']['score'])
+            t2_id = int(m['awayParticipant']['participantID'])
+            t2_score = int(m['awayParticipant']['score'])
             
-            # 월드컵 성적으로 시세 조정하기
-            goal, assist, yellow, red, runtime = player.goal, player.assist, player.yellow_card, player.red_card, player.run_time
-            team = Team.objects.get(id=player.team_id.id)
-            win, draw, loss, goal_diff = team.win, team.draw, team.loss, team.goal_diff
-            player.value = (init_value * (1 + goal * 0.3) * (1 + assist * 0.1) * (1 - yellow * 0.05) * (1 - red * 0.2) * (1 + runtime * 0.002)
-                            + (3000 * win) + (1000 * draw) - (500 * loss) + (100 * goal_diff))
-            player.save()
-        
-        print(datetime.datetime.now() - t1)
+            # Match 테이블에 정보 업데이트
+            match = Match.objects.get(id=m['matchID'])
+            match.match_status = 1          # 매치 상태도 1로 (종료된 경기) 수정
+            match.team1_score = t1_score
+            match.team2_score = t2_score
+            match.save()
 
-        return Response("success")
+            # Team 테이블에 홈팀 정보 업데이트
+            team1 = Team.objects.get(id=t1_id)
+            if t1_score > t2_score:
+                team1.win += 1
+                team1.points += 3
+            elif t1_score == t2_score:
+                team1.draw += 1
+                team1.points += 1
+            elif t1_score < t2_score:
+                team1.loss += 1
+            team1.goal_diff += (t1_score - t2_score)
+            team1.save()
 
-# 경기 정보 업데이트 코드       >> KST 18시 ~ 익일 7시 동안 1분 주기로 자동 업데이트 (12시간 x 60회 = 720회 갱신)
-class MatchUpdate(APIView):
-    @swagger_auto_schema(operation_id="경기 정보 업데이트", operation_description="경기 정보 업데이트", responses={200: '조회 성공'})
-    def get(self, request):
-        pending_result = []     # 경기 결과는 나왔지만 경기 상세 정보가 미제공인 경기들의 id 리스트
-        
-        # 실시간 경기 정보 API로 받아오기
-        BASE_URL = 'https://api.statorium.com/api/v1/matches/live/'
+            # Team 테이블에 원정팀 정보 업데이트
+            team2 = Team.objects.get(id=t2_id)
+            if t2_score > t1_score:
+                team2.win += 1
+                team2.points += 3
+            elif t2_score == t1_score:
+                team2.draw += 1
+                team2.points += 1
+            elif t2_score < t1_score:
+                team2.loss += 1
+            team2.goal_diff += (t2_score - t1_score)
+            team2.save()
+    
+    # 종료된 경기지만 상세 정보 미입력인 경우 API를 통해 상세정보 받아와서 선수 스탯 업데이트
+    for match_id in pending_result:
+        # 경기 상세 정보 API로 받아오기
+        BASE_URL = 'https://api.statorium.com/api/v1/matches/'
         params = {'apikey': API_KEY}
-        response = requests.get(BASE_URL, params=params)
+        response = requests.get(BASE_URL+str(match_id)+'/', params=params)
         data = response.json()
 
-        # 임시 데이터 (월드컵 live matches가 없을때 테스트용)
+        ##### 임시 데이터 (종료된 월드컵 경기가 없을때 테스트용) #####
         import json
-        data = json.load(open('worldcup/livematchtest.json'))
+        data = json.load(open('worldcup/matchdetailtest.json'))
+        ##### 임시 데이터 끝 ######################################
 
-        # match list 구하기
-        match_list = []
-        matches = Match.objects.all()
-        for match in matches:
-            match_list.append([match.id, match.match_status])
-        
-        # 실시간 경기 API에서 종료된 경기들을 받아와서 DB 경기 데이터와 대조 후 내용 업데이트
-        for m in data['matches']:
-            if ([int(m['matchID']), 0] in match_list) and (m['matchStatus']['value'] == "1"):
-                pending_result.append(int(m['matchID'])) # 우선 경기 상세 정보는 아직 미제공이라고 간주하고 pending_result 리스트에 누적 (다음 for문에서 처리 예정)
+        if data["match"]["matchStatus"]["statusID"] == "1":
+            # 경기 시간 변수 설정
+            game_time = int(data["match"]["matchDuration"])
 
-                t1_id = int(m['homeParticipant']['participantID'])
-                t1_score = int(m['homeParticipant']['score'])
-                t2_id = int(m['awayParticipant']['participantID'])
-                t2_score = int(m['awayParticipant']['score'])
-                
-                # Match 테이블에 정보 업데이트
-                match = Match.objects.get(id=m['matchID'])
-                match.match_status = 1
-                match.team1_score = t1_score
-                match.team2_score = t2_score
-                match.save()
-
-                # Team 테이블에 홈팀 정보 업데이트
-                team1 = Team.objects.get(id=t1_id)
-                if t1_score > t2_score:
-                    team1.win += 1
-                    team1.points += 3
-                elif t1_score == t2_score:
-                    team1.draw += 1
-                    team1.points += 1
-                elif t1_score < t2_score:
-                    team1.loss += 1
-                team1.goal_diff += (t1_score - t2_score)
-                team1.save()
-
-                # Team 테이블에 원정팀 정보 업데이트
-                team2 = Team.objects.get(id=t2_id)
-                if t2_score > t1_score:
-                    team2.win += 1
-                    team2.points += 3
-                elif t2_score == t1_score:
-                    team2.draw += 1
-                    team2.points += 1
-                elif t2_score < t1_score:
-                    team2.loss += 1
-                team2.goal_diff += (t2_score - t1_score)
-                team2.save()
-        
-        # 종료된 경기지만 상세 정보 미입력인 경우 API를 통해 상세정보 받아와서 선수 스탯 업데이트
-        for match_id in pending_result:
-            # 경기 상세 정보 API로 받아오기
-            BASE_URL = 'https://api.statorium.com/api/v1/matches/'
-            params = {'apikey': API_KEY}
-            response = requests.get(BASE_URL+str(match_id)+'/', params=params)
-            data = response.json()
-
-            # 임시 데이터 (종료된 월드컵 경기가 없을때 테스트용)
-            import json
-            data = json.load(open('worldcup/matchdetailtest.json'))
-
-            if data["match"]["matchStatus"]["statusID"] == "1":
-                # 경기 시간 변수 설정
-                game_time = int(data["match"]["matchDuration"])
-
-                # 홈팀 선수 출장시간 업데이트
-                home_runtime = []    # 선수 출장시간 담을 리스트
-                for p in data["match"]["homeParticipant"]["squad"]["lineup"]:
-                    home_runtime.append([int(p["playerID"]), game_time])
-                for s in data["match"]["homeParticipant"]["squad"]["subs"]:
-                    home_runtime.append([int(s["playerIN"]), game_time - int(s["minute"])])
-                    for player in home_runtime:
-                        if player[0] == int(s["playerOUT"]):
-                            player[1] -= (game_time - int(s["minute"]))     # 교체출전한 선수가 다시 교체 되는 경우를 감안한 코드
-                
-                # 홈팀 선수 이벤트 업데이트 (골, 어시스트, 옐로우카드, 레드카드)
-                home_event = []     # 선수 이벤트 담을 리스트
-                for p in data["match"]["homeParticipant"]["events"]:
-                    if p['eventId'] == "1":     # 골
-                        home_event.append([int(p["playerID"]), 1, 0, 0, 0])
-                        home_event.append([int(p["assist"][0]["playerID"]), 0, 1, 0, 0])
-                    elif p['eventId'] == "4":   # 페널티 골
-                        home_event.append([int(p["playerID"]), 1, 0, 0, 0])
-                    elif p['eventId'] == "5":   # 옐로우카드
-                        home_event.append([int(p["playerID"]), 0, 0, 1, 0])
-                    elif p['eventId'] == "6" or "7":   # 레드카드
-                        home_event.append([int(p["playerID"]), 0, 0, 0, 1])
-                
-                # Player 테이블에 홈팀 선수 출장시간 업데이트 
-                for p_id, runtime in home_runtime:
-                    player = Player.objects.get(id=p_id)
-                    player.run_time += runtime
-                    player.save()
-                
-                # Player 테이블에 홈팀 선수 이벤트 업데이트
-                for p_id, goal, assist, yellow, red in home_event:
-                    player = Player.objects.get(id=p_id)
-                    player.goal += goal
-                    player.assist += assist
-                    player.yellow_card += yellow
-                    player.red_card += red
-                    player.save()
-                
-                # 원정팀 선수 출장시간 업데이트
-                away_runtime = []    # 선수 출장시간 담을 리스트
-                for p in data["match"]["awayParticipant"]["squad"]["lineup"]:
-                    away_runtime.append([int(p["playerID"]), game_time])
-                for s in data["match"]["awayParticipant"]["squad"]["subs"]:
-                    away_runtime.append([int(s["playerIN"]), game_time - int(s["minute"])])
-                    for player in away_runtime:
-                        if player[0] == int(s["playerOUT"]):
-                            player[1] -= (game_time - int(s["minute"]))     # 교체출전한 선수가 다시 교체 되는 경우를 감안한 코드
-                
-                # 원정팀 선수 이벤트 업데이트 (골, 어시스트, 옐로우카드, 레드카드)
-                away_event = []     # 선수 이벤트 담을 리스트
-                for p in data["match"]["awayParticipant"]["events"]:
-                    if p['eventId'] == "1":     # 골
-                        away_event.append([int(p["playerID"]), 1, 0, 0, 0])
-                        away_event.append([int(p["assist"][0]["playerID"]), 0, 1, 0, 0])
-                    elif p['eventId'] == "4":   # 페널티 골
-                        away_event.append([int(p["playerID"]), 1, 0, 0, 0])
-                    elif p['eventId'] == "5":   # 옐로우카드
-                        away_event.append([int(p["playerID"]), 0, 0, 1, 0])
-                    elif p['eventId'] == "6" or "7":   # 레드카드
-                        away_event.append([int(p["playerID"]), 0, 0, 0, 1])
-                
-                # Player 테이블에 홈팀 선수 출장시간 업데이트 
-                for p_id, runtime in away_runtime:
-                    player = Player.objects.get(id=p_id)
-                    player.run_time += runtime
-                    player.save()
-                
-                # Player 테이블에 홈팀 선수 이벤트 업데이트
-                for p_id, goal, assist, yellow, red in away_event:
-                    player = Player.objects.get(id=p_id)
-                    player.goal += goal
-                    player.assist += assist
-                    player.yellow_card += yellow
-                    player.red_card += red
-                    player.save()
+            # 홈팀 선수 출장시간 업데이트
+            home_runtime = []    # 선수 출장시간 담을 리스트
+            for p in data["match"]["homeParticipant"]["squad"]["lineup"]:
+                home_runtime.append([int(p["playerID"]), game_time])
+            for s in data["match"]["homeParticipant"]["squad"]["subs"]:
+                home_runtime.append([int(s["playerIN"]), game_time - int(s["minute"])])
+                for player in home_runtime:
+                    if player[0] == int(s["playerOUT"]):
+                        player[1] -= (game_time - int(s["minute"]))     # 교체출전한 선수가 다시 교체 되는 경우를 감안한 코드
             
-        return Response("success")
+            # 홈팀 선수 이벤트 업데이트 (골, 어시스트, 옐로우카드, 레드카드)
+            home_event = []     # 선수 이벤트 담을 리스트
+            for p in data["match"]["homeParticipant"]["events"]:
+                if p['eventId'] == "1":     # 골
+                    home_event.append([int(p["playerID"]), 1, 0, 0, 0])
+                    home_event.append([int(p["assist"][0]["playerID"]), 0, 1, 0, 0])
+                elif p['eventId'] == "4":   # 페널티 골
+                    home_event.append([int(p["playerID"]), 1, 0, 0, 0])
+                elif p['eventId'] == "5":   # 옐로우카드
+                    home_event.append([int(p["playerID"]), 0, 0, 1, 0])
+                elif p['eventId'] == "6" or "7":   # 레드카드
+                    home_event.append([int(p["playerID"]), 0, 0, 0, 1])
+            
+            # Player 테이블에 홈팀 선수 출장시간 업데이트 
+            for p_id, runtime in home_runtime:
+                player = Player.objects.get(id=p_id)
+                player.run_time += runtime
+                player.save()
+            
+            # Player 테이블에 홈팀 선수 이벤트 업데이트
+            for p_id, goal, assist, yellow, red in home_event:
+                player = Player.objects.get(id=p_id)
+                player.goal += goal
+                player.assist += assist
+                player.yellow_card += yellow
+                player.red_card += red
+                player.save()
+            
+            # 원정팀 선수 출장시간 업데이트
+            away_runtime = []    # 선수 출장시간 담을 리스트
+            for p in data["match"]["awayParticipant"]["squad"]["lineup"]:
+                away_runtime.append([int(p["playerID"]), game_time])
+            for s in data["match"]["awayParticipant"]["squad"]["subs"]:
+                away_runtime.append([int(s["playerIN"]), game_time - int(s["minute"])])
+                for player in away_runtime:
+                    if player[0] == int(s["playerOUT"]):
+                        player[1] -= (game_time - int(s["minute"]))     # 교체출전한 선수가 다시 교체 되는 경우를 감안한 코드
+            
+            # 원정팀 선수 이벤트 업데이트 (골, 어시스트, 옐로우카드, 레드카드)
+            away_event = []     # 선수 이벤트 담을 리스트
+            for p in data["match"]["awayParticipant"]["events"]:
+                if p['eventId'] == "1":     # 골
+                    away_event.append([int(p["playerID"]), 1, 0, 0, 0])
+                    away_event.append([int(p["assist"][0]["playerID"]), 0, 1, 0, 0])
+                elif p['eventId'] == "4":   # 페널티 골
+                    away_event.append([int(p["playerID"]), 1, 0, 0, 0])
+                elif p['eventId'] == "5":   # 옐로우카드
+                    away_event.append([int(p["playerID"]), 0, 0, 1, 0])
+                elif p['eventId'] == "6" or "7":   # 레드카드
+                    away_event.append([int(p["playerID"]), 0, 0, 0, 1])
+            
+            # Player 테이블에 홈팀 선수 출장시간 업데이트 
+            for p_id, runtime in away_runtime:
+                player = Player.objects.get(id=p_id)
+                player.run_time += runtime
+                player.save()
+            
+            # Player 테이블에 홈팀 선수 이벤트 업데이트
+            for p_id, goal, assist, yellow, red in away_event:
+                player = Player.objects.get(id=p_id)
+                player.goal += goal
+                player.assist += assist
+                player.yellow_card += yellow
+                player.red_card += red
+                player.save()

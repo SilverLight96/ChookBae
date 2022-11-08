@@ -1,128 +1,54 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import styled, { keyframes } from "styled-components";
 import { NavLink } from "react-router-dom";
 import { Keyframes } from "styled-components";
 import GachaModal from "../Components/Gacha/GachaModal";
 import { fetchData } from "../utils/apis/api";
-import GachaCard from "../Components/Gacha/GachaCard";
 import PlayerCard from "../Components/common/PlayerCard";
+import { gachaApis } from "../utils/apis/userApis";
 
 function GachaPage() {
+  const didMountRef = useRef(false);
   const [isGacha, setIsGacha] = useState({
-    team_id: "",
+    team_id: 0,
     gacha_count: 0,
     point: 0,
   });
 
-  const [gachaResult, setGachaResult] = useState([
-    {
-      card_img: "",
-      player_name: "",
-      value: 0,
-    },
-    {
-      card_img: "",
-      player_name: "",
-      value: 0,
-    },
-  ]);
+  const [gachaResult, setGachaResult] = useState([]);
 
   const [isModal, setIsModal] = useState(false);
 
   const oneGacha = () => {
     setIsGacha({
-      team_id: "",
+      team_id: 0,
       gacha_count: 1,
-      point: 1000,
+      point: 0,
     });
   };
 
   const tenGacha = () => {
     setIsGacha({
-      team_id: "",
+      team_id: 0,
       gacha_count: 10,
-      point: 10000,
+      point: 0,
     });
   };
 
   useEffect(() => {
-    console.log("가차요청");
-    return () => {
-      getGacha();
-      console.log("가차요청완료");
-    };
+    if (isGacha.gacha_count !== 0) getGacha();
   }, [isGacha]);
-  console.log(isGacha.gacha_count);
-  const getGacha = async (url) => {
-    // const response = await fetchData.post(url, isGacha).then((res) => {
-    //   console.log(res);
-    //   setGachaResult(res);
-    // });
-    // return response;
-    setGachaResult([
-      {
-        card_img:
-          "https://ichef.bbci.co.uk/news/624/cpsprodpb/4118/production/_119546661_gettyimages-1294130887.jpg.webp",
-        player_name: "손흥민",
-        value: 10,
-      },
-      // {
-      //   card_img:
-      //     "https://ichef.bbci.co.uk/news/624/cpsprodpb/4118/production/_119546661_gettyimages-1294130887.jpg.webp",
-      //   player_name: "손흥민",
-      //   value: 10,
-      // },
-      // {
-      //   card_img:
-      //     "https://ichef.bbci.co.uk/news/624/cpsprodpb/4118/production/_119546661_gettyimages-1294130887.jpg.webp",
-      //   player_name: "손흥민",
-      //   value: 10,
-      // },
-      // {
-      //   card_img:
-      //     "https://ichef.bbci.co.uk/news/624/cpsprodpb/4118/production/_119546661_gettyimages-1294130887.jpg.webp",
-      //   player_name: "손흥민",
-      //   value: 10,
-      // },
-      // {
-      //   card_img:
-      //     "https://ichef.bbci.co.uk/news/624/cpsprodpb/4118/production/_119546661_gettyimages-1294130887.jpg.webp",
-      //   player_name: "손흥민",
-      //   value: 10,
-      // },
-      // {
-      //   card_img:
-      //     "https://ichef.bbci.co.uk/news/624/cpsprodpb/4118/production/_119546661_gettyimages-1294130887.jpg.webp",
-      //   player_name: "손흥민",
-      //   value: 10,
-      // },
-      // {
-      //   card_img:
-      //     "https://ichef.bbci.co.uk/news/624/cpsprodpb/4118/production/_119546661_gettyimages-1294130887.jpg.webp",
-      //   player_name: "손흥민",
-      //   value: 10,
-      // },
-      // {
-      //   card_img:
-      //     "https://ichef.bbci.co.uk/news/624/cpsprodpb/4118/production/_119546661_gettyimages-1294130887.jpg.webp",
-      //   player_name: "손흥민",
-      //   value: 10,
-      // },
-      // {
-      //   card_img:
-      //     "https://ichef.bbci.co.uk/news/624/cpsprodpb/4118/production/_119546661_gettyimages-1294130887.jpg.webp",
-      //   player_name: "손흥민",
-      //   value: 10,
-      // },
-      // {
-      //   card_img:
-      //     "https://ichef.bbci.co.uk/news/624/cpsprodpb/4118/production/_119546661_gettyimages-1294130887.jpg.webp",
-      //   player_name: "손흥민",
-      //   value: 10,
-      // },
-    ]);
+
+  // console.log(isGacha);
+
+  const getGacha = async () => {
+    const response = await fetchData
+      .post(gachaApis.GACHA, isGacha)
+      .then((res) => {
+        setGachaResult(res.data);
+      });
+    return response;
   };
-  console.log(gachaResult);
 
   useEffect(() => {
     console.log("모달열기");
@@ -133,6 +59,7 @@ function GachaPage() {
   }, [gachaResult]);
 
   console.log(gachaResult);
+
   const ModalHandler = () => {
     setIsModal((prev) => !prev);
   };
@@ -172,9 +99,9 @@ function GachaPage() {
               {gachaResult.map((playerCard) => {
                 return (
                   <PlayerCard
-                    title={playerCard.player_name}
-                    image={playerCard.card_img}
-                    key={playerCard.card_img}
+                    title={playerCard.fullname}
+                    image={playerCard.player_image}
+                    key={playerCard.player_image}
                     value={playerCard.value}
                   />
                 );
@@ -186,12 +113,12 @@ function GachaPage() {
           <div>
             <GachaText>가차 10회 뽑기</GachaText>
             <GachaList>
-              {gachaResult.map((playerCard) => {
+              {gachaResult.map((playerCard, idx) => {
                 return (
                   <PlayerCard
-                    title={playerCard.player_name}
-                    image={playerCard.card_img}
-                    key={playerCard.card_img}
+                    title={playerCard.fullname}
+                    image={playerCard.player_image}
+                    key={idx}
                     value={playerCard.value}
                   />
                 );
@@ -199,14 +126,6 @@ function GachaPage() {
             </GachaList>
           </div>
         ) : null}
-
-        {/* {gachaResult.map((gachacard) => {
-          <div>
-            <div>{gachacard.card_img}</div>
-            <div>{gachacard.player_name}</div>
-            <div>{gachacard.value}</div>
-          </div>;
-        })} */}
       </GachaModal>
     </Wrapper>
   );
@@ -441,14 +360,14 @@ const GachaButtonContainer = styled.div`
 `;
 
 const GachaText = styled.p`
-  font-size: 30px;
+  font-size: 20px;
   color: white;
 `;
 
 const GachaList = styled.div`
   display: grid;
   grid-template-columns: repeat(5, 1fr);
-  height: 50vh;
+  height: 70vh;
 `;
 
 const GachaOneList = styled.div`

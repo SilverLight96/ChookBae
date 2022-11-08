@@ -41,7 +41,7 @@ class UserUpdateSerializer(UserSerializer):
     #     blank=True,
     #     default='user/default.png'
     # )
-    new_profile_image = serializers.FileField(required=False)
+    new_profile_image = serializers.CharField(required=False)
     class Meta:
         model = get_user_model()
         fields = ('nickname','new_nickname', 'password', 'new_password', 'new_password_confirm','new_profile_image' )

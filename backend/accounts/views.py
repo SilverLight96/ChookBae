@@ -266,44 +266,17 @@ def mypage(request):
         #유저의 포인트 사용 내역 전부 가져오기 values()로 가져오면 딕셔너리 형태로 가져옴 튜플은 values_list()
         point_list = Point.objects.filter(user_id=user.id).values()
         profile = user.profile_image
-        profile = profile.__getstate__()['name']
-        # profile = profile.strip("https://chookbae.s3.ap-northeast-1.amazonaws.com/")
-        #unicodeDecodeError: 'utf-8' codec can't decode byte 0xff in position 0: invalid start byte
+        # profile = profile.__getstate__()['name'] #filefield에서 url을 가져오는 방법
+        #https://docs.djangoproject.com/en/2.2/_modules/django/db/models/fields/files/
+
         return Response({'predict_match':predict_match,'nickname':user.nickname,'point':user.points \
         ,'card_list':C_list,'profile':profile,'point_list':point_list},status=status.HTTP_200_OK)
     except jwt.ExpiredSignatureError:
         return Response({'error': ''}, status=status.HTTP_400_BAD_REQUEST)
     
 
+#이미지 api
 class Image(APIView):
-    # def post(self,request,format=None):
-    #     serializers = PhotoSerializer(data=request.data)
-    #     if serializers.is_valid():
-    #         serializers.save()
-    #         return Response(serializers.data,status=status.HTTP_201_CREATED)
-    #     return Response(serializers.errors,status=status.HTTP_400_BAD_REQUEST)  
-
-
-    # def post(self, request) :
-    #     try :
-    #         files = request.FILES.getlist('files')
-    #         host_id = request.GET.get('host_id')
-    #         s3r = boto3.resource('s3', aws_access_key_id= settings.AWS_ACCESS_KEY_ID, aws_secret_access_key= settings.AWS_SECRET_ACCESS_KEY)
-    #         key = "%s" %(host_id)
-
-    #         for file in files :
-    #             file._set_name(str(uuid.uuid4()))
-    #             s3r.Bucket(settings.AWS_STORAGE_BUCKET_NAME).put_object( Key=key+'/%s'%(file), Body=file, ContentType='jpg')
-    #             Image.objects.create(
-    #                 image_url = settings.STATIC_URL+"%s/%s"%(host_id, file),
-    #                 host_id = host_id
-    #             )
-    #         return Response({"MESSGE" : "SUCCESS"}, status=200)
-
-    #     except Exception as e :
-    #         return Response({"ERROR" : e.message})
-
-
     def post(self,request,format=None):
 
         file = request.FILES['profile_image']
