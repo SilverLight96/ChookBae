@@ -520,6 +520,49 @@ class TeamInfo(APIView):
         return Response(team_info)
 
 
+# 선수 실제 랭킹 조회 GET
+class PlayerRanking(APIView):
+    @swagger_auto_schema(operation_id="선수 랭킹 조회", operation_description="url을 통해 선수 랭킹 조회", responses={200: '조회 성공'})
+    def get(self, request):
+        goal = Player.objects.all().order_by('-goal', '-assist', '-run_time')[:10]
+        assist = Player.objects.all().order_by('-assist', '-goal', '-run_time')[:10]
+        yellow = Player.objects.all().order_by('-yellow_card', '-red_card')[:10]
+        red = Player.objects.all().order_by('-red_card', '-yellow_card')[:10]
+        run_time = Player.objects.all().order_by('-run_time', '-goal', '-assist')[:10]
+
+        goal_rank, assist_rank, yellow_rank, red_rank, run_time_rank = ["goal"], ["assist"], ["yellow"], ["red"], ["run_time"]
+
+        for g in goal:
+            goal_rank.append(g.id)
+        for a in assist:
+            assist_rank.append(a.id)
+        for y in yellow:
+            yellow_rank.append(y.id)
+        for r in red:
+            red_rank.append(r.id)
+        for rt in run_time:
+            run_time_rank.append(rt.id)
+
+        player_ranking = [goal_rank, assist_rank, yellow_rank, red_rank, run_time_rank]
+        
+        return Response(player_ranking)
+
+
+# 선수 정보 조회 GET
+class PlayerInfo(APIView):
+    player = openapi.Parameter('id', openapi.IN_PATH, description='player id', required=True, type=openapi.TYPE_NUMBER)
+    @swagger_auto_schema(operation_id="선수 정보 조회", operation_description="선수 고유번호로 정보 조회", manual_parameters=[id], responses={200: '조회 성공'})
+    def get(self, request, id):
+        player = Player.objects.get(id=id)
+        fullnameKR = player_k(player.id)
+        position = player_pos(player.position)
+        country = team_k(player.team_id.id)[0]
+        player_info = [player.id, fullnameKR, player.player_image, country, position, player.number, player.current_team,
+                        player.birthday, player.weight, player.height, player.goal, player.assist, player.yellow_card, player.red_card, player.run_time, player.value]
+
+        return Response(player_info)
+
+
 # 선수 시세 변동 알고리즘 및 자동 반영      >> 하루 1회 업데이트 @ 오후 12시
 def playerValueUpdate():
     
