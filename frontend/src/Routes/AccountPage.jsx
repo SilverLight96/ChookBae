@@ -1,19 +1,25 @@
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import { useForm } from "react-hook-form";
 import { useRef } from "react";
 import { REGEX, REGISTER_MESSAGE, STANDARD } from "../utils/constants/constant";
-import debounce from "../utils/functions/debounce";
 import { userApis } from "../utils/apis/userApis";
 import { fetchData } from "../utils/apis/api";
 import { keyframes } from "styled-components";
+import { useRecoilState } from "recoil";
+import { myInformation } from "../atoms";
+import axios from "axios";
+import { getCookie } from "../utils/functions/cookies";
+import { useNavigate } from "react-router-dom";
 
 export default function AccountPage() {
+  const profileInfo = useRecoilState(myInformation);
+  const navigate = useNavigate();
   const [userInfo, setUserInfo] = useState({
-    image: "",
-    new_nickname: "",
+    new_nickname: profileInfo[0].nickname,
     new_password: "",
     new_password_confirm: "",
+    new_profile_image: profileInfo[0].profile,
   });
 
   const {
@@ -24,13 +30,40 @@ export default function AccountPage() {
     formState: { errors },
   } = useForm({
     defaultValues: {
-      image: "",
       new_nickname: "",
       new_password: "",
       new_password_confirm: "",
     },
     mode: "onChange",
   });
+  const getToken = () => {
+    const accessToken = getCookie("token");
+    return accessToken;
+  };
+
+  const selectFile = async (e) => {
+    const uploadFile = e.target.files[0];
+    const formData = new FormData();
+
+    formData.append("profile_image", uploadFile);
+    console.log(uploadFile);
+
+    await axios({
+      method: "post",
+      url: "https://k7a202.p.ssafy.io/v1/accounts/image/",
+      data: formData,
+      headers: {
+        "Content-Type": "multipart/form-data",
+        Authorization: `${getToken()}`,
+      },
+    }).then((res) => {
+      console.log(res.data.profile_image);
+      setUserInfo((prev) => ({
+        ...prev,
+        new_profile_image: res.data.profile_image,
+      }));
+    });
+  };
 
   // 회원 정보 수정
   const onValid = (data) => {
@@ -44,11 +77,21 @@ export default function AccountPage() {
       } catch (err) {}
     })();
   }, [userInfo]);
-  console.log(userInfo);
 
   const updateuser = async () => {
-    return await fetchData.patch(userApis.UPDATE_USER, userInfo);
+    return await fetchData
+      .patch(userApis.UPDATE_USER, userInfo, {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `${getToken()}`,
+        },
+      })
+      .then((res) => {
+        navigate("/profile");
+        console.log(res);
+      });
   };
+  console.log(userInfo);
 
   // 비밀번호 확인
   const password = useRef({});
@@ -57,15 +100,16 @@ export default function AccountPage() {
     <Wrapper>
       <LoginBox>
         <h2>회원 정보 수정</h2>
+        <ProfileImgContainer>
+          <ProfileImg>
+            <img src={userInfo.new_profile_image} alt="프로필 이미지" />
+          </ProfileImg>
+          <form>
+            <label htmlFor="profile-upload">프로필 사진 등록 :</label>
+            <input type="file" accept="image/*" onChange={selectFile} />
+          </form>
+        </ProfileImgContainer>
         <form onSubmit={handleSubmit(onValid)}>
-          <ProfileImgContainer>
-            <ProfileImg>
-              <img
-                src="http://t0.gstatic.com/licensed-image?q=tbn:ANd9GcSIjMZAnE9OcAtov5EVsznvysN1zvXq5jDY7vSZkoqKv59QN306vyoU0ouBEgcHsyih"
-                alt="프로필 이미지"
-              />
-            </ProfileImg>
-          </ProfileImgContainer>
           <UserBox>
             <Input
               name="new_nickname"
@@ -331,8 +375,18 @@ const ProfileImgContainer = styled.div`
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  margin-left: 10px;
+
   margin-bottom: 20px;
+  border-bottom: 1px solid white;
+  > form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    > label {
+      color: white;
+      font-size: 16px;
+    }
+  }
 `;
 
 const ProfileImg = styled.main`

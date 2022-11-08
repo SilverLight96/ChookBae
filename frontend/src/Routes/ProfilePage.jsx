@@ -4,6 +4,7 @@ import { Routes, Route, Link, NavLink } from "react-router-dom";
 import { myInformation } from "../atoms";
 import { useRecoilState } from "recoil";
 import { fetchData } from "../utils/apis/api";
+import { getCookie } from "../utils/functions/cookies";
 
 import ProfilePlayerList from "./ProfilePlayerList";
 import ProfilePointPage from "./ProfilePoint";
@@ -12,16 +13,26 @@ import ProfileCard from "../Components/Profile/ProfileCard";
 
 function ProfilePage() {
   const [profileInfo, setProfileInfo] = useRecoilState(myInformation);
+
   const getUserInfo = async () => {
-    return await fetchData.get("/v1/accounts/mypage/").then((res) => {
-      console.log(res.data);
-      setProfileInfo(res.data);
-    });
+    return await fetchData
+      .get("/v1/accounts/mypage/", {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `${getCookie("token")}`,
+        },
+      })
+      .then((res) => {
+        setProfileInfo(res.data);
+      });
   };
 
   useEffect(() => {
     getUserInfo();
   }, []);
+
+  console.log(profileInfo);
+
   return (
     <Wrapper>
       <ProfileCard props={profileInfo} />
