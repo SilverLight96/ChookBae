@@ -215,28 +215,6 @@
   }
 }
 
-
-
-#app {
-  position: relative;
-}
-
-.demo,
-.cards { 
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: space-evenly;
-  perspective: 2000px;
-  position: relative;
-  z-index: 1;
-  transform: translate3d(0.1px, 0.1px, 0.1px )
-}
-.demo {
-  flex-direction: row;
-  justify-content: center;
-}
-
 .cards .card {
   &:nth-child(2) {
     &, &:before, &:after {

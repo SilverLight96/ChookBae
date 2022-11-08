@@ -6,9 +6,9 @@ import GachaModal from "../Components/Gacha/GachaModal";
 import { fetchData } from "../utils/apis/api";
 import PlayerCard from "../Components/common/PlayerCard";
 import { gachaApis } from "../utils/apis/userApis";
+import { getCookie } from "../utils/functions/cookies";
 
 function GachaPage() {
-  const didMountRef = useRef(false);
   const [isGacha, setIsGacha] = useState({
     team_id: 0,
     gacha_count: 0,
@@ -43,7 +43,12 @@ function GachaPage() {
 
   const getGacha = async () => {
     const response = await fetchData
-      .post(gachaApis.GACHA, isGacha)
+      .post(gachaApis.GACHA, isGacha, {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `${getCookie("token")}`,
+        },
+      })
       .then((res) => {
         setGachaResult(res.data);
       });
@@ -358,7 +363,7 @@ const GachaList = styled.div`
   height: 70vh;
   display: grid;
   grid-template-columns: repeat(5, 1fr);
-  grid-gap: 0px;
+  grid-row-gap: 20px;
 `;
 
 const GachaOneList = styled.div`
