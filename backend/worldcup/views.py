@@ -270,12 +270,12 @@ class card(APIView):
             return Response(gacha,status=status.HTTP_200_OK)
 
     @swagger_auto_schema(operation_id="유저의 보유하고 있는 카드 확인", operation_description="해당 유저가 보유하고 있는 모든 카드의 정보를 가져온다.")
-    def get(self, request):
+    def get(self, request, id):
         c_list=[]
-        hashmap = {} 
-        country = request.GET.get('country', None)
+        hashmap = {}
+        country = id
         if (country>0):
-            team=Team.objects.get(country=country)
+            team=Team.objects.get(id=country)
         
         token=request.META.get('HTTP_AUTHORIZATION')
         pay=jwt.decode(token,SECRET_KEY, algorithms=['HS256'])

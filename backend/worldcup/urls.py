@@ -10,6 +10,7 @@ urlpatterns = [
     path('predict/list/<int:id>', views.predictlist.as_view()),
     path('predict/info/<int:id>', views.predicdetail.as_view()),
     path('card', views.card.as_view()),
+    path('card/<int:id>', views.card.as_view()),
     path('card/combine', views.combine.as_view()),
     path('card/team',views.teamlist.as_view()),
     path('rank', views.rank.as_view()),
