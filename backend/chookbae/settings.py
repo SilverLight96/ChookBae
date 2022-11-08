@@ -14,6 +14,7 @@ from pathlib import Path
 from secret import db_setting
 # import environ
 import secret.email_setting as email_setting
+import secret.apikey as apikey
 # env = environ.Env(
 #     # set casting, default value
 #     DEBUG=(bool, False)
@@ -48,7 +49,7 @@ INSTALLED_APPS = [
     # 'django.contrib.sites',
     # 'allauth.account',
     # 'allauth.socialaccount',
-
+    'storages',
     'six',
     'imagekit',
     'django_apscheduler',
@@ -163,7 +164,7 @@ USE_TZ = False
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.2/howto/static-files/
 
-STATIC_URL = '/static/'
+# STATIC_URL = '/static/'
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field
@@ -178,7 +179,7 @@ AUTHENTICATION_BACKENDS = {
     'allauth.account.auth_backends.AuthenticationBackend',
 }
 
-MEDAIA_URL = '/media/'
+MEDIA_URL = '/media/'
 
 MEDIA_ROOT = BASE_DIR / 'media'
 
@@ -196,3 +197,23 @@ ACCOUNT_EMAIL_VERIFICATION = 'mandatory'
 ACCOUNT_AUTHENTICATION_METHOD = 'email' #로그인 시 이메일로 로그인
 ACCOUNT_EMAIL_CONFIRMATION_EXPIRE_DAYS = 0.02 # 30분 경과시 비활성화
 ACCOUNT_EMAIL_SUBJECT_PREFIX = '[Chookbae]이메일 인증' # 이메일 제목 앞에 붙는 prefix
+
+
+
+AWS_ACCESS_KEY_ID = apikey.AWS_ACCESS_KEY_ID # .csv 파일에 있는 내용을 입력 Access key ID
+AWS_SECRET_ACCESS_KEY = apikey.AWS_SECRET_ACCESS_KEY # .csv 파일에 있는 내용을 입력 Secret access key
+AWS_REGION = apikey.AWS_REGION # 리전
+AWS_STORAGE_BUCKET_NAME = apikey.AWS_STORAGE_BUCKET_NAME # 설정한 이름
+AWS_S3_CUSTOM_DOMAIN = apikey.AWS_S3_CUSTOM_DOMAIN
+AWS_S3_OBJECT_PARAMETERS = {
+    'CacheControl': 'max-age=86400',
+}
+
+AWS_DEFAULT_ACL = 'public-read'
+AWS_LOCATION = 'static'
+DEFAULT_FILE_STORAGE = 'chookbae.asset_storage.MediaStorage' # 파일 저장소를 S3로 설정
+STATIC_URL = 'https://%s/' % (AWS_S3_CUSTOM_DOMAIN)
+STATICFILES_STORAGE = 'chookbae.asset_storage.MediaStorage'
+STATICFILES_DIRS = [
+    BASE_DIR/'static'
+]

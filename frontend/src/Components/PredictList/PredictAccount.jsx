@@ -1,15 +1,16 @@
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useState } from "react";
 import styled from "styled-components";
 import axios from "axios"
-import { Route, Link, useLocation, useNavigate } from 'react-router-dom';
-
 
 export default function PredictAccount (props) {
-    const navigate = useNavigate()
-    const [inputValue, setInputValue] = useState('')
+    console.log(props.point);
+    const [inputValue, setInputValue] = useState(0)
     
     const baseURL = "https://k7a202.p.ssafy.io/"
     const sendBetData = (id, point, predict) => {
+        if (props.point < inputValue) {
+            alert('포인트가 부족합니다.')
+        } else {
         axios
         .post(baseURL + 'v1/predict', {
             match_id: id,
@@ -17,9 +18,13 @@ export default function PredictAccount (props) {
             predict: predict
     })
         .then( res => console.log(res))
-        .catch( err => alert('이미 배팅했습니다'))
+        .catch(err => {
+            console.log(err);
+            alert('이미 투표했습니다')
+        })
         setInputValue('')
         props.reload(true)
+        }
     }
     const state = props.selectedState
     const stateNum = (state) => {
@@ -35,12 +40,12 @@ export default function PredictAccount (props) {
     return (
         <Container>
             <MyInfoContainer>
-                <p>보유 포인트 : </p>
-                <p>배팅 상한 : </p>                
+                <p>보유 포인트 : {props.point}</p>             
             </MyInfoContainer>
             <CountryInfoContainer>
                 <CountryInfo
-                color={state === props.country1? 'white' : 'grey'}
+                onClick={() =>props.setSelectState(props.country1)}
+                color={state === props.country1? '#914154' : '#BC959F'}
                 >
                     <p>{props.country1}</p>
                     <p>인원 : {props.country1_num}</p>
@@ -49,7 +54,8 @@ export default function PredictAccount (props) {
 
                 </CountryInfo>
                 <CountryInfo
-                color={state === props.draw? 'white' : 'grey'}
+                onClick={() =>props.setSelectState(props.draw)}
+                color={state === props.draw? '#914154' : '#BC959F'}
                 >
                     <p>{props.draw}</p>
                     <p>인원 : {props.draw_num}</p>
@@ -57,7 +63,8 @@ export default function PredictAccount (props) {
                     <p>배율 : {props.draw_mul}</p>
                 </CountryInfo>
                 <CountryInfo
-                color={state === props.country2? 'white' : 'grey'}
+                onClick={() => props.setSelectState(props.country2)}
+                color={state === props.country2? '#914154' : '#BC959F'}
                 >
                     <p>{props.country2}</p>
                     <p>인원 : {props.country2_num}</p>
@@ -76,13 +83,15 @@ export default function PredictAccount (props) {
 const Container = styled.div`
     width: 90%;
     height: 60%;
-
+    padding: 3%;
+    
     display: flex;
     flex-direction: column;
     justify-content: space-between;
     align-items: center;
     
-    border: 1px solid black;
+    background-color: ${(props) => props.theme.colors.mainRed};
+    border-radius: 10px;
 `
 
 const MyInfoContainer = styled.div`
@@ -95,9 +104,6 @@ const MyInfoContainer = styled.div`
     justify-content: center;
     align-items: center;
     align-self: flex-end;
-
-    border: 1px solid black;
-
 `
 
 const CountryInfoContainer = styled.div`
@@ -108,8 +114,6 @@ const CountryInfoContainer = styled.div`
     flex-direction: row;
     justify-content: space-between;
     align-items: center;
-
-    border: 1px solid black;
 
 `
 
@@ -137,7 +141,6 @@ const ConfirmDiv = styled.div`
     justify-content: space-between;
     align-items: center;
 
-    border: 1px solid black;
 
 `
 const StyledInput = styled.input`
@@ -147,12 +150,14 @@ const StyledInput = styled.input`
     text-align: center;
     color: grey;
 
-    border: 1px solid black;
 `
 const StyledBtn = styled.button`
     width: auto;
     height: auto;
     font-size: 100%;
 
-    border: 1px solid black;
+    color: white;
+    border-radius: 10px;
+    border: 2px solid white;
+    background-color: ${(props) => props.theme.colors.subRed};
 `
