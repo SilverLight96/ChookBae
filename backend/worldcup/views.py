@@ -117,7 +117,7 @@ class predicdetail(APIView):
         user_id=pay['id']
         user=User.objects.get(id=user_id)
         point=user.points
-        
+
         try:
             bet=Bet.objects.get(id=id)
         except:
@@ -274,7 +274,7 @@ class card(APIView):
         c_list=[]
         hashmap = {} 
         country = request.GET.get('country', None)
-        if country is not None:
+        if (country>0):
             team=Team.objects.get(country=country)
         
         token=request.META.get('HTTP_AUTHORIZATION')
@@ -292,7 +292,7 @@ class card(APIView):
 
         for i in hashmap.keys():
             C=Player.objects.get(id=i)
-            if country is not None:
+            if (country>0):
                 if(C.team_id != team):
                     continue
             player_name=player_k(C.id)
