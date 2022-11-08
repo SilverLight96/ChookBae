@@ -93,21 +93,18 @@ function GachaPage() {
       </GachaMain>
       <GachaModal open={isModal} close={ModalHandler}>
         {isGacha.gacha_count === 1 ? (
-          <div>
-            <GachaText>가차 1회 뽑기</GachaText>
-            <GachaOneList>
-              {gachaResult.map((playerCard) => {
-                return (
-                  <PlayerCard
-                    title={playerCard.fullname}
-                    image={playerCard.player_image}
-                    key={playerCard.player_image}
-                    value={playerCard.value}
-                  />
-                );
-              })}
-            </GachaOneList>
-          </div>
+          <GachaOneList>
+            {gachaResult.map((playerCard) => {
+              return (
+                <PlayerCard
+                  title={playerCard.fullname}
+                  image={playerCard.player_image}
+                  key={playerCard.player_image}
+                  value={playerCard.value}
+                />
+              );
+            })}
+          </GachaOneList>
         ) : null}
         {isGacha.gacha_count === 10 ? (
           <GachaList>
@@ -356,13 +353,9 @@ const GachaButtonContainer = styled.div`
   }
 `;
 
-const GachaText = styled.p`
-  font-size: 20px;
-  color: white;
-`;
-
 const GachaList = styled.div`
   margin-top: 10%;
+  height: 70vh;
   display: grid;
   grid-template-columns: repeat(5, 1fr);
   grid-gap: 0px;
@@ -370,5 +363,6 @@ const GachaList = styled.div`
 
 const GachaOneList = styled.div`
   width: 100%;
+  height: 80vh;
   margin: auto;
 `;

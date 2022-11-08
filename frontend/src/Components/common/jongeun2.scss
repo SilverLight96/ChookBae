@@ -8,16 +8,13 @@
 
 
 
-.card {
-
-  height: 35vh;
-  
+.card { 
+  height: 100%;
   position: relative;
   overflow: cover;
   margin: 5px;
   z-index: 10;
-  touch-action: none;
-  
+  touch-action: none;  
   border-radius: 10px;
   box-shadow: 
     -5px -5px 5px -5px var(--color1), 
