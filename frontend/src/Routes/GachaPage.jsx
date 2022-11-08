@@ -6,9 +6,9 @@ import GachaModal from "../Components/Gacha/GachaModal";
 import { fetchData } from "../utils/apis/api";
 import PlayerCard from "../Components/common/PlayerCard";
 import { gachaApis } from "../utils/apis/userApis";
+import { getCookie } from "../utils/functions/cookies";
 
 function GachaPage() {
-  const didMountRef = useRef(false);
   const [isGacha, setIsGacha] = useState({
     team_id: 0,
     gacha_count: 0,
@@ -43,7 +43,12 @@ function GachaPage() {
 
   const getGacha = async () => {
     const response = await fetchData
-      .post(gachaApis.GACHA, isGacha)
+      .post(gachaApis.GACHA, isGacha, {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `${getCookie("token")}`,
+        },
+      })
       .then((res) => {
         setGachaResult(res.data);
       });
@@ -93,38 +98,32 @@ function GachaPage() {
       </GachaMain>
       <GachaModal open={isModal} close={ModalHandler}>
         {isGacha.gacha_count === 1 ? (
-          <div>
-            <GachaText>가차 1회 뽑기</GachaText>
-            <GachaOneList>
-              {gachaResult.map((playerCard) => {
-                return (
-                  <PlayerCard
-                    title={playerCard.fullname}
-                    image={playerCard.player_image}
-                    key={playerCard.player_image}
-                    value={playerCard.value}
-                  />
-                );
-              })}
-            </GachaOneList>
-          </div>
+          <GachaOneList>
+            {gachaResult.map((playerCard) => {
+              return (
+                <PlayerCard
+                  title={playerCard.fullname}
+                  image={playerCard.player_image}
+                  key={playerCard.player_image}
+                  value={playerCard.value}
+                />
+              );
+            })}
+          </GachaOneList>
         ) : null}
         {isGacha.gacha_count === 10 ? (
-          <div>
-            <GachaText>가차 10회 뽑기</GachaText>
-            <GachaList>
-              {gachaResult.map((playerCard, idx) => {
-                return (
-                  <PlayerCard
-                    title={playerCard.fullname}
-                    image={playerCard.player_image}
-                    key={idx}
-                    value={playerCard.value}
-                  />
-                );
-              })}
-            </GachaList>
-          </div>
+          <GachaList>
+            {gachaResult.map((playerCard, idx) => {
+              return (
+                <PlayerCard
+                  title={playerCard.fullname}
+                  image={playerCard.player_image}
+                  key={idx}
+                  value={playerCard.value}
+                />
+              );
+            })}
+          </GachaList>
         ) : null}
       </GachaModal>
     </Wrapper>
@@ -359,19 +358,16 @@ const GachaButtonContainer = styled.div`
   }
 `;
 
-const GachaText = styled.p`
-  font-size: 20px;
-  color: white;
-`;
-
 const GachaList = styled.div`
+  margin-top: 10%;
+  height: 70vh;
   display: grid;
   grid-template-columns: repeat(5, 1fr);
-  height: 70vh;
+  grid-row-gap: 20px;
 `;
 
 const GachaOneList = styled.div`
   width: 100%;
-
+  height: 80vh;
   margin: auto;
 `;
