@@ -521,7 +521,6 @@ class TeamInfo(APIView):
 
 
 # 선수 시세 변동 알고리즘 및 자동 반영      >> 하루 1회 업데이트 @ 오후 12시
-@transaction.atomic()
 def playerValueUpdate():
     
     # 선수 시세 설정 코드
