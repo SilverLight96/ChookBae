@@ -1,15 +1,27 @@
 import React from "react";
 import styled from "styled-components";
+import "./jongeun2.scss";
 
 function PlayerCard(props) {
   return (
-    <Wrapper>
-      <BestCardContainer>
-        <Image src={props.image} />
-        <Title2>{props.value}</Title2>
-        <Title>{props.title}</Title>
-      </BestCardContainer>
-    </Wrapper>
+    <main id="app">
+      <section class="cards">
+        <div
+          class="card mewtwo animated"
+          style={{ backgroundImage: `url(${props.image})` }}
+          alt={props.title}
+        >
+          <div>
+            <h3 style={{ textAlign: "center", color: "white" }}>
+              {props.title}
+            </h3>
+            <h4 style={{ textAlign: "right", color: "white" }}>
+              {props.value}
+            </h4>
+          </div>
+        </div>
+      </section>
+    </main>
   );
 }
 
@@ -42,7 +54,7 @@ const BestCardContainer = styled.div`
 
 const Image = styled.img`
   width: 100%;
-
+  height: 100%;
   border-radius: 5px;
   object-fit: cover !important;
 `;
@@ -54,7 +66,7 @@ const Title = styled.div`
   align-items: center;
   width: 100%;
   height: 30%;
-  font-size: 20x;
+  font-size: 30px;
   font-family: "KOTRAHOPE";
   font-weight: normal;
   font-style: normal;
@@ -71,7 +83,7 @@ const Title2 = styled.div`
 
   width: 100%;
   height: 30%;
-  font-size: 20px;
+  font-size: 30px;
   font-family: "KOTRAHOPE";
   font-weight: normal;
   font-style: normal;

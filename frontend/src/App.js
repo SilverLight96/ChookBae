@@ -10,16 +10,18 @@ import MainPage from './Routes/MainPage';
 import LoginPage from './Routes/LoginPage';
 import SignUpPage from './Routes/SignUpPage';
 import MatchPage from './Routes/MatchPage';
-import MatchCountryDetail from './Routes/MatchCountryDetail'
-import MatchDateDetail from './Routes/MatchDateDetail'
+// import MatchCountryDetail from './Routes/MatchCountryDetail'
+import MatchDetail from './Routes/MatchDetail'
 import ProfilePage from "./Routes/ProfilePage";
 import GachaPage from "./Routes/GachaPage";
 import NavBar from "./Components/common/NavBar";
-import PredictionPage from "./Routes/PredictionPage";
 import AccountPage from "./Routes/AccountPage";
 import ActivatePage from "./Routes/ActivatePage";
 import ProtectedRoute from "./Routes/ProtectedRoute";
 import MixPage from "./Routes/MixPage";
+import PredictList from "./Routes/PredictList"
+import PredictDetail from "./Routes/PredictDetail"
+import TeamInfo from "./Routes/TeamInfo"
 
 function App() {
   const loggedin = useRecoilValue(loggedinState);
@@ -33,14 +35,15 @@ function App() {
           <Route path="/account" element={<AccountPage/>}/>    
         <Route element={<ProtectedRoute loggedin={loggedin} />}>
           <Route path="/profile/*" element={<ProfilePage/>}/>
-          <Route path="/prediction" element={<PredictionPage/>}/>
+          <Route path="/PredictDetail" element={<PredictDetail/>}/>
+          <Route path="/PredictList" element={<PredictList/>}/>
           <Route path="/gacha" element={<GachaPage/>}/>
           <Route path="/mix" element={<MixPage/>}/>
         </Route>
           <Route path="" element={<MainPage/>}/>
           <Route path="/Match" element={<MatchPage type='country'/>}/>
-          <Route path="/Match/Country" element={<MatchCountryDetail/>}/>
-          <Route path="/Match/Date" element={<MatchDateDetail/>}/>  
+          <Route path="/Match/Detail" element={<MatchDetail/>}/>
+          <Route path="/TeamInfo" element={<TeamInfo/>}/>
           <Route path="/accounts/activate" element={<ActivatePage/>}/>
       </Routes> 
     </BrowserRouter>

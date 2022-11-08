@@ -1,302 +1,180 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import styled from "styled-components";
-import MatchCountry from "../Components/MatchPage/MatchCountry"
-import MatchDate from "../Components/MatchPage/MatchDate"
+import MatchCard from "../Components/MatchPage/MatchCard"
+import MatchCountryCard from "../Components/MatchPage/MatchCountryCard"
 import Calendar from 'react-calendar';
 import moment from 'moment';
+import 'moment/locale/ko';
 import 'react-calendar/dist/Calendar.css';
 import axios from "axios"
 
+
 function MatchPage() {
-
-    const thStyle={
-        width: '100em',
-        height: 'auto',
-    }
-
-    const btnDivStyle={
-        marginTop: '3%',
-        marginBottom: '3%',
-        display: 'flex',
-        justifyContent: 'space-evenly'
-    }
-
-    const btnStyle={
-        width: '10em',
-        height: '5em',
-    }
-
-    const calendarStyle={
-        width: '100%',
-    }
-
-    //const [matches, setMatches] = useState([])
-    const header = [
-        'id',
-        'pk',
-        'match_name',
-        'match_type',
-        'team1_pk',
-        'team2_pk',
-        'start_time',
-        'venue_pk',
-        'team1_score',
-        'team2_score',
-    ]
+    // state ----------------------------------------------------
+    const [groupData, setGroupData] = useState([])
     const [value, onChange] = useState(new Date());
+    const [dataDate, setDataDate] = useState([])
+    const [cardState, setCardState] = useState([])
+    const [selectCard, setSelectCard] = useState()
+    const [type, setType] = useState('country')
+    // value
+    const baseURL = "https://k7a202.p.ssafy.io/"
     const valueMoment = moment(value).format("YYYY-MM-DD")
+    // useEffect - get prepare data countries with group --------
+    useEffect(() => {
+        const axiosGetGroup = async() => {
+            const dataAxios = await axios
+            .get(baseURL + 'v1/match/group', {
+                headers: {
+                    'Content-Type': 'application/json',
+                    },
+            })
+            console.log(dataAxios.data);
+            setGroupData(dataAxios.data)
+        }
 
+        axiosGetGroup()
+    }, [])
+    // axios - get data countries with date-----------------------
+    const axiosGet = async(subUrl) => {
+        const dataAxios = await axios
+        .get(baseURL + 'v1/' + subUrl, {
+            headers: {
+                'Content-Type': 'application/json',
+                },
+            })
+        await setDataDate(dataAxios.data)
+        }
+    const getDataDate = (date) => {
+        const convertedDate = date.split('-').join('')
+        return axiosGet('match/date/' + convertedDate)
+    }
+    // calender --------------------------------------------------
+    const onChangeTemp = (e) => {
+        const valueMoment = moment(e).format("YYYY-MM-DD")
+        getDataDate(valueMoment)
+        onChange(e)
+        console.log(dataDate)
+        }
+    // top position two button ----------------------------------- 
     const Tableheader = () => {
         return(
             <>
-                <div style={btnDivStyle}>
-                    <button style={btnStyle} onClick={changeCountry}>국가별</button>
-                    <button style={btnStyle} onClick={changeDate}>날짜별</button>
-                </div>
-                <table>
-                    <thead>
-                        <tr>
-                            {header.map((elem, idx) => {
-                            return (
-                                <th style={thStyle} key={idx}>{elem}</th>
-                                    )
-                                })}
-                        </tr>
-                    </thead>
-                </table>
+                <BtnContainer>
+                    <StyledButton onClick={changeCountry}>국가별</StyledButton>
+                    <StyledButton onClick={changeDate}>날짜별</StyledButton>
+                </BtnContainer>
             </>
     )}
-    const [type, setType] = useState(
-        'country'
-        )
     const changeCountry = () => {
         setType('country')
     }
     const changeDate = () => {
         setType('date')
     }
-    const [countryMatches, setcountryMatches] = useState([{
-            id: '1',
-            pk: '8',
-            match_name: '잘 모름',
-            match_type: '이것도 잘 모름',
-            team1_pk: '1',
-            team2_pk: '2',
-            start_time: '2022-10-19',
-            venue_pk: '1',
-            team1_score: '99',
-            team2_score: '0',
-        },
-        {
-            id: '1',
-            pk: '8',
-            match_name: '잘 모름',
-            match_type: '이것도 잘 모름',
-            team1_pk: '1',
-            team2_pk: '2',
-            start_time: '08:00',
-            venue_pk: '1',
-            team1_score: '99',
-            team2_score: '0',
-        },
-        {
-            id: '1',
-            pk: '8',
-            match_name: '잘 모름',
-            match_type: '이것도 잘 모름',
-            team1_pk: '1',
-            team2_pk: '2',
-            start_time: '08:00',
-            venue_pk: '1',
-            team1_score: '99',
-            team2_score: '0',
-        },
-        {
-            id: '1',
-            pk: '8',
-            match_name: '잘 모름',
-            match_type: '이것도 잘 모름',
-            team1_pk: '1',
-            team2_pk: '2',
-            start_time: '08:00',
-            venue_pk: '1',
-            team1_score: '99',
-            team2_score: '0',
-        },
-        {
-            id: '1',
-            pk: '8',
-            match_name: '잘 모름',
-            match_type: '이것도 잘 모름',
-            team1_pk: '1',
-            team2_pk: '2',
-            start_time: '08:00',
-            venue_pk: '1',
-            team1_score: '99',
-            team2_score: '0',
-        },
-    ]);
-
-    const [dateMatches, setdateMatches] = useState([{
-            id: '2',
-            pk: '10',
-            match_name: '잘 알고 있음',
-            match_type: '이것도 잘 알고 있음',
-            team1_pk: '3',
-            team2_pk: '4',
-            start_time: '2022-10-19',
-            venue_pk: '4',
-            team1_score: '1089',
-            team2_score: '12',
-        },
-        {
-            id: '2',
-            pk: '10',
-            match_name: '잘 알고 있음',
-            match_type: '이것도 잘 알고 있음',
-            team1_pk: '3',
-            team2_pk: '4',
-            start_time: '2022-10-20',
-            venue_pk: '4',
-            team1_score: '1089',
-            team2_score: '12',
-        },
-        {
-            id: '2',
-            pk: '10',
-            match_name: '잘 알고 있음',
-            match_type: '이것도 잘 알고 있음',
-            team1_pk: '3',
-            team2_pk: '4',
-            start_time: '2022-10-21',
-            venue_pk: '4',
-            team1_score: '1089',
-            team2_score: '12',
-        },
-        {
-            id: '2',
-            pk: '10',
-            match_name: '잘 알고 있음',
-            match_type: '이것도 잘 알고 있음',
-            team1_pk: '3',
-            team2_pk: '4',
-            start_time: '2022-10-22',
-            venue_pk: '4',
-            team1_score: '1089',
-            team2_score: '12',
-        },
-        {
-            id: '2',
-            pk: '10',
-            match_name: '잘 알고 있음',
-            match_type: '이것도 잘 알고 있음',
-            team1_pk: '3',
-            team2_pk: '4',
-            start_time: '2022-10-23 ',
-            venue_pk: '4',
-            team1_score: '1089',
-            team2_score: '12',
-        },
-    ]);
-
-    // let url = 'https://example.com/';
-    // const axios_options = {
-    //     option1: 'option1',
-    //     option2: 'option2',
-    // }
-    // const axios_url = `${url}/${axios_options.option1}/${axios_options.option2}`
-
-    // axios
-    // .get(axios_url)
-    // .then(res => setMatches(res.data))
-    // .catch(err => console.log(err))
-
+    // click country button -----------------------------------------
     if (type ==='country'){
         return (
+            <>
             <div>
-                <Tableheader />
-                {countryMatches.map((match, index) => {
-                    return (
-                        <MatchCountry
-                            key={index}
-                            id={match.id}
-                            pk={match.pk}
-                            match_name={match.match_name}
-                            match_type={match.match_type}
-                            team1_pk={match.team1_pk}
-                            team2_pk={match.team2_pk}
-                            start_time={match.start_time}
-                            venue_pk={match.venue_pk}
-                            team1_score={match.team1_score}
-                            team2_score={match.team2_score}
-                    />
-                    )
-                })}
+            <Tableheader />
+                <hr />
+                <MatchCountryCard 
+                data={groupData}
+                setState={setCardState}
+                selectedCard={setSelectCard}
+                />
+                <hr />
+                <h1>{selectCard}</h1>
+
+                <div>
+                    {cardState.map((match, index) => {
+                        return (
+                            <MatchCard
+                                key={index + 'key'}
+                                match_id={match[0]}
+                                start_date={match[1]}
+                                start_time={match[2]}
+                                venue_name={match[3]}
+                                venue_address={match[4]}
+                                team1_country={match[5]}
+                                team1_logo={match[6]}
+                                team1_group={match[7]}
+                                team2_country={match[8]}
+                                team2_logo={match[9]}
+                            />
+                            )
+                        }
+                    )}
+                </div>
             </div>
+            <BlankDiv><br /><br /><br /></BlankDiv>
+            </>
         )
     }
+    // click data button ------------------------------------------
     else {
         return (
             <>
             <div>
                 <Tableheader />
-                <StyledCalendar>
-                    <Calendar onChange={onChange} value={value} style={calendarStyle} />
-                    <div>
-                        {valueMoment} 
-                    </div>
-                </StyledCalendar>
-                {dateMatches.map((match, index) => {
-                    if (match.start_time === valueMoment) {
+                <StyledCalendarContainer>
+                    <Calendar onChange={onChangeTemp} value={value} />
+                </StyledCalendarContainer>
+                <h1>{valueMoment}</h1>
+                {dataDate.map((match, index) => {
+                    if (match[1] === valueMoment) {
                     return (
-                        <MatchDate
-                        date={valueMoment}
-                        key={index}
-                        id={match.id}
-                        pk={match.pk}
-                        match_name={match.match_name}
-                        match_type={match.match_type}
-                        team1_pk={match.team1_pk}
-                        team2_pk={match.team2_pk}
-                        start_time={match.start_time}
-                        venue_pk={match.venue_pk}
-                        team1_score={match.team1_score}
-                        team2_score={match.team2_score}
+                        <>
+                        <MatchCard
+                            match_id = {match[0]}
+                            start_date={match[1]}
+                            start_time={match[2]}
+                            venue_name={match[3]}
+                            venue_address={match[4]}
+                            team1_country={match[5]}
+                            team1_logo={match[6]}
+                            team1_group={match[7]}
+                            team2_country={match[8]}
+                            team2_logo={match[9]}
+                            key={index}
                         />
+                        </>
                     )
                 }})}
             </div>
+            <BlankDiv><br /><br /><br /></BlankDiv>
             </>
         )
     }
 }
 
 export default MatchPage;
-
-const StyledCalendar = styled.div`
+// style --------------------------------------------------------
+const StyledCalendarContainer = styled.div`
     /* container styles */
-    margin: auto;
+    margin-left: auto;
+    margin-right: auto;
+
+    display: flex;
+    justify-content: center;
     width: 100%;
-
-    /* calendar styles */
-    .react-calendar {
-        width: 100%;
-        margin-left: auto;
-        margin-right: auto;
-    }
-    /* navigation styles */
-    .react-calendar__navigation  {
-        display: flex;
-        .react-calendar__navigation__label {
-            width: 100%;
-        }
-
-        .react-calendar__navigation__arrow {
-
-        }
-    }
-    /* label styles */
-    .react-calendar__month-view__weekdays {
-        text-align: center;
-    }
 `
+
+const BlankDiv = styled.div`
+    height: 100%;
+`
+const StyledButton = styled.button`
+    width: '10em';
+    height: '5em';
+`
+
+const BtnContainer= styled.div`
+    margin-top: '3%';
+    margin-bottom: '3%';
+    display: flex;
+    justify-content: space-evenly;
+`
+
+
+    // return axiosGet('match/date/' + convertedDate)
