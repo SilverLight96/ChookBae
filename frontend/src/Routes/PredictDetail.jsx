@@ -1,10 +1,11 @@
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useEffect, useState } from "react";
 import styled from "styled-components";
-import { Route, Link, useLocation, useNavigate } from 'react-router-dom';
+import { useLocation } from 'react-router-dom';
 import axios from 'axios'
 import baedang from '../assets/baedang.png'
 import points from '../assets/points.png'
 import usernumber from '../assets/usernumber.png'
+import { getCookie } from '../utils/functions/cookies'
 
 import PredictAccount from '../Components/PredictList/PredictAccount'
 
@@ -21,7 +22,11 @@ export default function PredictDetail () {
     useEffect(() => {
         const getPredictData = async(id) => {
             const axiosData = await axios
-            .get(baseURL + 'v1/predict/info/' + id)
+            .get(baseURL + 'v1/predict/info/' + id, {
+                headers: {
+                    "Content-Type": "application/json",
+                    Authorization: `${getCookie("token")}`
+                }})
             setPredictData(axiosData.data)
         }
         getPredictData(location.state.match_id)
@@ -155,8 +160,10 @@ export default function PredictDetail () {
                 draw_num = {predictData.draw_count}
                 draw_point = {predictData.draw_total}
                 draw_mul = {predictData.draw_dang}
+                setSelectState = {setSelectState}
                 selectedState = {selectState}
                 match_id = {location.state.match_id}
+                point = {predictData.point}
                 reload = {setReload}
                 />
             </PredictAccountDiv>

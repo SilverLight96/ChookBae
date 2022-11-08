@@ -1,15 +1,16 @@
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useState } from "react";
 import styled from "styled-components";
 import axios from "axios"
-import { Route, Link, useLocation, useNavigate } from 'react-router-dom';
-
 
 export default function PredictAccount (props) {
-    const navigate = useNavigate()
-    const [inputValue, setInputValue] = useState('')
+    console.log(props.point);
+    const [inputValue, setInputValue] = useState(0)
     
     const baseURL = "https://k7a202.p.ssafy.io/"
     const sendBetData = (id, point, predict) => {
+        if (props.point < inputValue) {
+            alert('포인트가 부족합니다.')
+        } else {
         axios
         .post(baseURL + 'v1/predict', {
             match_id: id,
@@ -17,9 +18,13 @@ export default function PredictAccount (props) {
             predict: predict
     })
         .then( res => console.log(res))
-        .catch( err => alert('이미 배팅했습니다'))
+        .catch(err => {
+            console.log(err);
+            alert('이미 투표했습니다')
+        })
         setInputValue('')
         props.reload(true)
+        }
     }
     const state = props.selectedState
     const stateNum = (state) => {
@@ -35,11 +40,11 @@ export default function PredictAccount (props) {
     return (
         <Container>
             <MyInfoContainer>
-                <p>보유 포인트 : </p>
-                <p>배팅 상한 : </p>                
+                <p>보유 포인트 : {props.point}</p>             
             </MyInfoContainer>
             <CountryInfoContainer>
                 <CountryInfo
+                onClick={() =>props.setSelectState(props.country1)}
                 color={state === props.country1? '#914154' : '#BC959F'}
                 >
                     <p>{props.country1}</p>
@@ -49,6 +54,7 @@ export default function PredictAccount (props) {
 
                 </CountryInfo>
                 <CountryInfo
+                onClick={() =>props.setSelectState(props.draw)}
                 color={state === props.draw? '#914154' : '#BC959F'}
                 >
                     <p>{props.draw}</p>
@@ -57,6 +63,7 @@ export default function PredictAccount (props) {
                     <p>배율 : {props.draw_mul}</p>
                 </CountryInfo>
                 <CountryInfo
+                onClick={() => props.setSelectState(props.country2)}
                 color={state === props.country2? '#914154' : '#BC959F'}
                 >
                     <p>{props.country2}</p>
