@@ -5,3 +5,7 @@ export const userApis = {
     // DELETE_USER: '/v1/account/delete',
     UPDATE_USER: '/v1/accounts/update/',
   };
+
+export const gachaApis = {
+  GACHA : 'v1/card'
+}
