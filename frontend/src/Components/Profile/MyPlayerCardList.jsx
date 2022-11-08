@@ -18,6 +18,7 @@ function MyPlayerCardList() {
             title={playerCard.fullname}
             image={playerCard.player_image}
             key={playerCard.player_image}
+            count={playerCard.count}
             value={playerCard.value}
           />
         );
@@ -32,7 +33,7 @@ const Wrapper = styled.div`
   width: 100%;
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  grid-gap: 0.1rem;
-  margin-bottom: 0.1rem;
+  grid-gap: 1rem;
+  margin-bottom: 1rem;
   scroll-behavior: smooth;
 `;
