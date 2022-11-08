@@ -6,5 +6,6 @@ def start():
     scheduler = BackgroundScheduler(timezone='Asia/Seoul')
     scheduler.add_job(predictcalc, 'cron', hour='12')
     scheduler.add_job(playerValueUpdate, 'cron', hour='12')             # 선수 시세
-    scheduler.add_job(matchUpdate, 'cron', second='0', hour='18-07')    # 경기 결과 및 실시간 스코어 정보
+    scheduler.add_job(matchUpdate, 'cron', second='0', hour='18-23')    # 경기 결과 및 실시간 스코어 정보
+    scheduler.add_job(matchUpdate, 'cron', second='0', hour='00-07')    # 경기 결과 및 실시간 스코어 정보
     scheduler.start()

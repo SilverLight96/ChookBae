@@ -19,4 +19,6 @@ urlpatterns = [
     path('match/detail/<int:id>', views.MatchDetail.as_view()),
     path('match/table/<str:id>', views.MatchTable.as_view()),
     path('match/teaminfo/<int:id>', views.TeamInfo.as_view()),
+    # 선수 랭킹 API
+    # 선수 정보 API
 ]
