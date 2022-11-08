@@ -111,9 +111,13 @@ class predictlist(APIView):
 
 #승부 예측 정보 조회 GET
 class predicdetail(APIView):
-    match_id = openapi.Parameter('id', openapi.IN_PATH, description='date in YYYYMMDD', required=True, type=openapi.TYPE_NUMBER)
-    @swagger_auto_schema(operation_id="경기 정보 조회 (날짜별)", operation_description="날짜 입력으로 경기 조회 (날짜양식: YYYYMMDD)", manual_parameters=[id])
     def get(self, request, id):
+        token=request.META.get('HTTP_AUTHORIZATION')
+        pay=jwt.decode(token,SECRET_KEY, algorithms=['HS256'])
+        user_id=pay['id']
+        user=User.objects.get(id=user_id)
+        point=user.points
+
         try:
             bet=Bet.objects.get(id=id)
         except:
@@ -138,7 +142,7 @@ class predicdetail(APIView):
 
         return Response({'win_count': win_count, 'win_total': bet.win, 'win_dang': win_dang,
         'draw_count': draw_count, 'draw_total': bet.draw, 'draw_dang': draw_dang,
-        'lose_count': lose_count, 'lose_total': bet.lose, 'lose_dang': lose_dang,'total_point' :total, },status=status.HTTP_200_OK)
+        'lose_count': lose_count, 'lose_total': bet.lose, 'lose_dang': lose_dang,'total_point' :total, 'point' : point,},status=status.HTTP_200_OK)
 
 #승부 예측 여부 GET
 class predictinfo(APIView):
@@ -270,7 +274,7 @@ class card(APIView):
         c_list=[]
         hashmap = {} 
         country = request.GET.get('country', None)
-        if country is not None:
+        if (country>0):
             team=Team.objects.get(country=country)
         
         token=request.META.get('HTTP_AUTHORIZATION')
@@ -288,7 +292,7 @@ class card(APIView):
 
         for i in hashmap.keys():
             C=Player.objects.get(id=i)
-            if country is not None:
+            if (country>0):
                 if(C.team_id != team):
                     continue
             player_name=player_k(C.id)
