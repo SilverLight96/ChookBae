@@ -102,6 +102,8 @@ function MixPage() {
     setSelectCombine((prev) => {
       return { ...prev, player_card_id1: e.target.id };
     });
+    setMixSelect(0);
+    ModalHandler();
   };
   const addCardRight = (e) => {
     console.log(e);
@@ -109,6 +111,8 @@ function MixPage() {
     setSelectCombine((prev) => {
       return { ...prev, player_card_id2: e.target.id };
     });
+    setMixSelect(0);
+    ModalHandler();
   };
 
   console.log(selectCombine);
@@ -122,7 +126,6 @@ function MixPage() {
 
   const ModalHandler = () => {
     setIsModal((prev) => !prev);
-    setMixSelect(0);
   };
 
   const mixCard = () => {

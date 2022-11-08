@@ -31,11 +31,11 @@ const Background = styled.div`
   & section {
     width: 90%;
     max-width: 600px;
-    height: 70vh;
+    height: 80vh;
     background-color: ${(props) => props.theme.colors.subBlack};
     border-radius: 5px;
     & main {
-      padding: 0 20px 20px;
+      padding: 0 20px;
     }
   }
 `;

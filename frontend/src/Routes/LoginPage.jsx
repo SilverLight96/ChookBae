@@ -51,6 +51,7 @@ function LoginPage() {
         setLoginError(error.response.data);
       });
   };
+  console.log(cookies);
 
   useEffect(
     (prev) => {
