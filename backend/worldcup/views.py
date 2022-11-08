@@ -523,12 +523,6 @@ class TeamInfo(APIView):
 # 선수 시세 변동 알고리즘 및 자동 반영      >> 하루 1회 업데이트 @ 오후 12시
 @transaction.atomic()
 def playerValueUpdate():
-
-    # 선수 기록 수정 코드 (테스트)
-    player = Player.objects.get(id=48)
-    player.goal += 1      # 1골 추가
-    player.run_time += 90   # 출장시간 추가
-    player.save()      # DB 업데이트
     
     # 선수 시세 설정 코드
     players = Player.objects.all()
