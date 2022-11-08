@@ -313,13 +313,19 @@ class combine(APIView):
     @transaction.atomic()
     def get_object(self, user_id, card1, card2):  
         user=User.objects.get(id=user_id)
-        first=PlayerCard.objects.get(id=card1)
-        second=PlayerCard.objects.get(id=card2)
-        team=-1
-
-        if(user_id != first.user_id.id or user_id != second.user_id.id):
+        try:
+            first=PlayerCard.objects.filter(Q(player_id=card1) & Q(user_id=user_id)).order_by('?').first()
+            second=PlayerCard.objects.filter(Q(player_id=card1) & Q(user_id=user_id) & ~Q(id=first.id)).order_by('?').first()
+            if second is None :
+                raise Exception
+            team=-1
+        except:
             return ('보유하고 있지 않은 선수카드입니다.')
         
+            
+        
+
+
         if(first.player_id.team_id == second.player_id.team_id):
             team=first.player_id.team_id.id
         
