@@ -18,6 +18,7 @@ function MyPlayerCardList() {
             title={playerCard.fullname}
             image={playerCard.player_image}
             key={playerCard.player_image}
+            count={playerCard.count}
             value={playerCard.value}
           />
         );

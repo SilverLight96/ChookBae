@@ -18,6 +18,9 @@ function PlayerCard(props) {
             <h4 style={{ textAlign: "right", color: "white" }}>
               {props.value}
             </h4>
+            <h4 style={{ textAlign: "right", color: "white" }}>
+              {props.count}
+            </h4>
           </div>
         </div>
       </section>
