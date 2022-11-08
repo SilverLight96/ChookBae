@@ -520,7 +520,7 @@ class TeamInfo(APIView):
         return Response(team_info)
 
 
-# 선수 시세 변동 알고리즘       >> 하루 1회 업데이트 @ 오후 12시
+# 선수 시세 변동 알고리즘 및 자동 반영      >> 하루 1회 업데이트 @ 오후 12시
 @transaction.atomic()
 def playerValueUpdate():
 
@@ -545,7 +545,7 @@ def playerValueUpdate():
         player.save()
 
 
-# 경기 정보 업데이트       >> KST 18시 ~ 익일 7시 동안 1분 주기로 자동 업데이트 (12시간 x 60회 = 720회 갱신)
+# 경기 정보 자동 업데이트       >> KST 18시 ~ 익일 7시 동안 1분 주기로 자동 업데이트 (12시간 x 60회 = 720회 갱신)
 def matchUpdate():
     pending_result = []     # 경기 결과는 나왔지만 경기 상세 정보가 미제공인 경기들의 id 리스트
     
