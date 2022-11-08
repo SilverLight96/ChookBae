@@ -13,4 +13,5 @@ urlpatterns = [
     path('update/', views.update), #회원정보 수정')
     path('nickname/<str:nickname>/', views.check_nickname), #닉네임 중복 확인'
     path('activate/<slug:uid64>/<slug:token>/',views.activate, name='activate'),
+    path('image/',views.Image.as_view(),name='image'),
 ]

@@ -1,4 +1,5 @@
 // import { createGlobalStyle } from 'styled-components';
+// import styled from 'styled-components';
 
 // const GlobalStyles = createGlobalStyle`
 //   @import url('https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css');

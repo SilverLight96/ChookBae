@@ -1,46 +1,24 @@
-import React, { useRef, useState, useMemo } from "react";
+import React from "react";
 import styled from "styled-components";
-import { Route, Link, useLocation, useNavigate } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import MatchDeatilTable from '../Components/MatchPage/MatchDetailTable'
 import MatchDetailChart from '../Components/MatchPage/MatchDetailChart'
 // useNavigate Link 로 바꾸기
 function MatchDetail() {
+    // location ----------------------------------------------------------
     const location = useLocation()
+    // navigate ----------------------------------------------------------
     const navigate = useNavigate()
+    // value -------------------------------------------------------------
 
     const propData = location.state.firstData
     const propDataSecond = location.state.secondData
-
+    
     const state = {
         match_id: location.state.firstData.match_id,
         team1_country: location.state.firstData.team1_country,
         team2_country: location.state.firstData.team2_country,
     }
-
-    const detailData_1 = [
-        '',
-        propData.team1_rank,
-        propData.team1_last_five,
-        // propData.team1_manager,
-        'Manager',
-    ]
-
-    const detailData_2 = [
-        '',
-        propData.team2_rank,
-        propData.team2_last_five,
-        // propData.team2_manager,
-        'Manager',
-    ]
-
-    Object.keys(propDataSecond).map(elem => {
-        if (propDataSecond[elem][1] === propData.team1_country) {
-            detailData_1[0] = elem[0]
-        }
-        if (propDataSecond[elem][1] === propData.team2_country) {
-            detailData_2[0] = elem[0]
-        }
-    })
 
     const detailDataHeader = [
         '조별 순위',
@@ -49,7 +27,36 @@ function MatchDetail() {
         '감독',
         '선수단',
     ]
+    
+    const detailData_1 = [
+        null,
+        propData.team1_rank,
+        propData.team1_last_five,
+        // propData.team1_manager,
+        'Manager',
+    ]
 
+    const detailData_2 = [
+        null,
+        propData.team2_rank,
+        propData.team2_last_five,
+        // propData.team2_manager,
+        'Manager',
+    ]
+    // data formating -----------------------------------------------
+    Object.keys(propDataSecond).map(elem => {
+        if (propDataSecond[elem][1] === propData.team1_country) {
+            detailData_1[0] = parseInt(elem[0]) + 1
+        }
+        if (propDataSecond[elem][1] === propData.team2_country) {
+            detailData_2[0] = parseInt(elem[0]) + 1
+        }
+    })
+    console.log(propDataSecond);
+    console.log(detailData_1);
+    console.log(detailData_2);
+
+    // return data --------------------------------------------------
     return(
         <Container>
             <DescriptionContainer>
@@ -63,7 +70,7 @@ function MatchDetail() {
 
                 <Predict>
                     <Group>
-                        <h1>{propData.team1_group}</h1>
+                        <h1>{propData.team1_group}조</h1>
                     </Group>
 
                     <PredictBtn
@@ -129,7 +136,8 @@ export default MatchDetail
 
 const Data = styled.div`
     height: 50%;
-    width: 40%;
+    width: 30%;
+    padding: 1%;
     
     font-size: 5%;
 
@@ -137,141 +145,139 @@ const Data = styled.div`
     flex-direction: column;
     align-items: center;
 
-    border: 1px solid black;
+    background-color: #760D27;
+    color: white;
+    border-radius: 10px;
 `
 
 const Container = styled.div`
-    height: 95vh;
-    width: 95vw;
+    height: auto;
+    width: 100%;
 
     margin: 0;
     padding: 0;
     
-    position: relative;
-    bottom: 0;
-
-    border: 1px solid black;
+    position: absolute;
+    top: 0;
+    left: 0;
+    
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    align-items: center;
+    background-color: ${(props) => props.theme.colors.mainBlack};
 `
 
 const DataContainer = styled.div`
-    width: 95vw;
+    width: 95%;
+    margin-top: 3%;
 
     display: flex;
     justify-content: space-between;
-
-    position: absolute;
-    top: 35%;
-    right: 0;
-
-    z-index: 1;
-    
-    border: 1px solid black;
 `
 
 const DescriptionContainer = styled.div`
     width: 50%;
-    height: 10%;
-    border: 1px solid black;
+    height: auto;
     font-size: 5%;
-
-    position: absolute;
-    top: 0%;
-    right: 25%;
+    background-color: #760D27;
+    color: white;
+    margin-top: 5%;
+    padding: 1%;
 
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
 
+    border-radius: 10px;
+    z-index: 1;
 `
 
 const FlagContainer = styled.div`
-    width: 95vw;
+    width: 95%;
     height: 20%;
+    background-color: #760D27;
+    margin-top: 3%;
 
     display: flex;
     justify-content: space-between;
     align-items: center;
 
-    position: absolute;
-    top: 11%;
-    right: 0;
-
-    border: 1px solid black;
+    border-radius: 10px;
 `
 
 const Flag = styled.img`
     width: 30%;
     height: 50%;
 
-    border: 1px solid black;
 `
 
 const Predict = styled.div`
     width: 30%;
     height: 50%;
 
-    border: 1px solid black;    
-`
-
-const Group = styled.div`
-    width: 30%;
-    height: 20%;
-
     display: flex;
+    flex-direction: column;
     justify-content: center;
     align-items: center;
 
-    position: absolute;
-    top: 25%;
-    left: 35%;
+    color: white;
+`
 
-    border: 1px solid black;    
+const Group = styled.div`
+    width: 100%;
+    height: 20%;
+
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center; 
 `
 
 const PredictBtn = styled.button`
-    width: 30%;
+    width: 5em;
     height: 25%;
     margin: 0;
     padding: 0;
-
-    position: absolute;
-    top: 50%;
-    left: 35%;
-
-    border: 1px solid black;
+    background-color: #914154;
+    color: white;
+    
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    
+    border: 2px solid white;
+    border-radius: 10px;
+    p {
+        height: auto;
+        width: auto;
+        margin: 0;
+        padding: 1%;
+    }
 `
 
 const TableContainer = styled.div`
-    width: 95vw;
-    height: 30vh;
+    width: 95%;
+    height: auto;
+    margin-top: 3%;
 
     display: flex;
     justify-content: space-between;
     align-items: center;
 
-    position: absolute;
-    bottom: 25%;
-    right: 0;
-
-    border: 1px solid black;
 `
 
 const ChartContainer = styled.div`
-    width: 95vw;
-    height: 70vw;
-    margin-top: 75vh;
-    margin-bottom: 0;
+    width: 95%;
+    height: auto;
 
-    /* display: flex;
-    justify-content: space-between;
-    align-items: center; */
+    margin-top: 3%;
+    margin-bottom: 40%;
+    background-color: white;
 
-    /* position: absolute;
-    bottom: 15%;
-    right: 0; */
-
-    border: 1px solid black;
+    display: flex;
+    align-items: center;
 `
 
 const StyledLink = styled(Link)`

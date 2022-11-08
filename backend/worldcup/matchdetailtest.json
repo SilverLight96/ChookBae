@@ -1,0 +1,344 @@
+{
+  "gmtUpdated": 1660291866,
+  "match": {
+    "matchID": "37638",
+    "matchdayID": "4102",
+    "matchStatus": {
+      "statusID": "1"
+    },
+    "extraTime": {
+      "is_extra": "0",
+      "home_score": "0",
+      "away_score": "0"
+    },
+    "matchDate": "2022-11-21",
+    "matchTime": "13:00",
+    "matchVenue": {
+      "venueID": "1166",
+      "venueName": "Khalifa International Stadium"
+    },
+    "homeParticipant": {
+      "participantID": "381",
+      "score": "3",
+      "participantName": "England",
+      "logo": "https://api.statorium.com/media/bearleague/bl1577372003565.png",
+      "squad": {
+        "lineup": [
+          {
+            "playerID":"29",
+            "additionalInfo":{
+               "birthdate":"",
+               "height":"",
+               "weight":"",
+               "position":"1"
+            }
+          },
+          {
+            "playerID":"31",
+            "additionalInfo":{
+               "birthdate":"",
+               "height":"",
+               "weight":"",
+               "position":"2"
+            }
+          },
+          {
+            "playerID":"33",
+            "additionalInfo":{
+               "birthdate":"",
+               "height":"",
+               "weight":"",
+               "position":"2"
+            }
+          },
+          {
+            "playerID":"37",
+            "additionalInfo":{
+               "birthdate":"",
+               "height":"",
+               "weight":"",
+               "position":"2"
+            }
+          },
+          {
+            "playerID":"34",
+            "additionalInfo":{
+               "birthdate":"",
+               "height":"",
+               "weight":"",
+               "position":"2"
+            }
+          },
+          {
+            "playerID":"39",
+            "additionalInfo":{
+               "birthdate":"",
+               "height":"",
+               "weight":"",
+               "position":"3"
+            }
+          },
+          {
+            "playerID":"40",
+            "additionalInfo":{
+               "birthdate":"",
+               "height":"",
+               "weight":"",
+               "position":"3"
+            }
+          },
+          {
+            "playerID":"45",
+            "additionalInfo":{
+               "birthdate":"",
+               "height":"",
+               "weight":"",
+               "position":"3"
+            }
+          },
+          {
+            "playerID":"48",
+            "additionalInfo":{
+               "birthdate":"",
+               "height":"",
+               "weight":"",
+               "position":"4"
+            }
+          },
+          {
+            "playerID":"46",
+            "additionalInfo":{
+               "birthdate":"",
+               "height":"",
+               "weight":"",
+               "position":"4"
+            }
+          },
+          {
+            "playerID":"43",
+            "additionalInfo":{
+               "birthdate":"",
+               "height":"",
+               "weight":"",
+               "position":"4"
+            }
+          }
+        ],
+        "bench": [
+          {
+            "playerID":"50",
+            "additionalInfo":{
+               "birthdate":"",
+               "height":"",
+               "weight":"",
+               "position":"1"
+            }
+          },
+          {
+            "playerID":"32",
+            "additionalInfo":{
+               "birthdate":"",
+               "height":"",
+               "weight":"",
+               "position":"2"
+            }
+          },
+          {
+            "playerID":"49",
+            "additionalInfo":{
+               "birthdate":"",
+               "height":"",
+               "weight":"",
+               "position":"3"
+            }
+          },
+          {
+            "playerID":"51",
+            "additionalInfo":{
+               "birthdate":"",
+               "height":"",
+               "weight":"",
+               "position":"3"
+            }
+          },
+          {
+            "playerID":"47",
+            "additionalInfo":{
+               "birthdate":"",
+               "height":"",
+               "weight":"",
+               "position":"4"
+            }
+          }          
+        ],
+        "subs": [
+          {
+            "playerIN":"47",
+            "playerOUT":"43",
+            "minute":"75"
+         },
+         {
+            "playerIN":"51",
+            "playerOUT":"39",
+            "minute":"80"
+         },
+         {
+            "playerIN":"32",
+            "playerOUT":"34",
+            "minute":"88"
+         }
+        ]
+      },
+      "events": [
+        {
+          "rowId":"1037472",
+          "eventId":"1",
+          "eventName":"Goal",
+          "playerID":"48",
+          "minute":"3",
+          "stageID":"0",
+          "assist":[
+             {
+                "rowId":"1037473",
+                "eventId":"2",
+                "eventName":"Assist",
+                "playerID":"46",
+                "minute":"3"
+             }
+          ]
+       },
+       {
+          "rowId":"1037474",
+          "eventId":"1",
+          "eventName":"Goal",
+          "playerID":"48",
+          "minute":"15",
+          "stageID":"0",
+          "assist":[
+             {
+                "rowId":"1037475",
+                "eventId":"2",
+                "eventName":"Assist",
+                "playerID":"46",
+                "minute":"15"
+             }
+          ]
+       },
+       {
+          "rowId":"1037478",
+          "eventId":"5",
+          "eventName":"Yellow card",
+          "playerID":"31",
+          "minute":"53",
+          "stageID":"0"
+       },
+       {
+          "rowId":"1037479",
+          "eventId":"5",
+          "eventName":"Yellow card",
+          "playerID":"29",
+          "minute":"65",
+          "stageID":"0"
+       },
+       {
+          "rowId":"1037480",
+          "eventId":"1",
+          "eventName":"Goal",
+          "playerID":"47",
+          "minute":"89",
+          "stageID":"0",
+          "assist":[
+             {
+                "rowId":"1037481",
+                "eventId":"2",
+                "eventName":"Assist",
+                "playerID":"48",
+                "minute":"89"
+             }
+          ]
+       }
+      ],
+      "teamStats": [
+        {
+          "rowId":"1037510",
+          "teamStatID":"11",
+          "teamStatName":"Possession",
+          "count":"58"
+       },
+       {
+          "rowId":"1037512",
+          "teamStatID":"9",
+          "teamStatName":"Total shots",
+          "count":"7"
+       },
+       {
+          "rowId":"1037514",
+          "teamStatID":"16",
+          "teamStatName":"Shots on target",
+          "count":"6"
+       },
+       {
+          "rowId":"1037516",
+          "teamStatID":"12",
+          "teamStatName":"Corners",
+          "count":"4"
+       },
+       {
+          "rowId":"1037519",
+          "teamStatID":"10",
+          "teamStatName":"Fouls",
+          "count":"7"
+       }
+      ]
+    },
+    "awayParticipant": {
+      "participantID": "1227",
+      "score": "1",
+      "participantName": "Iran",
+      "logo": "https://api.statorium.com/media/bearleague/bl1643370435894.png",
+      "squad": {
+        "lineup": [
+          
+        ],
+        "bench": [
+          
+        ],
+        "subs": [
+          
+        ]
+      },
+      "events": [
+        
+      ],
+      "teamStats": [
+        
+      ]
+    },
+    "matchDuration": "90",
+    "matchTicker": "",
+    "group": {
+      "groupID": "164",
+      "groupName": "Group B"
+    },
+    "additionalInfo": {
+      "attendance": "",
+      "referee": null,
+      "referee_assitant": null,
+      "fourth_official": null
+    }
+  },
+  "stages": [
+    {
+      "stageID": "3",
+      "stageName": "Extra time",
+      "home_score": null,
+      "away_score": null
+    },
+    {
+      "stageID": "4",
+      "stageName": "Penalty Shootout",
+      "home_score": null,
+      "away_score": null
+    }
+  ]
+}

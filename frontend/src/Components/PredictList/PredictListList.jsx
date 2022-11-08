@@ -1,7 +1,7 @@
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import axios from "axios"
-import { Route, Link, useLocation, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 export default function PredictListList (props) {
     const navigate = useNavigate()
@@ -56,13 +56,16 @@ export default function PredictListList (props) {
 const Container = styled.div`
     width: 90vw;
     height: auto;
+    margin-top: 3%;
 
     display: flex;
     flex-direction: column;
     justify-content: space-between;
     align-items: center;
 
-    border: 2px solid black;
+    background-color: ${(props) => props.theme.colors.mainRed};
+
+    border-radius: 10px;
 `
 
 const PredictionCard = styled.div`
@@ -73,15 +76,11 @@ const PredictionCard = styled.div`
     flex-direction: row;
     justify-content: space-between;
     align-items: center;
-
-    border: 1px solid black;
 `
 
 const Flag = styled.img`
     width: 25%;
     height: 90%;
-
-    border: 1px solid black;
 
 `
 
@@ -94,7 +93,6 @@ const DataContainer = styled.div`
     align-items: center;
     justify-content: center;
 
-    border: 1px solid black;
 `
 
 const StyledBtn = styled.button`
@@ -102,7 +100,20 @@ const StyledBtn = styled.button`
     height: 20%;
     font-size: 5%;
     text-align: center;
-    line-height: 20%;
 
-    border: 1px solid black;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    background-color: #914154;
+    border: 2px solid white;
+    border-radius: 10px;
+    p {
+        height: auto;
+        width: auto;
+        margin: 0;
+        padding: 1%;
+        color: white;
+    }
 `
+

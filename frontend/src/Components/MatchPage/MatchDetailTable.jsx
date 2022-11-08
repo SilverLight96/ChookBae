@@ -1,12 +1,10 @@
-import React, { useRef, useState, useMemo } from "react";
+import React from "react";
 import styled from "styled-components";
-import { Route, Link, useLocation } from 'react-router-dom';
 
 const MatchDeatilTable = (props) => {
     const propData = Object.values(props.data)
     console.log(propData)
     return (
-        <>
         <StyledTable>
             <tbody>
                 <StyledTr>
@@ -33,7 +31,6 @@ const MatchDeatilTable = (props) => {
                 })}
             </tbody>
         </StyledTable>
-        </>
     )
 }
 
@@ -42,6 +39,9 @@ export default MatchDeatilTable
 const StyledTable = styled.table`
     height: 20%;
     width: 100%;
+
+    background-color: #760D27;
+    border-radius: 10px;
     /* border: 1px solid black; */
 `
 
@@ -51,5 +51,5 @@ const StyledTr = styled.tr`
 
 const StyledTh = styled.th`
     font-size: 5%;
-    border: 1px solid black;
+    color: white;
 `
