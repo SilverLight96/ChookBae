@@ -10,9 +10,11 @@ import { useRecoilState } from "recoil";
 import { myInformation } from "../atoms";
 import axios from "axios";
 import { getCookie } from "../utils/functions/cookies";
+import { useNavigate } from "react-router-dom";
 
 export default function AccountPage() {
   const profileInfo = useRecoilState(myInformation);
+  const navigate = useNavigate();
   const [userInfo, setUserInfo] = useState({
     new_nickname: profileInfo[0].nickname,
     new_password: "",
@@ -34,6 +36,10 @@ export default function AccountPage() {
     },
     mode: "onChange",
   });
+  const getToken = () => {
+    const accessToken = getCookie("token");
+    return accessToken;
+  };
 
   const selectFile = async (e) => {
     const uploadFile = e.target.files[0];
@@ -41,10 +47,6 @@ export default function AccountPage() {
 
     formData.append("profile_image", uploadFile);
     console.log(uploadFile);
-    const getToken = () => {
-      const accessToken = getCookie("token");
-      return accessToken;
-    };
 
     await axios({
       method: "post",
@@ -77,8 +79,17 @@ export default function AccountPage() {
   }, [userInfo]);
 
   const updateuser = async () => {
-    return await fetchData.patch(userApis.UPDATE_USER, userInfo);
-    // console.log(userInfo);
+    return await fetchData
+      .patch(userApis.UPDATE_USER, userInfo, {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `${getToken()}`,
+        },
+      })
+      .then((res) => {
+        navigate("/profile");
+        console.log(res);
+      });
   };
   console.log(userInfo);
 
