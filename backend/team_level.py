@@ -13,7 +13,8 @@ django.setup()
 from worldcup.models import *  # django.setup() 이후에 임포트해야 오류가 나지 않음
 
 
-############### 팀 정보 추출 ###############
+############### 프로팀 정보 추출 ###############
+''' 선수 시세에 다양성을 부여하기 위해 리그 및 순위별 가중치를 부여하기 위한 프로팀 데이터 추출'''
 # URL 및 요청변수 설정
 BASE_URL = 'https://api.statorium.com/api/v1/'
 path = 'teams/'
