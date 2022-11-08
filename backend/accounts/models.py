@@ -20,7 +20,8 @@ class User(AbstractBaseUser):
     #     blank=True,
     #     default='user/default.png'
     # )
-    profile_image = models.FileField(upload_to=profile_image_path, null=True, blank=True)
+    # profile_image = models.FileField(upload_to=profile_image_path, null=True, blank=True)
+    profile_image = models.TextField(null=True, blank=True)
     email = models.EmailField(max_length=50, null=False)
     is_active = models.BooleanField(default=False)
     USERNAME_FIELD = 'email'
