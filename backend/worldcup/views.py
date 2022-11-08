@@ -316,11 +316,16 @@ class combine(APIView):
         try:
             first=PlayerCard.objects.filter(Q(player_id=card1) & Q(user_id=user_id)).order_by('?').first()
             second=PlayerCard.objects.filter(Q(player_id=card1) & Q(user_id=user_id) & ~Q(id=first.id)).order_by('?').first()
+            if second is None :
+                raise Exception
+            team=-1
         except:
             return ('보유하고 있지 않은 선수카드입니다.')
-        team=-1
+        
             
         
+
+
         if(first.player_id.team_id == second.player_id.team_id):
             team=first.player_id.team_id.id
         
