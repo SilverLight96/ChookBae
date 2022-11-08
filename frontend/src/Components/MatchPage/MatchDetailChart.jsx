@@ -1,9 +1,8 @@
 import { Chart as ChartJS, CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend,
   } from 'chart.js';
   import { Bar } from 'react-chartjs-2';
-import React, { useRef, useState, useMemo } from "react";
+import React from "react";
 import styled from "styled-components";
-import { Route, Link, useLocation } from 'react-router-dom';
 
 ChartJS.register(
     CategoryScale,
