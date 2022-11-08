@@ -44,7 +44,12 @@ function MixPage() {
 
   const getPlayerList = async (url) => {
     const response = await fetchData
-      .get(`https://k7a202.p.ssafy.io/v1/card/${country}`)
+      .get(`https://k7a202.p.ssafy.io/v1/card/${country}`, {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `${getCookie("token")}`,
+        },
+      })
       .then((res) => {
         console.log(res.data);
         setPlayerList(res.data);
