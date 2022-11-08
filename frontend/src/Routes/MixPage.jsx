@@ -5,7 +5,7 @@ import { Keyframes } from "styled-components";
 import MixModal from "../Components/Mix/MixModal";
 import { fetchData } from "../utils/apis/api";
 import { getCookie } from "../utils/functions/cookies";
-// import GachaCard from "../Components/Gacha/GachaCard";
+import PlayerCard from "../Components/common/PlayerCard";
 
 function MixPage() {
   const country = 0;
@@ -98,6 +98,7 @@ function MixPage() {
         .then((res) => {
           console.log(res.data);
           setCombinedCard(res.data);
+          setMixSelect(3);
         });
     };
     cardCombine();
@@ -139,10 +140,17 @@ function MixPage() {
               {playerList.map((players) => {
                 return (
                   <MixCard onClick={addCardLeft} key={players.id}>
-                    <title>{players.value}</title>
-                    <title>{players.fullname}</title>
+                    <div>{players.value}</div>
+                    <h1>{players.fullname}</h1>
                     <img src={players.player_image} alt="" id={players.id} />
                   </MixCard>
+                  // <PlayerCard
+                  //   onClick={addCardLeft}
+                  //   title={players.fullname}
+                  //   image={players.player_image}
+                  //   key={players.player_image}
+                  //   value={players.value}
+                  // />
                 );
               })}
             </CardList>
@@ -155,13 +163,26 @@ function MixPage() {
               {playerList.map((players) => {
                 return (
                   <MixCard onClick={addCardRight} key={players.id}>
-                    <title>{players.value}</title>
-                    <title>{players.fullname}</title>
+                    <div>{players.value}</div>
+                    <h1>{players.fullname}</h1>
                     <img src={players.player_image} alt="" id={players.id} />
                   </MixCard>
                 );
               })}
             </CardList>
+          </ModalBody>
+        ) : null}
+        {mixSelect === 3 ? (
+          <ModalBody>
+            <CombinedCard>
+              <PlayerCard
+                onClick={addCardLeft}
+                title={combinedCard.fullname}
+                image={combinedCard.player_image}
+                key={combinedCard.player_image}
+                value={combinedCard.value}
+              />
+            </CombinedCard>
           </ModalBody>
         ) : null}
       </MixModal>
@@ -455,11 +476,26 @@ const MixText = styled.p`
 `;
 
 const MixCard = styled.div`
+  position: relative;
   border-radius: 10px;
   border: 1px solid ${(props) => props.theme.colors.white};
   > img {
     width: 100%;
     height: 100%;
+  }
+  > h1 {
+    position: absolute;
+    color: white;
+    left: 5%;
+    top: 10%;
+    font-size: 18px;
+    margin: 0px;
+  }
+  > div {
+    position: absolute;
+    color: white;
+    right: 5%;
+    bottom: 10%;
   }
 `;
 
@@ -474,4 +510,10 @@ const CardList = styled.div`
   grid-template-columns: repeat(3, 1fr);
   overflow-y: auto;
   scroll-behavior: smooth;
+`;
+
+const CombinedCard = styled.div`
+  width: 100%;
+  height: 80vh;
+  margin: auto;
 `;
