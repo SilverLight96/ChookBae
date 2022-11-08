@@ -117,7 +117,7 @@ class predicdetail(APIView):
         user_id=pay['id']
         user=User.objects.get(id=user_id)
         point=user.points
-        
+
         try:
             bet=Bet.objects.get(id=id)
         except:
@@ -270,12 +270,12 @@ class card(APIView):
             return Response(gacha,status=status.HTTP_200_OK)
 
     @swagger_auto_schema(operation_id="유저의 보유하고 있는 카드 확인", operation_description="해당 유저가 보유하고 있는 모든 카드의 정보를 가져온다.")
-    def get(self, request):
+    def get(self, request, id):
         c_list=[]
-        hashmap = {} 
-        country = request.GET.get('country', None)
-        if country is not None:
-            team=Team.objects.get(country=country)
+        hashmap = {}
+        country = id
+        if (country>0):
+            team=Team.objects.get(id=country)
         
         token=request.META.get('HTTP_AUTHORIZATION')
         pay=jwt.decode(token,SECRET_KEY, algorithms=['HS256'])
@@ -292,11 +292,11 @@ class card(APIView):
 
         for i in hashmap.keys():
             C=Player.objects.get(id=i)
-            if country is not None:
+            if (country>0):
                 if(C.team_id != team):
                     continue
             player_name=player_k(C.id)
-            c_list.append({'player_image' : C.player_image, 'fullname' : player_name, 'value' : C.value, 'count' : hashmap.get(i) })
+            c_list.append({'id' : C.id, 'player_image' : C.player_image, 'fullname' : player_name, 'value' : C.value, 'count' : hashmap.get(i) })
 
         c_list.sort(key=lambda x: x["fullname"])    
         return Response(c_list)       
@@ -313,13 +313,19 @@ class combine(APIView):
     @transaction.atomic()
     def get_object(self, user_id, card1, card2):  
         user=User.objects.get(id=user_id)
-        first=PlayerCard.objects.get(id=card1)
-        second=PlayerCard.objects.get(id=card2)
-        team=-1
-
-        if(user_id != first.user_id.id or user_id != second.user_id.id):
+        try:
+            first=PlayerCard.objects.filter(Q(player_id=card1) & Q(user_id=user_id)).order_by('?').first()
+            second=PlayerCard.objects.filter(Q(player_id=card1) & Q(user_id=user_id) & ~Q(id=first.id)).order_by('?').first()
+            if second is None :
+                raise Exception
+            team=-1
+        except:
             return ('보유하고 있지 않은 선수카드입니다.')
         
+            
+        
+
+
         if(first.player_id.team_id == second.player_id.team_id):
             team=first.player_id.team_id.id
         
@@ -522,6 +528,49 @@ class TeamInfo(APIView):
             team_info.append([fullnameKR, p.fullname, position, p.number])
         
         return Response(team_info)
+
+
+# 선수 실제 랭킹 조회 GET
+class PlayerRanking(APIView):
+    @swagger_auto_schema(operation_id="선수 랭킹 조회", operation_description="url을 통해 선수 랭킹 조회", responses={200: '조회 성공'})
+    def get(self, request):
+        goal = Player.objects.all().order_by('-goal', '-assist', '-run_time')[:10]
+        assist = Player.objects.all().order_by('-assist', '-goal', '-run_time')[:10]
+        yellow = Player.objects.all().order_by('-yellow_card', '-red_card')[:10]
+        red = Player.objects.all().order_by('-red_card', '-yellow_card')[:10]
+        run_time = Player.objects.all().order_by('-run_time', '-goal', '-assist')[:10]
+
+        goal_rank, assist_rank, yellow_rank, red_rank, run_time_rank = ["goal"], ["assist"], ["yellow"], ["red"], ["run_time"]
+
+        for g in goal:
+            goal_rank.append(g.id)
+        for a in assist:
+            assist_rank.append(a.id)
+        for y in yellow:
+            yellow_rank.append(y.id)
+        for r in red:
+            red_rank.append(r.id)
+        for rt in run_time:
+            run_time_rank.append(rt.id)
+
+        player_ranking = [goal_rank, assist_rank, yellow_rank, red_rank, run_time_rank]
+        
+        return Response(player_ranking)
+
+
+# 선수 정보 조회 GET
+class PlayerInfo(APIView):
+    player = openapi.Parameter('id', openapi.IN_PATH, description='player id', required=True, type=openapi.TYPE_NUMBER)
+    @swagger_auto_schema(operation_id="선수 정보 조회", operation_description="선수 고유번호로 정보 조회", manual_parameters=[id], responses={200: '조회 성공'})
+    def get(self, request, id):
+        player = Player.objects.get(id=id)
+        fullnameKR = player_k(player.id)
+        position = player_pos(player.position)
+        country = team_k(player.team_id.id)[0]
+        player_info = [player.id, fullnameKR, player.player_image, country, position, player.number, player.current_team,
+                        player.birthday, player.weight, player.height, player.goal, player.assist, player.yellow_card, player.red_card, player.run_time, player.value]
+
+        return Response(player_info)
 
 
 # 선수 시세 변동 알고리즘 및 자동 반영      >> 하루 1회 업데이트 @ 오후 12시

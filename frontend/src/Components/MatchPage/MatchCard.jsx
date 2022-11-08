@@ -1,6 +1,6 @@
-import React, { useRef, useState, useMemo } from "react";
+import React from "react";
 import styled from "styled-components";
-import { Route, Link, useLocation, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import axios from 'axios'
 
 function MatchData(props) {
