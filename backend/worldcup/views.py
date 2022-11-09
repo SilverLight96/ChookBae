@@ -8,7 +8,7 @@ import datetime
 import operator
 from django.db import transaction
 from django.shortcuts import render
-from django.db.models import Q
+from django.db.models import Q,Subquery
 from rest_framework import status
 from rest_framework.response import Response
 from .Serializers import UserrankSerializer,matchidSerializer
@@ -224,29 +224,37 @@ class teamlist(APIView):
 
 #선수 뽑기 POST
 class card(APIView):
-    param = openapi.Schema(type=openapi.TYPE_OBJECT, required=['team_id', 'gacha_count', 'point'],
+    param = openapi.Schema(type=openapi.TYPE_OBJECT, required=['group_id', 'gacha_count', 'point'],
     properties={
-        'team_id': openapi.Schema(type=openapi.TYPE_NUMBER, description="국가 번호"),
+        'group_id': openapi.Schema(type=openapi.TYPE_STRING, description="그룹"),
         'gacha_count': openapi.Schema(type=openapi.TYPE_NUMBER, description="가챠 횟수"),
         'point': openapi.Schema(type=openapi.TYPE_NUMBER, description="소모 포인트"),
         })
 
     @transaction.atomic()
-    def get_object(self, user_id, team_id,gacha_count,point):
+    def get_object(self, user_id, group_id, gacha_count, point):
         point=int(point)
         gacha_count=int(gacha_count)
-        team_id=int(team_id)
+       
         c_list=[]
         user=User.objects.get(id=user_id)
 
         if(user.points<point):
             return ('보유하고 있는 포인트를 확인해 주세요.')
-
+        
         for i in range(gacha_count):
-            if(team_id > 0):
-                card=Player.objects.filter(team_id=team_id).order_by('?').first()
-            else :
-                card=Player.objects.order_by('?').first()   
+            try:
+                if(group_id == "상관없음"):
+                    card=Player.objects.order_by('?').first()
+                else :
+                    team=Team.objects.filter(group=group_id).order_by('?').first()
+                    card=Player.objects.filter(team_id=team.id).order_by('?').first()   
+                    if card is None:
+                        raise Exception
+            except:
+                return ('그룹 선택을 다시 확인해주세요.')
+
+
 
             find=PlayerCard.objects.filter(Q(player_id=card.id) & Q(user_id=user_id)).count()
             if(find==0):
@@ -268,9 +276,9 @@ class card(APIView):
         token=request.META.get('HTTP_AUTHORIZATION')
         pay=jwt.decode(token,SECRET_KEY, algorithms=['HS256'])
         user_id=pay['id']
-        gacha=self.get_object(user_id,request.data['team_id'],request.data['gacha_count'],request.data['point'])
+        gacha=self.get_object(user_id,request.data['group_id'],request.data['gacha_count'],request.data['point'])
 
-        if(gacha=='보유하고 있는 포인트를 확인해 주세요.'):
+        if(gacha=='보유하고 있는 포인트를 확인해 주세요.' or gacha=='그룹 선택을 다시 확인해주세요.'):
             return Response({'error' :gacha},status=status.HTTP_400_BAD_REQUEST)
         else:
             return Response(gacha,status=status.HTTP_200_OK)
