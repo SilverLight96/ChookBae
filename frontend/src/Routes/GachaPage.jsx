@@ -9,8 +9,22 @@ import { gachaApis } from "../utils/apis/userApis";
 import { getCookie } from "../utils/functions/cookies";
 
 function GachaPage() {
+  const GroupName = [
+    {
+      group: "A",
+    },
+    {
+      group: "B",
+    },
+    {
+      group: "C",
+    },
+    {
+      group: "D",
+    },
+  ];
   const [isGacha, setIsGacha] = useState({
-    team_id: 0,
+    group_id: "",
     gacha_count: 0,
     point: 0,
   });
@@ -19,27 +33,36 @@ function GachaPage() {
 
   const [isModal, setIsModal] = useState(false);
 
+  const onGroupSelect = (e) => {
+    console.log(e);
+    setIsGacha((prev) => ({
+      ...prev,
+      group_id: `${e.target.id}`,
+    }));
+  };
+
   const oneGacha = () => {
-    setIsGacha({
-      team_id: 0,
+    setIsGacha((prev) => ({
+      ...prev,
       gacha_count: 1,
       point: 0,
-    });
+    }));
   };
 
   const tenGacha = () => {
-    setIsGacha({
-      team_id: 0,
+    setIsGacha((prev) => ({
+      ...prev,
       gacha_count: 10,
       point: 0,
-    });
+    }));
   };
 
   useEffect(() => {
     if (isGacha.gacha_count !== 0) getGacha();
   }, [isGacha]);
 
-  // console.log(isGacha);
+  console.log(isGacha);
+  console.log(GroupName);
 
   const getGacha = async () => {
     const response = await fetchData
@@ -91,6 +114,13 @@ function GachaPage() {
           <GachaCardListContainer></GachaCardListContainer>
         </GachaCardContainer>
 
+        {GroupName.map((groups) => {
+          return (
+            <GroupButton onClick={onGroupSelect} id={groups.group}>
+              {groups.group}조
+            </GroupButton>
+          );
+        })}
         <GachaButtonContainer>
           <button onClick={oneGacha}>1회 뽑기</button>
           <button onClick={tenGacha}>10회 뽑기</button>
@@ -372,3 +402,5 @@ const GachaOneList = styled.div`
   height: 80vh;
   margin: auto;
 `;
+
+const GroupButton = styled.button``;
