@@ -623,11 +623,12 @@ def matchUpdate():
         if m['matchStatus']['value'] == "-1":       # -1 = 진행중인 경기
             # Match 테이블에 실시간 스코어 업데이트
             match = Match.objects.get(id=m['matchID'])
+            match.match_status = 1          # 매치 상태도 -1로 (진행중인 경기) 수정
             match.team1_score = t1_score
             match.team2_score = t2_score
             match.save()
 
-        elif ((m['matchStatus']['value'] == "1") and [int(m['matchID']), 0] in match_list):     # 1 = 종료된 경기
+        elif ((m['matchStatus']['value'] == "1") and [int(m['matchID']), -1] in match_list):     # 1 = 종료된 경기
             pending_result.append(int(m['matchID'])) # 우선 경기 상세 정보는 아직 미제공이라고 간주하고 pending_result 리스트에 누적 (다음 for문에서 처리 예정)
 
             t1_id = int(m['homeParticipant']['participantID'])
