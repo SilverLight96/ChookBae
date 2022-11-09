@@ -603,6 +603,7 @@ def playerValueUpdate():
         player.value = (init_value * (1 + goal * 0.3) * (1 + assist * 0.1) * (1 - yellow * 0.05) * (1 - red * 0.2) * (1 + runtime * 0.002)
                         + (3000 * win) + (1000 * draw) - (500 * loss) + (100 * goal_diff))
         player.save()
+    
 
 
 # 경기 정보 자동 업데이트       >> KST 18시 ~ 익일 7시 동안 1분 주기로 자동 업데이트 (12시간 x 60회 = 720회 갱신)
@@ -769,3 +770,18 @@ def matchUpdate():
                 player.yellow_card += yellow
                 player.red_card += red
                 player.save()
+
+
+
+@transaction.atomic()
+def uservalue():
+    user=User.objects.all()
+
+    for i in user:
+        card=PlayerCard.objects.filter(Q(user_id=i.id)).distinct().values('player_id').distinct()
+        num=0
+        for c in card:
+            player=Player.objects.get(id=c.get('player_id'))
+            num+=player.value
+        i.value=num
+        i.save()
