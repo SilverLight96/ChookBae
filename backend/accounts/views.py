@@ -241,6 +241,7 @@ def mypage(request):
     try:
         C_list=[]
         M_list=[]
+        P_list=[]
         hashmap = {}
 
         payload = jwt.decode(token_receive, SECRET_KEY, algorithms=['HS256'])
@@ -267,16 +268,20 @@ def mypage(request):
             match=Match.objects.get(id=i.match_id.id)
             team_name1 = team_k(match.team1_id.id)[0]
             team_name2 = team_k(match.team2_id.id)[0]
-            M_list.append({'team1': team_name1, 'team2' : team_name2, 'bet_time' : i.bet_time, 'result': i.result})
+
+            M_list.append({'team1': team_name1, 'team2' : team_name2, 'bet_time' : i.bet_time.date(), 'result': i.result})
 
         #유저의 포인트 사용 내역 전부 가져오기 values()로 가져오면 딕셔너리 형태로 가져옴 튜플은 values_list()
-        point_list = Point.objects.filter(user_id=user.id).values()
+        point_list = Point.objects.filter(user_id=user.id)
+        for i in point_list:
+            P_list.append({'point': i.point, 'info': i.info, 'time': i.time.strftime("%Y-%m-%d %H:%M")})
+
         profile = user.profile_image
         # profile = profile.__getstate__()['name'] #filefield에서 url을 가져오는 방법
         #https://docs.djangoproject.com/en/2.2/_modules/django/db/models/fields/files/
 
         return Response({'predict_match':M_list,'nickname':user.nickname,'point':user.points \
-        ,'card_list':C_list,'profile':profile,'point_list':point_list},status=status.HTTP_200_OK)
+        ,'card_list':C_list,'profile':profile,'point_list':P_list},status=status.HTTP_200_OK)
     except jwt.ExpiredSignatureError:
         return Response({'error': ''}, status=status.HTTP_400_BAD_REQUEST)
     

@@ -44,7 +44,12 @@ function MixPage() {
 
   const getPlayerList = async (url) => {
     const response = await fetchData
-      .get(`https://k7a202.p.ssafy.io/v1/card/${country}`)
+      .get(`https://k7a202.p.ssafy.io/v1/card/${country}`, {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `${getCookie("token")}`,
+        },
+      })
       .then((res) => {
         console.log(res.data);
         setPlayerList(res.data);
@@ -193,7 +198,7 @@ function MixPage() {
 export default MixPage;
 
 const Wrapper = styled.div`
-  max-width: 860px;
+  max-width: 600px;
   margin: auto;
 `;
 
@@ -505,6 +510,7 @@ const ModalBody = styled.div`
 
 const CardList = styled.div`
   width: 100%;
+  max-width: 600px;
   height: 70vh;
   display: grid;
   grid-template-columns: repeat(3, 1fr);
@@ -514,6 +520,7 @@ const CardList = styled.div`
 
 const CombinedCard = styled.div`
   width: 100%;
+  max-width: 400px;
   height: 80vh;
   margin: auto;
 `;
