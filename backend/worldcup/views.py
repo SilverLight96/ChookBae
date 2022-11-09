@@ -196,13 +196,19 @@ def predictcalc():
             result=2
             dang=total/bet.lose
 
-        predictinfo=Prediction.objects.filter(match_id=match.id,predict=result)
+        predictinfo=Prediction.objects.filter(match_id=match.id,result=-1)
 
         for pre in predictinfo:
-            user=User.objects.get(id=pre.user_id.id)
-            user.points+=(dang*pre.user_point)
-            user.save()
-            po=Point.objects.create(user_id=user,point=dang*pre.user_point,info='경기 예측 성공')
+            if(pre.predict==result):
+                user=User.objects.get(id=pre.user_id.id)
+                user.points+=(dang*pre.user_point)
+                user.save()
+                po=Point.objects.create(user_id=user,point=dang*pre.user_point,info='경기 예측 성공')
+                pre.result=1
+                pre.save()
+            else:
+                pre.result=0
+                pre.save()
 
 class teamlist(APIView):
     @swagger_auto_schema(operation_id="전체 팀의 간단한 정보를 가져온다.", operation_description="유저가 국가를 선택하여 뽑기를 희망하는 경우 국가에 대한 간략한 정보를 보여준다")
@@ -617,11 +623,12 @@ def matchUpdate():
         if m['matchStatus']['value'] == "-1":       # -1 = 진행중인 경기
             # Match 테이블에 실시간 스코어 업데이트
             match = Match.objects.get(id=m['matchID'])
+            match.match_status = 1          # 매치 상태도 -1로 (진행중인 경기) 수정
             match.team1_score = t1_score
             match.team2_score = t2_score
             match.save()
 
-        elif ((m['matchStatus']['value'] == "1") and [int(m['matchID']), 0] in match_list):     # 1 = 종료된 경기
+        elif ((m['matchStatus']['value'] == "1") and [int(m['matchID']), -1] in match_list):     # 1 = 종료된 경기
             pending_result.append(int(m['matchID'])) # 우선 경기 상세 정보는 아직 미제공이라고 간주하고 pending_result 리스트에 누적 (다음 for문에서 처리 예정)
 
             t1_id = int(m['homeParticipant']['participantID'])

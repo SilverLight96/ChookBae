@@ -1,6 +1,5 @@
-import React, { useRef, useState, useMemo } from "react";
-import styled from "styled-components";
-import { Route, Link, useLocation } from 'react-router-dom';
+import React from "react";
+import { useLocation } from 'react-router-dom';
 
 function MatchCountryDetail() {
     const location = useLocation()

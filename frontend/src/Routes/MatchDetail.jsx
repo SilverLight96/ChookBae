@@ -1,6 +1,6 @@
-import React, { useRef, useState, useMemo } from "react";
+import React from "react";
 import styled from "styled-components";
-import { Route, Link, useLocation, useNavigate } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import MatchDeatilTable from '../Components/MatchPage/MatchDetailTable'
 import MatchDetailChart from '../Components/MatchPage/MatchDetailChart'
 // useNavigate Link 로 바꾸기
@@ -165,7 +165,8 @@ const Container = styled.div`
     flex-direction: column;
     justify-content: space-around;
     align-items: center;
-    background-color: ${(props) => props.theme.colors.mainBlack}`
+    background-color: ${(props) => props.theme.colors.mainBlack};
+`
 
 const DataContainer = styled.div`
     width: 95%;
@@ -272,7 +273,7 @@ const ChartContainer = styled.div`
     height: auto;
 
     margin-top: 3%;
-    margin-bottom: 20%;
+    margin-bottom: 40%;
     background-color: white;
 
     display: flex;

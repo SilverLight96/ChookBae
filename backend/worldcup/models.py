@@ -109,6 +109,7 @@ class Prediction(models.Model):
     user_id = models.ForeignKey(User, models.DO_NOTHING, db_column='user_id')
     user_point = models.IntegerField()
     predict = models.IntegerField()
+    result= models.IntegerField(default=-1)
 
     class Meta:
             db_table='prediction'

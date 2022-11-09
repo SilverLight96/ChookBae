@@ -45,7 +45,7 @@ function LoginPage() {
       .then((res) => {
         setCookie("token", res.data.token);
         setLogged(true);
-        navigate("/");
+        navigate("/profile");
       })
       .catch((error) => {
         setLoginError(error.response.data);

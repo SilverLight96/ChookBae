@@ -1,6 +1,6 @@
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useEffect, useState } from "react";
 import styled from "styled-components";
-import { Route, Link, useLocation, useNavigate } from 'react-router-dom';
+import { useLocation } from 'react-router-dom';
 import axios from 'axios'
 
 export default function TeamInfo () {
@@ -12,7 +12,7 @@ export default function TeamInfo () {
     useEffect(() => {
         const getData = async(id) => {
             const dataAxios = await axios
-
+            // >>>>TODO<<<<
             .get(baseURL + 'v1/match/teaminfo/' + 434, {
                 headers: {
                     'Content-Type': 'application/json',
@@ -33,7 +33,8 @@ export default function TeamInfo () {
                     if (data[2] === 0 || data[2] === 'FM') {
                         return(
                             <div key={idx}>
-                                <p>FM {data[0]} {data[1]}</p>
+                                <p>FM</p>
+                                <p>{data[0]} {data[1]}</p>
                             </div>
                         )
                     }
@@ -48,13 +49,13 @@ export default function TeamInfo () {
                             <div key={idx}>
                                 <p>{data[0]}</p>
                                 <p>{data[1]}</p>
-                                <hr />
                             </div>
                         )
                     }
                 })}
                 </PositionDiv>
             </GkDiv>
+            <StyledHr />
             <FwDiv>
                 <Position>FW</Position>
                 <PositionDiv>
@@ -64,13 +65,13 @@ export default function TeamInfo () {
                             <div key={idx}>
                                 <p>{data[0]}</p>
                                 <p>{data[1]}</p>
-                                <hr />
                             </div>
                         )
                     }
                 })}
                 </PositionDiv>
             </FwDiv>
+            <StyledHr />
             <MfDiv>
                 <Position>MF</Position>
                 <PositionDiv>
@@ -80,13 +81,13 @@ export default function TeamInfo () {
                             <div key={idx}>
                                 <p>{data[0]}</p>
                                 <p>{data[1]}</p>
-                                <hr />
                             </div>
                         )
                     }
                 })}
                 </PositionDiv>
             </MfDiv>
+            <StyledHr />
             <DfDiv>
                 <Position>DF</Position>
                 <PositionDiv>
@@ -96,7 +97,6 @@ export default function TeamInfo () {
                             <div key={idx}>
                                 <p>{data[0]}</p>
                                 <p>{data[1]}</p>
-                                <hr />
                             </div>
                         )
                     }
@@ -111,7 +111,7 @@ export default function TeamInfo () {
 
 const Container = styled.div`
     width: 100%;
-    height: auto%;
+    height: auto;
     margin-right: auto;
     margin-left: auto;
     color: white;
@@ -119,8 +119,6 @@ const Container = styled.div`
     display: flex;
     flex-direction: column;
     align-items: center;
-
-    border: 1px solid black;
 
     position: absolute;
     left: 0;
@@ -148,65 +146,73 @@ const Title = styled.div`
 const Fm = styled.div`
     p {
         margin: 0;
+        padding: 1%;
     }
+    div {
+        width: auto;
+        display: flex;
+        flex-direction: row;
+        justify-content: space-evenly;
+        background-color: ${(props) => props.theme.colors.mainRed};
+        border-radius: 10px;
+    }
+    width: 40%;
     padding: 1%;
     margin-top: 3%;
-    background-color: ${(props) => props.theme.colors.mainRed};
     text-align: center;
-    border-radius: 10px;
 `
 const GkDiv = styled.div`
-    margin-top: 3%;
+    margin-top: 1.5%;
+    margin-bottom: 1.5%;
 
     width: 90%;
     height: auto;
-    background-color: ${(props) => props.theme.colors.mainRed};
 
     display: flex;
-    flex-direction: row;
-    justify-content: space-between;
+    flex-direction: column;
+    justify-content: space-evenly;
     align-items: center;
     border-radius: 10px;
 
 `
 const FwDiv = styled.div`
-    margin-top: 3%;
+    margin-top: 1.5%;
+    margin-bottom: 1.5%;
 
     width: 90%;
     height: auto;
-    background-color: ${(props) => props.theme.colors.mainRed};
     
     display: flex;
-    flex-direction: row;
-    justify-content: space-between;
+    flex-direction: column;
+    justify-content: space-evenly;
     align-items: center;
     border-radius: 10px;
 
 `
 const MfDiv = styled.div`
-    margin-top: 3%;
+    margin-top: 1.5%;
+    margin-bottom: 1.5%;
 
     width: 90%;
     height: auto;
-    background-color: ${(props) => props.theme.colors.mainRed};
 
     display: flex;
-    flex-direction: row;
-    justify-content: space-between;
+    flex-direction: column;
+    justify-content: space-evenly;
     align-items: center;
     border-radius: 10px;
 
 `
 const DfDiv = styled.div`
-    margin-top: 3%;
+    margin-top: 1.5%;
+    margin-bottom: 1.5%;
 
     width: 90%;
     height: auto;
-    background-color: ${(props) => props.theme.colors.mainRed};
 
     display: flex;
-    flex-direction: row;
-    justify-content: space-between;
+    flex-direction: column;
+    justify-content: space-evenly;
     align-items: center;
     border-radius: 10px;
 
@@ -217,14 +223,33 @@ const BlankDiv = styled.div`
 
 `
 const PositionDiv = styled.div`
-    width: 50%;
+    display: flex;
+    flex-flow: row wrap;
+    justify-content: space-evenly;
+    text-align: center;
+    
+    width: 100%;
     height: auto;
+
+    div {
+        margin-top: 3%;
+        width: 45%;
+        background-color: ${(props) => props.theme.colors.mainRed};
+        border-radius: 10px;
+        font-size: 80%;
+    }
 `
 
 const Position = styled.p`
     width: 30%;
     height: auto;
+    text-align: center;
+    border-radius: 10px;
 
-    align-self: flex-start;
+    background-color: ${(props) => props.theme.colors.mainRed};
 
+`
+const StyledHr = styled.hr`
+    background-color: white;
+    width: 100%;
 `
