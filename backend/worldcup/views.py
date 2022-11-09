@@ -747,13 +747,13 @@ def matchUpdate():
                 elif p['eventId'] == "6" or "7":   # 레드카드
                     away_event.append([int(p["playerID"]), 0, 0, 0, 1])
             
-            # Player 테이블에 홈팀 선수 출장시간 업데이트 
+            # Player 테이블에 원정팀 선수 출장시간 업데이트 
             for p_id, runtime in away_runtime:
                 player = Player.objects.get(id=p_id)
                 player.run_time += runtime
                 player.save()
             
-            # Player 테이블에 홈팀 선수 이벤트 업데이트
+            # Player 테이블에 원정팀 선수 이벤트 업데이트
             for p_id, goal, assist, yellow, red in away_event:
                 player = Player.objects.get(id=p_id)
                 player.goal += goal
