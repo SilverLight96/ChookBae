@@ -43,7 +43,7 @@ export default NavBar;
 
 const NabBody = styled.div`
   z-index: 100;
-  max-width: 860px;
+  max-width: 600px;
   width: 100%;
   margin: auto;
   position: fixed;

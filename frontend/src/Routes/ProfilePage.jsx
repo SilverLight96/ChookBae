@@ -62,7 +62,7 @@ function ProfilePage() {
 export default ProfilePage;
 
 const Wrapper = styled.div`
-  max-width: 860px;
+  max-width: 600px;
   margin: auto;
   margin-bottom: 70px;
 `;
