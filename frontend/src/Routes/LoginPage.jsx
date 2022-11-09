@@ -149,7 +149,7 @@ function LoginPage() {
 export default LoginPage;
 
 const Wrapper = styled.div`
-  max-width: 860px;
+  max-width: 600px;
   margin: auto;
   font-family: sans-serif;
 `;
