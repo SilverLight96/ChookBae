@@ -207,7 +207,7 @@ export default function AccountPage() {
 }
 
 const Wrapper = styled.div`
-  max-width: 860px;
+  max-width: 600px;
   margin: auto;
   font-family: sans-serif;
 `;
