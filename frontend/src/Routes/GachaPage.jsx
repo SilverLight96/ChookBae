@@ -133,7 +133,7 @@ function GachaPage() {
 export default GachaPage;
 
 const Wrapper = styled.div`
-  max-width: 860px;
+  max-width: 600px;
   margin: auto;
 `;
 
@@ -309,7 +309,7 @@ const GachaCardContainer = styled.div`
 
 const GachaButtonContainer = styled.div`
   display: flex;
-  max-width: 860px;
+  max-width: 600px;
   flex-direction: row;
   justify-content: space-around;
   margin-bottom: 25px;
@@ -368,6 +368,7 @@ const GachaList = styled.div`
 
 const GachaOneList = styled.div`
   width: 100%;
+  max-width: 400px;
   height: 80vh;
   margin: auto;
 `;

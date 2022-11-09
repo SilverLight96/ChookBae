@@ -14,7 +14,7 @@ function MainPage() {
 export default MainPage;
 
 const Wrapper = styled.div`
-  max-width: 860px;
+  max-width: 600px;
   margin: auto;
 `;
 

@@ -43,7 +43,7 @@ export default ProfileCard;
 const Wrapper = styled.div`
   position: relative;
   margin: auto;
-  max-width: 860px;
+  max-width: 600px;
   width: 100%;
   height: 160px;
   display: flex;
