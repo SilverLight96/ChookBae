@@ -169,8 +169,6 @@ const Wrapper = styled.div`
 const Logo = styled.div`
   text-align: center;
   margin: auto;
-  padding-top: 15%;
-  padding-bottom: 20%;
   > img {
     width: 30%;
   }
@@ -210,7 +208,7 @@ const anim4 = keyframes`
 `;
 
 const LoginBox = styled.div`
-  height: 92vh;
+  height: 98vh;
   width: 100vw;
   padding: 40px;
   /* transform: translate(-50%, -50%); */
@@ -319,7 +317,7 @@ const Input = styled.input`
   padding: 10px 0;
   font-size: 16px;
   color: #fff;
-  margin-bottom: 40px;
+  margin-bottom: 4vh;
   border: none;
   border-bottom: 1px solid #fff;
   outline: none;
@@ -432,34 +430,4 @@ const LoginPageHeader = styled.div`
   h3:focus {
     outline: none;
   }
-
-  /* Animate neon flicker */
-  /* @keyframes flicker {
-    0%,
-    19%,
-    21%,
-    23%,
-    25%,
-    54%,
-    56%,
-    100% {
-      text-shadow: -0.2rem -0.2rem 1rem #fff, 0.2rem 0.2rem 1rem #fff,
-        0 0 2rem var(--neon-text-color), 0 0 4rem var(--neon-text-color),
-        0 0 6rem var(--neon-text-color), 0 0 8rem var(--neon-text-color),
-        0 0 10rem var(--neon-text-color);
-
-      box-shadow: 0 0 0.5rem #fff, inset 0 0 0.5rem #fff,
-        0 0 2rem var(--neon-border-color),
-        inset 0 0 2rem var(--neon-border-color),
-        0 0 4rem var(--neon-border-color),
-        inset 0 0 4rem var(--neon-border-color);
-    }
-
-    20%,
-    24%,
-    55% {
-      text-shadow: none;
-      box-shadow: none;
-    }
-  } */
 `;
