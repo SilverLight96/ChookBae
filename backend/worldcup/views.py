@@ -239,13 +239,15 @@ class card(APIView):
         c_list=[]
         user=User.objects.get(id=user_id)
 
-        if(user.points<point):
-            return ('보유하고 있는 포인트를 확인해 주세요.')
+        
 
         if(group_id == "상관없음"):
             point=0*gacha_count
         else:
             point=0*gacha_count
+
+        if(user.points<point):
+            return ('보유하고 있는 포인트를 확인해 주세요.')
         
         for i in range(gacha_count):
             try:

@@ -72,15 +72,17 @@ const ProfileImg = styled.main`
 const ProfileMain = styled.main`
   display: flex;
   flex-direction: column;
-  margin-left: 30px;
+  margin-left: 5%;
   width: 70%;
   > p {
-    font-size: 20px;
+    font-size: 18px;
     font-weight: bold;
   }
 `;
 
 const NickName = styled.h2`
+  margin-top: 20%;
+  margin-bottom: 10px;
   font-size: 26px;
   font-weight: bold;
 `;
@@ -96,6 +98,7 @@ const ButtonConatiner = styled.div`
       margin-left: 5px;
       padding: 5px;
       color: ${(props) => props.theme.colors.white};
+      font-size: 12px;
       :hover {
         cursor: pointer;
       }

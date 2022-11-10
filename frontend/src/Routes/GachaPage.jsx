@@ -7,39 +7,54 @@ import { fetchData } from "../utils/apis/api";
 import PlayerCard from "../Components/common/PlayerCard";
 import { gachaApis } from "../utils/apis/userApis";
 import { getCookie } from "../utils/functions/cookies";
+import Dropdown from "../Components/Gacha/SelectBox";
 
 function GachaPage() {
+  const [sortKey, setSortKey] = useState("startTime");
+  const getSortKey = (e) => {
+    console.log(e);
+    setIsGacha((prev) => ({
+      ...prev,
+      group_id: `${e}`,
+    }));
+  };
+
   const [isGacha, setIsGacha] = useState({
-    team_id: 0,
+    group_id: "상관없음",
     gacha_count: 0,
-    point: 0,
   });
 
   const [gachaResult, setGachaResult] = useState([]);
 
   const [isModal, setIsModal] = useState(false);
 
+  const onGroupSelect = (e) => {
+    console.log(e);
+    setIsGacha((prev) => ({
+      ...prev,
+      group_id: `${e.target.id}`,
+    }));
+  };
+
   const oneGacha = () => {
-    setIsGacha({
-      team_id: 0,
+    setIsGacha((prev) => ({
+      ...prev,
       gacha_count: 1,
-      point: 0,
-    });
+    }));
   };
 
   const tenGacha = () => {
-    setIsGacha({
-      team_id: 0,
+    setIsGacha((prev) => ({
+      ...prev,
       gacha_count: 10,
-      point: 0,
-    });
+    }));
   };
 
   useEffect(() => {
     if (isGacha.gacha_count !== 0) getGacha();
   }, [isGacha]);
 
-  // console.log(isGacha);
+  console.log(isGacha);
 
   const getGacha = async () => {
     const response = await fetchData
@@ -84,12 +99,13 @@ function GachaPage() {
         <NavStyle to="/mix">선수 합성</NavStyle>
       </ButtonContainer>
 
+      <Dropdown getSortKey={getSortKey} />
       <GachaMain>
-        <GachaCardContainer>
+        <GachaGlowContainer>
           <Glow></Glow>
           <CardPack>선수 뽑기</CardPack>
           <GachaCardListContainer></GachaCardListContainer>
-        </GachaCardContainer>
+        </GachaGlowContainer>
 
         <GachaButtonContainer>
           <button onClick={oneGacha}>1회 뽑기</button>
@@ -133,6 +149,7 @@ function GachaPage() {
 export default GachaPage;
 
 const Wrapper = styled.div`
+  background-color: ${(props) => props.theme.colors.mainBlack};
   max-width: 600px;
   margin: auto;
 `;
@@ -146,22 +163,21 @@ const NavStyle = styled(NavLink)`
   justify-content: center;
   font-size: 26px;
   text-align: center;
-  background-color: ${(props) => props.theme.colors.mainBlack};
-  border-bottom: 2px solid ${(props) => props.theme.colors.mainBlack};
-  border-top-left-radius: 10px;
-  border-top-right-radius: 10px;
+  background-color: ${(props) => props.theme.colors.mainRed};
+  border-bottom: 2px solid ${(props) => props.theme.colors.mainRed};
+  /* border-top-left-radius: 10px;
+  border-top-right-radius: 10px; */
   outline: invert;
   &:link {
     text-decoration: none;
   }
   &.active {
     color: ${(props) => props.theme.colors.white};
-    background-color: ${(props) => props.theme.colors.mainRed};
-    border-top-left-radius: 10px;
-    border-top-right-radius: 10px;
+    background-color: ${(props) => props.theme.colors.mainBlack};
+    /* border-top-left-radius: 10px;
+    border-top-right-radius: 10px; */
     font-weight: bold;
     border: 2px solid ${(props) => props.theme.colors.mainBlack};
-    border-bottom: none;
   }
 `;
 
@@ -216,7 +232,7 @@ const ButtonContainer = styled.div`
 const GachaMain = styled.div`
   width: 100%;
   height: 82vh;
-  background-color: ${(props) => props.theme.colors.mainOrange};
+  background-color: ${(props) => props.theme.colors.mainBlack};
   margin: auto;
   display: flex;
   flex-direction: column;
@@ -237,8 +253,8 @@ const Steam = keyframes`
 const Glow = styled.span`
   z-index: 1;
   position: absolute;
-  width: 300px;
-  height: 400px;
+  width: 40%;
+  height: 80%;
   background: linear-gradient(0deg, #000, #272727);
   :before,
   :after {
@@ -271,8 +287,8 @@ const CardPack = styled.div`
   //background-image: linear-gradient(135deg, #b118ac 0%, #26c7da 100%);
   position: absolute;
   z-index: 2;
-  width: 300px;
-  height: 400px;
+  width: 40%;
+  height: 80%;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -291,10 +307,10 @@ const GachaCardListContainer = styled.div`
   display: none;
 `;
 
-const GachaCardContainer = styled.div`
+const GachaGlowContainer = styled.div`
   position: relative;
   width: 100%;
-  height: 100%;
+  height: 70%;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -312,11 +328,10 @@ const GachaButtonContainer = styled.div`
   max-width: 600px;
   flex-direction: row;
   justify-content: space-around;
-  margin-bottom: 25px;
   > button {
     border-radius: 5px;
-    font-size: 30px;
-    padding: 20px 40px;
+    font-size: 26px;
+    padding: 15px 25px;
     border-color: transparent;
     color: ${(props) => props.theme.colors.white};
     font-weight: bold;
@@ -328,9 +343,9 @@ const GachaButtonContainer = styled.div`
     -webkit-transition: all 0.3s;
     -moz-transition: all 0.3s;
     transition: all 0.3s;
-    background: ${(props) => props.theme.colors.mainBlue};
+    background: ${(props) => props.theme.colors.mainRed};
     color: #fff;
-    box-shadow: 0 6px ${(props) => props.theme.colors.pointBlue};
+    box-shadow: 0 6px ${(props) => props.theme.colors.subRed};
     -webkit-transition: none;
     -moz-transition: none;
     transition: none;
