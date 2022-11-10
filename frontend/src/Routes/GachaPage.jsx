@@ -13,9 +13,9 @@ function GachaPage() {
   const [sortKey, setSortKey] = useState("startTime");
   const getSortKey = (e) => {
     console.log(e);
-    setIsGacha((prev) => ({
-      ...prev,
+    setIsGacha(() => ({
       group_id: `${e}`,
+      gacha_count: 0,
     }));
   };
 
@@ -51,7 +51,7 @@ function GachaPage() {
   };
 
   useEffect(() => {
-    if (isGacha.gacha_count !== 0) getGacha();
+    if (isGacha.gacha_count === 1 || isGacha.gacha_count === 10) getGacha();
   }, [isGacha]);
 
   console.log(isGacha);
@@ -71,10 +71,8 @@ function GachaPage() {
   };
 
   useEffect(() => {
-    console.log("모달열기");
     return () => {
       ModalHandler();
-      console.log("모달열기 완료");
     };
   }, [gachaResult]);
 
