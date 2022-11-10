@@ -1,8 +1,6 @@
 import React from "react";
 import styled from "styled-components";
 import RankIcon from "../../assets/Rank_Icon.png";
-import { Link } from "react-router-dom";
-
 
 function UserRank() {
   const rankings = [
@@ -16,17 +14,12 @@ function UserRank() {
   return (
     <Wrapper>
       <RankHeader>
-        <h3>
         Top Rank <img src={RankIcon} alt="랭크 아이콘" />
-        </h3>
-        
-        <Link to="/Ranking">전체 랭킹 보기</Link>
-        
-     </RankHeader>
+      </RankHeader>
       <RankAll>
+        전체 랭킹
       </RankAll>
       <RankMain>
-
         <RankTH>
           <div>Rank</div>
           <div>UserName</div>
@@ -56,15 +49,9 @@ const Wrapper = styled.div`
 const RankHeader = styled.header`
   display: flex;
   align-items: flex-end;
-  justify-content: space-between;
   font-size: 36px;
   > img {
     margin-left: 10px;
-  }
-  > a {
-    font-size: 18px;
-  }
-  > h3 {
   }
   margin-bottom: 10px;
   margin-top: 10px;
@@ -72,7 +59,10 @@ const RankHeader = styled.header`
 const RankAll = styled.header`
   display: flex;
   align-items: flex-end;
-  font-size: 18px;
+  font-size: 36px;
+  > img {
+    margin-right: 10px;
+  }
   margin-bottom: 10px;
   margin-top: 10px;
 `;
@@ -99,5 +89,3 @@ const RankBody = styled.div`
     border: 1px solid white;
   }
 `;
-
-
