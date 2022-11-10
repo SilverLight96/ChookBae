@@ -17,7 +17,7 @@ export default function ActivatePage() {
 }
 
 const ActivateContainer = styled.div`
-  max-width: 860px;
+  max-width: 600px;
   margin: auto;
 `;
 

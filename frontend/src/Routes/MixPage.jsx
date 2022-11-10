@@ -44,7 +44,12 @@ function MixPage() {
 
   const getPlayerList = async (url) => {
     const response = await fetchData
-      .get(`https://k7a202.p.ssafy.io/v1/card/${country}`)
+      .get(`https://k7a202.p.ssafy.io/v1/card/${country}`, {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `${getCookie("token")}`,
+        },
+      })
       .then((res) => {
         console.log(res.data);
         setPlayerList(res.data);
@@ -193,7 +198,7 @@ function MixPage() {
 export default MixPage;
 
 const Wrapper = styled.div`
-  max-width: 860px;
+  max-width: 600px;
   margin: auto;
 `;
 
@@ -206,21 +211,21 @@ const NavStyle = styled(NavLink)`
   justify-content: center;
   font-size: 26px;
   text-align: center;
-  background-color: ${(props) => props.theme.colors.mainBlack};
-  border-bottom: 2px solid ${(props) => props.theme.colors.mainBlack};
-  border-top-left-radius: 10px;
-  border-top-right-radius: 10px;
+  background-color: ${(props) => props.theme.colors.mainRed};
+  border-bottom: 2px solid ${(props) => props.theme.colors.mainRed};
+  /* border-top-left-radius: 10px;
+  border-top-right-radius: 10px; */
   outline: invert;
   &:link {
     text-decoration: none;
   }
   &.active {
     color: ${(props) => props.theme.colors.white};
-    background-color: ${(props) => props.theme.colors.mainRed};
-    border-top-left-radius: 10px;
-    border-top-right-radius: 10px;
+    background-color: ${(props) => props.theme.colors.mainBlack};
+    /* border-top-left-radius: 10px;
+    border-top-right-radius: 10px; */
     font-weight: bold;
-    border: 2px solid ${(props) => props.theme.colors.mainBlack};
+    border: 2px solid ${(props) => props.theme.colors.mainRed};
     border-bottom: none;
   }
 `;
@@ -276,7 +281,7 @@ const ButtonContainer = styled.div`
 const MixMain = styled.div`
   width: 100%;
   height: 82vh;
-  background-color: ${(props) => props.theme.colors.mainOrange};
+  background-color: ${(props) => props.theme.colors.mainBlack};
   margin: auto;
   display: flex;
   flex-direction: column;
@@ -334,14 +339,14 @@ const MixButton = styled.div`
 
 const MixButtonContainer = styled.div`
   display: flex;
-  max-width: 860px;
+  max-width: 600px;
   flex-direction: row;
   justify-content: space-around;
   margin-bottom: 25px;
   > button {
     border-radius: 5px;
     font-size: 30px;
-    padding: 70px 5px;
+    padding: 15px 25px;
     border-color: transparent;
     color: ${(props) => props.theme.colors.white};
     font-weight: bold;
@@ -353,9 +358,9 @@ const MixButtonContainer = styled.div`
     -webkit-transition: all 0.3s;
     -moz-transition: all 0.3s;
     transition: all 0.3s;
-    background: ${(props) => props.theme.colors.mainBlue};
+    background: ${(props) => props.theme.colors.mainRed};
     color: #fff;
-    box-shadow: 0 6px ${(props) => props.theme.colors.pointBlue};
+    box-shadow: 0 6px ${(props) => props.theme.colors.subRed};
     -webkit-transition: none;
     -moz-transition: none;
     transition: none;
@@ -398,8 +403,8 @@ const Steam = keyframes`
 const Glow = styled.span`
   z-index: 1;
   position: absolute;
-  width: 250px;
-  height: 180px;
+  width: 40%;
+  height: 70%;
   background: linear-gradient(0deg, #000, #272727);
   :before,
   :after {
@@ -446,8 +451,7 @@ const GachaCardContainer = styled.div`
   align-items: center;
   justify-content: center;
   flex-direction: column;
-  margin-top: 30px;
-  margin-bottom: 30px;
+
   .modes {
     margin: 30px;
     position: absolute;
@@ -461,8 +465,8 @@ const CardPack = styled.div`
   //background-image: linear-gradient(135deg, #b118ac 0%, #26c7da 100%);
   position: absolute;
   z-index: 2;
-  width: 250px;
-  height: 180px;
+  width: 40%;
+  height: 70%;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -505,6 +509,7 @@ const ModalBody = styled.div`
 
 const CardList = styled.div`
   width: 100%;
+  max-width: 600px;
   height: 70vh;
   display: grid;
   grid-template-columns: repeat(3, 1fr);
@@ -514,6 +519,7 @@ const CardList = styled.div`
 
 const CombinedCard = styled.div`
   width: 100%;
+  max-width: 400px;
   height: 80vh;
   margin: auto;
 `;
