@@ -8,7 +8,7 @@ import datetime
 import operator
 from django.db import transaction
 from django.shortcuts import render
-from django.db.models import Q
+from django.db.models import Q,Subquery
 from rest_framework import status
 from rest_framework.response import Response
 from .Serializers import UserrankSerializer,matchidSerializer
@@ -196,13 +196,19 @@ def predictcalc():
             result=2
             dang=total/bet.lose
 
-        predictinfo=Prediction.objects.filter(match_id=match.id,predict=result)
+        predictinfo=Prediction.objects.filter(match_id=match.id,result=-1)
 
         for pre in predictinfo:
-            user=User.objects.get(id=pre.user_id.id)
-            user.points+=(dang*pre.user_point)
-            user.save()
-            po=Point.objects.create(user_id=user,point=dang*pre.user_point,info='경기 예측 성공')
+            if(pre.predict==result):
+                user=User.objects.get(id=pre.user_id.id)
+                user.points+=(dang*pre.user_point)
+                user.save()
+                po=Point.objects.create(user_id=user,point=dang*pre.user_point,info='경기 예측 성공')
+                pre.result=1
+                pre.save()
+            else:
+                pre.result=0
+                pre.save()
 
 class teamlist(APIView):
     @swagger_auto_schema(operation_id="전체 팀의 간단한 정보를 가져온다.", operation_description="유저가 국가를 선택하여 뽑기를 희망하는 경우 국가에 대한 간략한 정보를 보여준다")
@@ -218,29 +224,42 @@ class teamlist(APIView):
 
 #선수 뽑기 POST
 class card(APIView):
-    param = openapi.Schema(type=openapi.TYPE_OBJECT, required=['team_id', 'gacha_count', 'point'],
+    param = openapi.Schema(type=openapi.TYPE_OBJECT, required=['group_id', 'gacha_count', 'point'],
     properties={
-        'team_id': openapi.Schema(type=openapi.TYPE_NUMBER, description="국가 번호"),
+        'group_id': openapi.Schema(type=openapi.TYPE_STRING, description="그룹"),
         'gacha_count': openapi.Schema(type=openapi.TYPE_NUMBER, description="가챠 횟수"),
         'point': openapi.Schema(type=openapi.TYPE_NUMBER, description="소모 포인트"),
         })
 
     @transaction.atomic()
-    def get_object(self, user_id, team_id,gacha_count,point):
-        point=int(point)
+    def get_object(self, user_id, group_id, gacha_count):
+        
         gacha_count=int(gacha_count)
-        team_id=int(team_id)
+       
         c_list=[]
         user=User.objects.get(id=user_id)
 
         if(user.points<point):
             return ('보유하고 있는 포인트를 확인해 주세요.')
 
+        if(group_id == "상관없음"):
+            point=0*gacha_count
+        else:
+            point=0*gacha_count
+        
         for i in range(gacha_count):
-            if(team_id > 0):
-                card=Player.objects.filter(team_id=team_id).order_by('?').first()
-            else :
-                card=Player.objects.order_by('?').first()   
+            try:
+                if(group_id == "상관없음"):
+                    card=Player.objects.order_by('?').first()
+                else :
+                    team=Team.objects.filter(group=group_id).order_by('?').first()
+                    card=Player.objects.filter(team_id=team.id).order_by('?').first()   
+                    if card is None:
+                        raise Exception
+            except:
+                return ('그룹 선택을 다시 확인해주세요.')
+
+
 
             find=PlayerCard.objects.filter(Q(player_id=card.id) & Q(user_id=user_id)).count()
             if(find==0):
@@ -262,9 +281,9 @@ class card(APIView):
         token=request.META.get('HTTP_AUTHORIZATION')
         pay=jwt.decode(token,SECRET_KEY, algorithms=['HS256'])
         user_id=pay['id']
-        gacha=self.get_object(user_id,request.data['team_id'],request.data['gacha_count'],request.data['point'])
+        gacha=self.get_object(user_id,request.data['group_id'],request.data['gacha_count'])
 
-        if(gacha=='보유하고 있는 포인트를 확인해 주세요.'):
+        if(gacha=='보유하고 있는 포인트를 확인해 주세요.' or gacha=='그룹 선택을 다시 확인해주세요.'):
             return Response({'error' :gacha},status=status.HTTP_400_BAD_REQUEST)
         else:
             return Response(gacha,status=status.HTTP_200_OK)
@@ -374,34 +393,51 @@ class combine(APIView):
 
 # 랭킹 조회 POST
 class rank(APIView):
-    param = openapi.Schema(type=openapi.TYPE_OBJECT, required=['type',],
-    properties={
-        'type': openapi.Schema(type=openapi.TYPE_STRING, description="랭킹의 타입"),
-        })
 
-    def get_object(self, type):
+    def get(self, request):
         R_list=[]
         num=1
-        if(type=='value'):
+        id=request.GET['type']
+        if(id=='value'):
             user=User.objects.all().order_by('-value')
             for i in user:
                 R_list.append({'nickname' : i.nickname, 'value' : i.value, 'rank' : num })  
                 num+=1
             
-        elif(type=='player'):
+        elif(id=='player'):
             player=Player.objects.all().order_by('-value')
             for i in player:
                 player_name= player_k(i.id)
                 R_list.append({'fullname' : player_name, 'goal' : i.goal, 'value' : i.value ,'rank' : num })
                 num+=1
 
-        return (R_list)   
+        return Response(R_list,status=status.HTTP_200_OK)   
 
 
-    @swagger_auto_schema(operation_id="랭킹 조회", operation_description="타입에 따라 보유하고 있는 포인트 혹은 보유하고 있는 선수의 가치 랭킹 조회", request_body=param)
-    def post(self, request, format=None):
-        rank=self.get_object(request.data['type'])
-        return Response(rank,status=status.HTTP_200_OK)
+   
+
+
+class TopRank(APIView):
+
+    def get(self, request):
+        user_list=[]
+        player_list=[]
+        num=1
+
+        user=User.objects.all().order_by('-value')[:5]
+        for i in user:
+            user_list.append({'nickname' : i.nickname, 'value' : i.value, 'rank' : num })  
+            num+=1
+
+        num=1 
+        player=Player.objects.all().order_by('-value')[:5]
+        for i in player:
+            player_name= player_k(i.id)
+            player_list.append({'fullname' : player_name, 'goal' : i.goal, 'value' : i.value ,'rank' : num })
+            num+=1
+
+        return Response({'user_list': user_list, 'player_list':player_list},status=status.HTTP_200_OK) 
+
 
 
 # 그룹 정보 조회 GET
@@ -589,6 +625,7 @@ def playerValueUpdate():
         player.value = (init_value * (1 + goal * 0.3) * (1 + assist * 0.1) * (1 - yellow * 0.05) * (1 - red * 0.2) * (1 + runtime * 0.002)
                         + (3000 * win) + (1000 * draw) - (500 * loss) + (100 * goal_diff))
         player.save()
+    
 
 
 # 경기 정보 자동 업데이트       >> KST 18시 ~ 익일 7시 동안 1분 주기로 자동 업데이트 (12시간 x 60회 = 720회 갱신)
@@ -617,11 +654,12 @@ def matchUpdate():
         if m['matchStatus']['value'] == "-1":       # -1 = 진행중인 경기
             # Match 테이블에 실시간 스코어 업데이트
             match = Match.objects.get(id=m['matchID'])
+            match.match_status = 1          # 매치 상태도 -1로 (진행중인 경기) 수정
             match.team1_score = t1_score
             match.team2_score = t2_score
             match.save()
 
-        elif ((m['matchStatus']['value'] == "1") and [int(m['matchID']), 0] in match_list):     # 1 = 종료된 경기
+        elif ((m['matchStatus']['value'] == "1") and [int(m['matchID']), -1] in match_list):     # 1 = 종료된 경기
             pending_result.append(int(m['matchID'])) # 우선 경기 상세 정보는 아직 미제공이라고 간주하고 pending_result 리스트에 누적 (다음 for문에서 처리 예정)
 
             t1_id = int(m['homeParticipant']['participantID'])
@@ -740,13 +778,13 @@ def matchUpdate():
                 elif p['eventId'] == "6" or "7":   # 레드카드
                     away_event.append([int(p["playerID"]), 0, 0, 0, 1])
             
-            # Player 테이블에 홈팀 선수 출장시간 업데이트 
+            # Player 테이블에 원정팀 선수 출장시간 업데이트 
             for p_id, runtime in away_runtime:
                 player = Player.objects.get(id=p_id)
                 player.run_time += runtime
                 player.save()
             
-            # Player 테이블에 홈팀 선수 이벤트 업데이트
+            # Player 테이블에 원정팀 선수 이벤트 업데이트
             for p_id, goal, assist, yellow, red in away_event:
                 player = Player.objects.get(id=p_id)
                 player.goal += goal
@@ -754,3 +792,18 @@ def matchUpdate():
                 player.yellow_card += yellow
                 player.red_card += red
                 player.save()
+
+
+
+@transaction.atomic()
+def uservalue():
+    user=User.objects.all()
+
+    for i in user:
+        card=PlayerCard.objects.filter(Q(user_id=i.id)).distinct().values('player_id').distinct()
+        num=0
+        for c in card:
+            player=Player.objects.get(id=c.get('player_id'))
+            num+=player.value
+        i.value=num
+        i.save()
