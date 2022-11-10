@@ -1,6 +1,6 @@
 import React from "react";
 import styled from "styled-components";
-import "./jongeun2.scss";
+import "./PlayerCardDesign.scss";
 
 function PlayerCard(props) {
   return (
