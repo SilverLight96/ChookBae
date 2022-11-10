@@ -1,38 +1,8 @@
 @import url(https://fonts.googleapis.com/css?family=Exo+2:200i);
 
 :root {
-  /* Base font size */
-  font-size: 10px;   
-  
-  /* Set neon color */
   --neon-text-color: #f40;
   --neon-border-color: #08f;
-}
-
-h1 {
-  font-size: 4rem;
-  font-weight: 200;
-  font-style: italic;
-  color: #fff;
-  /* padding: 4rem 6rem 5.5rem; */
-  /* border: 0.4rem solid #fff; */
-  border-radius: 2rem;
-  text-transform: uppercase;
-  animation: flicker 1.5s infinite alternate;     
-}
-
-h1::-moz-selection {
-  background-color: var(--neon-border-color);
-  color: var(--neon-text-color);
-}
-
-h1::selection {
-  background-color: var(--neon-border-color);
-  color: var(--neon-text-color);
-}
-
-h1:focus {
-  outline: none;
 }
 
 /* Animate neon flicker */

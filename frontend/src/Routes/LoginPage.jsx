@@ -70,9 +70,11 @@ function LoginPage() {
       <LoginBox>
         <Logo>
           <img src={logo} alt="로그인 페이지 로고" />
-          <h1 contenteditable spellcheck="false">
-            chookbae
-          </h1>
+          <LoginPageHeader>
+            <h3 contenteditable spellcheck="false">
+              chookbae
+            </h3>
+          </LoginPageHeader>
         </Logo>
         <form onSubmit={handleSubmit(onValid)}>
           <UserBox>
@@ -402,4 +404,62 @@ const SignUpButton = styled.button`
       animation-delay: 2.25s;
     }
   }
+`;
+
+const LoginPageHeader = styled.div`
+  h3 {
+    font-size: 2.5rem;
+    font-weight: 200;
+    font-style: italic;
+    color: #fff;
+    /* padding: 4rem 6rem 5.5rem; */
+    /* border: 0.4rem solid #fff; */
+    border-radius: 2rem;
+    text-transform: uppercase;
+    animation: flicker 1.5s infinite alternate;
+  }
+
+  h3::-moz-selection {
+    background-color: var(--neon-border-color);
+    color: var(--neon-text-color);
+  }
+
+  h3::selection {
+    background-color: var(--neon-border-color);
+    color: var(--neon-text-color);
+  }
+
+  h3:focus {
+    outline: none;
+  }
+
+  /* Animate neon flicker */
+  /* @keyframes flicker {
+    0%,
+    19%,
+    21%,
+    23%,
+    25%,
+    54%,
+    56%,
+    100% {
+      text-shadow: -0.2rem -0.2rem 1rem #fff, 0.2rem 0.2rem 1rem #fff,
+        0 0 2rem var(--neon-text-color), 0 0 4rem var(--neon-text-color),
+        0 0 6rem var(--neon-text-color), 0 0 8rem var(--neon-text-color),
+        0 0 10rem var(--neon-text-color);
+
+      box-shadow: 0 0 0.5rem #fff, inset 0 0 0.5rem #fff,
+        0 0 2rem var(--neon-border-color),
+        inset 0 0 2rem var(--neon-border-color),
+        0 0 4rem var(--neon-border-color),
+        inset 0 0 4rem var(--neon-border-color);
+    }
+
+    20%,
+    24%,
+    55% {
+      text-shadow: none;
+      box-shadow: none;
+    }
+  } */
 `;
