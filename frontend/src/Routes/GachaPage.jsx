@@ -126,7 +126,7 @@ function GachaPage() {
           </GachaOneList>
         ) : null}
         {isGacha.gacha_count === 10 ? (
-          <GachaList>
+          <GachaList className="cards">
             {gachaResult.map((playerCard, idx) => {
               return (
                 <PlayerCard

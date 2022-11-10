@@ -363,8 +363,8 @@ const MixButtonContainer = styled.div`
   margin-bottom: 25px;
   > button {
     border-radius: 5px;
-    font-size: 30px;
-    padding: 15px 25px;
+    font-size: 22px;
+    padding: 10px 15px;
     border-color: transparent;
     color: ${(props) => props.theme.colors.white};
     font-weight: bold;
