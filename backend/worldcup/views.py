@@ -232,8 +232,8 @@ class card(APIView):
         })
 
     @transaction.atomic()
-    def get_object(self, user_id, group_id, gacha_count, point):
-        point=int(point)
+    def get_object(self, user_id, group_id, gacha_count):
+        
         gacha_count=int(gacha_count)
        
         c_list=[]
@@ -241,6 +241,11 @@ class card(APIView):
 
         if(user.points<point):
             return ('보유하고 있는 포인트를 확인해 주세요.')
+
+        if(group_id == "상관없음"):
+            point=0*gacha_count
+        else:
+            point=0*gacha_count
         
         for i in range(gacha_count):
             try:
@@ -276,7 +281,7 @@ class card(APIView):
         token=request.META.get('HTTP_AUTHORIZATION')
         pay=jwt.decode(token,SECRET_KEY, algorithms=['HS256'])
         user_id=pay['id']
-        gacha=self.get_object(user_id,request.data['group_id'],request.data['gacha_count'],request.data['point'])
+        gacha=self.get_object(user_id,request.data['group_id'],request.data['gacha_count'])
 
         if(gacha=='보유하고 있는 포인트를 확인해 주세요.' or gacha=='그룹 선택을 다시 확인해주세요.'):
             return Response({'error' :gacha},status=status.HTTP_400_BAD_REQUEST)
@@ -388,34 +393,51 @@ class combine(APIView):
 
 # 랭킹 조회 POST
 class rank(APIView):
-    param = openapi.Schema(type=openapi.TYPE_OBJECT, required=['type',],
-    properties={
-        'type': openapi.Schema(type=openapi.TYPE_STRING, description="랭킹의 타입"),
-        })
 
-    def get_object(self, type):
+    def get(self, request):
         R_list=[]
         num=1
-        if(type=='value'):
+        id=request.GET['type']
+        if(id=='value'):
             user=User.objects.all().order_by('-value')
             for i in user:
                 R_list.append({'nickname' : i.nickname, 'value' : i.value, 'rank' : num })  
                 num+=1
             
-        elif(type=='player'):
+        elif(id=='player'):
             player=Player.objects.all().order_by('-value')
             for i in player:
                 player_name= player_k(i.id)
                 R_list.append({'fullname' : player_name, 'goal' : i.goal, 'value' : i.value ,'rank' : num })
                 num+=1
 
-        return (R_list)   
+        return Response(R_list,status=status.HTTP_200_OK)   
 
 
-    @swagger_auto_schema(operation_id="랭킹 조회", operation_description="타입에 따라 보유하고 있는 포인트 혹은 보유하고 있는 선수의 가치 랭킹 조회", request_body=param)
-    def post(self, request, format=None):
-        rank=self.get_object(request.data['type'])
-        return Response(rank,status=status.HTTP_200_OK)
+   
+
+
+class TopRank(APIView):
+
+    def get(self, request):
+        user_list=[]
+        player_list=[]
+        num=1
+
+        user=User.objects.all().order_by('-value')[:5]
+        for i in user:
+            user_list.append({'nickname' : i.nickname, 'value' : i.value, 'rank' : num })  
+            num+=1
+
+        num=1 
+        player=Player.objects.all().order_by('-value')[:5]
+        for i in player:
+            player_name= player_k(i.id)
+            player_list.append({'fullname' : player_name, 'goal' : i.goal, 'value' : i.value ,'rank' : num })
+            num+=1
+
+        return Response({'user_list': user_list, 'player_list':player_list},status=status.HTTP_200_OK) 
+
 
 
 # 그룹 정보 조회 GET
