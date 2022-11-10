@@ -23,6 +23,9 @@ import PredictList from "./Routes/PredictList"
 import PredictDetail from "./Routes/PredictDetail"
 import TeamInfo from "./Routes/TeamInfo"
 
+import RankPage from "./Routes/RankPage";
+import PlayerRanking from "./Routes/PlayerRanking";
+
 function App() {
   const loggedin = useRecoilValue(loggedinState);
   return (
@@ -45,6 +48,9 @@ function App() {
           <Route path="/Match/Detail" element={<MatchDetail/>}/>
           <Route path="/TeamInfo" element={<TeamInfo/>}/>
           <Route path="/accounts/activate" element={<ActivatePage/>}/>
+
+          <Route path="/ranking" element={<RankPage/>}/>
+          <Route path="/playerRanking" element={<PlayerRanking/>}/>
       </Routes> 
     </BrowserRouter>
   </CookiesProvider>
