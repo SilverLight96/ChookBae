@@ -1,39 +1,42 @@
-import React from "react";
+import React,{useState, useEffect} from "react";
 import styled from "styled-components";
 
+import { fetchData } from "../../utils/apis/api";
+import { rankApis } from "../../utils/apis/userApis";
 
 export default function PlayerRankList() {
-    const rankings = [
-        { id: 1, username: "Kim", points: 1240000 },
-        { id: 2, username: "Im", points: 1130000 },
-        { id: 3, username: "Kang", points: 1040000 },
-        { id: 4, username: "Park", points: 940000 },
-        { id: 5, username: "Lee", points: 860000 },
-        { id: 6, username: "Lee", points: 860000 },
-        { id: 7, username: "Lee", points: 860000 },
-        { id: 8, username: "Lee", points: 860000 },
-        { id: 9, username: "Lee", points: 860000 },
-        { id: 5, username: "Lee", points: 860000 },
-        { id: 5, username: "Lee", points: 860000 },
-        { id: 5, username: "Lee", points: 860000 },
-        { id: 5, username: "Lee", points: 860000 },
-        { id: 5, username: "Lee", points: 860000 },
-      ];
+  const [rankResult, setRankResult] = useState([]);
+
+    const [isModal, setIsModal] = useState(false);
+    const getRank = async () => {
+      const response = await fetchData
+          .get(rankApis.RANK("player"))
+          .then((res) => {
+            setRankResult(res.data);
+          });
+        return response;
+      };
+    
+    useEffect(() => {
+          getRank();
+    }, []);
   return (
     <Wrapper>
       <h2>선수 전체 랭킹</h2>
       <RankingMain>
         <RankingTH>
-          <div>선수</div>
-          <div>시세</div>
           <div>등수</div>
+          <div>선수</div>
+          <div>골</div>
+          <div>시세</div>
         </RankingTH>
-        {rankings.map((rank, id) => {
+        {rankResult.map((rank, id) => {
           return (
             <RankBody key={id}>
-              <div>{rank.username}</div>
-              <div>{rank.points}</div>
-              <div>{rank.id}</div>
+              <div>{rank.rank}</div>
+              <div>{rank.fullname}</div>
+              <div>{rank.goal}</div>
+              <div>{rank.value}</div>
             </RankBody>
           );
         })}
@@ -44,7 +47,7 @@ export default function PlayerRankList() {
 
 const Wrapper = styled.div`
   margin: auto;
-  width: 90%;
+  width: 95%;
 `;
 
 const RankingMain = styled.main`
@@ -56,7 +59,7 @@ const RankingMain = styled.main`
 
 const RankingTH = styled.div`
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(4, 1fr);
   grid-gap: 1rem;
   margin-bottom: 1rem;
   scroll-behavior: smooth;
@@ -64,7 +67,7 @@ const RankingTH = styled.div`
 const RankBody = styled.div`
   font-size: 18px;
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(4, 1fr);
   grid-gap: 0rem;
   margin-bottom: 1rem;
   scroll-behavior: smooth;

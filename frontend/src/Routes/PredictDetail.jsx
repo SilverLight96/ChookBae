@@ -167,7 +167,7 @@ export default function PredictDetail () {
                 reload = {setReload}
                 />
             </PredictAccountDiv>
-            <BlankDiv height="15vh"></BlankDiv>
+            <BlankDiv height="20vh"></BlankDiv>
             </>
             }
         </Container>
@@ -177,7 +177,7 @@ export default function PredictDetail () {
 const Container = styled.div`
     width: 100%;
     height: auto;
-    background-color: ${(props) => props.theme.colors.mainBlack};
+    background: linear-gradient(#141e30, #243b55);
     color: white;
 
     display: flex;

@@ -9,7 +9,7 @@
 
 
 .card { 
-  height: 100%;
+  height: 15vh;
   position: relative;
   overflow: cover;
   margin: 5px;
@@ -216,7 +216,7 @@
 }
 
 
-.cards .card {
+.cards {
   &:nth-child(2) {
     &, &:before, &:after {
       animation-delay: 0.25s;

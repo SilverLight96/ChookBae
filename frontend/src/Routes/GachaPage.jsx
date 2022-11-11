@@ -127,7 +127,7 @@ function GachaPage() {
           </GachaOneList>
         ) : null}
         {isGacha.gacha_count === 10 ? (
-          <GachaList>
+          <GachaList className="cards">
             {gachaResult.map((playerCard, idx) => {
               return (
                 <PlayerCard
@@ -149,7 +149,7 @@ function GachaPage() {
 export default GachaPage;
 
 const Wrapper = styled.div`
-  background-color: ${(props) => props.theme.colors.mainBlack};
+  background: linear-gradient(#141e30, #243b55);
   max-width: 600px;
   margin: auto;
 `;
@@ -163,8 +163,8 @@ const NavStyle = styled(NavLink)`
   justify-content: center;
   font-size: 26px;
   text-align: center;
-  background-color: ${(props) => props.theme.colors.mainRed};
-  border-bottom: 2px solid ${(props) => props.theme.colors.mainRed};
+  background-color: ${(props) => props.theme.colors.mainBlack};
+  border-bottom: 2px solid ${(props) => props.theme.colors.mainBlack};
   /* border-top-left-radius: 10px;
   border-top-right-radius: 10px; */
   outline: invert;
@@ -173,11 +173,11 @@ const NavStyle = styled(NavLink)`
   }
   &.active {
     color: ${(props) => props.theme.colors.white};
-    background-color: ${(props) => props.theme.colors.mainBlack};
+    background-color: ${(props) => props.theme.colors.mainRed};
     /* border-top-left-radius: 10px;
     border-top-right-radius: 10px; */
     font-weight: bold;
-    border: 2px solid ${(props) => props.theme.colors.mainBlack};
+    border: 2px solid ${(props) => props.theme.colors.mainRed};
   }
 `;
 
@@ -231,8 +231,8 @@ const ButtonContainer = styled.div`
 
 const GachaMain = styled.div`
   width: 100%;
-  height: 82vh;
-  background-color: ${(props) => props.theme.colors.mainBlack};
+  height: 85vh;
+  background: linear-gradient(#141e30, #243b55);
   margin: auto;
   display: flex;
   flex-direction: column;
@@ -253,8 +253,9 @@ const Steam = keyframes`
 const Glow = styled.span`
   z-index: 1;
   position: absolute;
-  width: 40%;
-  height: 80%;
+  max-width: 250px;
+  width: 50%;
+  height: 70%;
   background: linear-gradient(0deg, #000, #272727);
   :before,
   :after {
@@ -287,8 +288,9 @@ const CardPack = styled.div`
   //background-image: linear-gradient(135deg, #b118ac 0%, #26c7da 100%);
   position: absolute;
   z-index: 2;
-  width: 40%;
-  height: 80%;
+  max-width: 250px;
+  width: 50%;
+  height: 70%;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -379,6 +381,9 @@ const GachaList = styled.div`
   display: grid;
   grid-template-columns: repeat(5, 1fr);
   grid-row-gap: 20px;
+  > div {
+    height: 30vh;
+  }
 `;
 
 const GachaOneList = styled.div`
@@ -386,4 +391,7 @@ const GachaOneList = styled.div`
   max-width: 400px;
   height: 80vh;
   margin: auto;
+  > div {
+    height: 80vh;
+  }
 `;

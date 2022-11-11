@@ -124,7 +124,7 @@ const Container = styled.div`
     left: 0;
     top: 0;
 
-    background-color: ${(props) => props.theme.colors.mainBlack};
+    background: linear-gradient(#141e30, #243b55);
 `
 
 const Title = styled.div`
