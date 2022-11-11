@@ -39,6 +39,8 @@ const Wrapper = styled.div`
 `;
 
 const PredictionMain = styled.main`
+  text-align: center;
+  background-color: #fffffff4;
   margin-top: 15px;
   font-size: 22px;
   border: 2px solid ${(props) => props.theme.colors.mainRed};
@@ -61,9 +63,6 @@ const PredictionBody = styled.div`
   grid-gap: 0rem;
   margin-bottom: 1rem;
   scroll-behavior: smooth;
-  > div {
-    border: 1px solid white;
-  }
 `;
 
 const PredictionResult = styled.div`

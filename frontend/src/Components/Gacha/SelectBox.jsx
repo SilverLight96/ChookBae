@@ -65,7 +65,7 @@ export default Dropdown;
 const Wrapper = styled.div`
   display: flex;
   justify-content: end;
-  background-color: ${(props) => props.theme.colors.mainBlack};
+  background: #141e30;
 `;
 
 export const DropdownContainer = styled.main`
