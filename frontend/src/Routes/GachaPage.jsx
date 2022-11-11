@@ -120,6 +120,7 @@ function GachaPage() {
                   image={playerCard.player_image}
                   key={playerCard.player_image}
                   value={playerCard.value}
+                  // flag={playerCard.logo}
                 />
               );
             })}
@@ -134,6 +135,7 @@ function GachaPage() {
                   image={playerCard.player_image}
                   key={idx}
                   value={playerCard.value}
+                  // flag={playerCard.logo}
                 />
               );
             })}
