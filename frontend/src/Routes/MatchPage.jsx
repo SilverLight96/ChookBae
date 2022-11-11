@@ -63,11 +63,13 @@ function MatchPage() {
                 <BtnContainer>
                     <CountrydButton
                     onClick={changeCountry}
-                    backColor={type === 'country'? '#760D27' : 'black' }
+                    backColor={type === 'date'? '#760D27' : 'none' }
+                    background={type === 'date'? 'none' : 'linear-gradient(#141e30, #243b55)'}
                     fw={type === 'country'? 'bold' : 'normal' }>국가별</CountrydButton>
                     <DateButton 
                     onClick={changeDate}
-                    backColor={type === 'date'? '#760D27' : 'black' }
+                    backColor={type === 'country'? '#760D27' : 'none' }
+                    background={type === 'country'? 'none' : 'linear-gradient(#141e30, #243b55)'}
                     fw={type === 'date'? 'bold' : 'normal' }>날짜별</DateButton>
                 </BtnContainer>
             </>
@@ -169,9 +171,6 @@ const BlankDiv = styled.div`
     height: ${props => props.height};
 `
 const CountrydButton = styled.button`
-    &:hover {
-        color: white;
-    }
     width: 50%;
     height: 50px;
 
@@ -179,12 +178,10 @@ const CountrydButton = styled.button`
     font-weight: ${props => props.fw};
     font-size: 120%;
 
+    background: ${props => props.background};
     background-color: ${props => props.backColor};
 `
 const DateButton = styled.button`
-    &:hover {
-        color: white;
-    }
     width: 50%;
     height: 50px;
 
@@ -192,6 +189,7 @@ const DateButton = styled.button`
     font-weight: ${props => props.fw};
     font-size: 120%;
 
+    background: ${props => props.background};
     background-color: ${props => props.backColor};
 `
 
@@ -226,7 +224,7 @@ const SelectedCard = styled.p`
 const Container = styled.div`
     width: 100%;
     height: auto;
-    background-color: ${(props) => props.theme.colors.mainBlack};
+    background: linear-gradient(#141e30, #243b55);
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -240,7 +238,7 @@ const Container = styled.div`
 `
 
 const StyledHr = styled.hr`
-    width: 100%;
+    width: 90%;
     height: 0;
     background-color: #914154;
     border: 1px solid #914154;
