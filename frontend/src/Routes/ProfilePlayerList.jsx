@@ -5,7 +5,6 @@ import MyPlayerCardList from "../Components/Profile/MyPlayerCardList";
 function ProfilePlayerList() {
   return (
     <Wrapper>
-      선수 목록
       <MyPlayerCardList />
     </Wrapper>
   );

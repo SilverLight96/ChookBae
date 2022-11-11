@@ -20,6 +20,7 @@ function MyPlayerCardList() {
             key={playerCard.player_image}
             count={playerCard.count}
             value={playerCard.value}
+            // flag={playerCard.logo}
           />
         );
       })}
@@ -36,4 +37,5 @@ const Wrapper = styled.div`
   grid-gap: 1rem;
   margin-bottom: 1rem;
   scroll-behavior: smooth;
+  margin-top: 10px;
 `;
