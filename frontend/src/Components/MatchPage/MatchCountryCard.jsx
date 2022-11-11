@@ -33,9 +33,9 @@ function MatchCountryCard(props) {
             {Object.keys(data).map((elem, index) => {
                 return(
                     <GroupContainer key={index}>
-                        <CountryContainer>
-                            <h1>{elem}조</h1>
-                        </CountryContainer>
+                        <GroupName>
+                            {elem}조
+                        </GroupName>
                         {data[elem].map((country, index) => {
                             return (
                                 <CountryContainer
@@ -84,7 +84,10 @@ const GroupContainer = styled.div`
 `
 
 const CountryContainer = styled.div`
-    width: 19%;
+    p {
+        font-size: 100%;
+    }
+    width: 22%;
     height: 100%;
 
     display: flex;
@@ -109,10 +112,22 @@ const StyledFlag = styled.img`
 `
 
 const StyledName = styled.div`
+    p {
+        font-size: 1px;
+    }
     width: 100%;
     height: 5%;
-    font-size: 5%;
     color: white;
     text-align: center;
 
+`
+
+const GroupName = styled.p`
+    width:9%;
+    height: 100%;
+    color: white;
+    text-align: center;
+    font-weight: bold;
+    margin-left: 2%;
+    margin-right: 2%;
 `
