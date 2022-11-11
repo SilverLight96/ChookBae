@@ -155,6 +155,7 @@ function MixPage() {
                   //   image={players.player_image}
                   //   key={players.player_image}
                   //   value={players.value}
+                  //   flag={playerCard.logo}
                   // />
                 );
               })}
@@ -186,6 +187,7 @@ function MixPage() {
                 image={combinedCard.player_image}
                 key={combinedCard.player_image}
                 value={combinedCard.value}
+                flag={combinedCard.logo}
               />
             </CombinedCard>
           </ModalBody>
