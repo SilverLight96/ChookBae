@@ -82,11 +82,11 @@ const ButtonContainer = styled.div`
 const NavStyle = styled(NavLink)`
   color: ${(props) => props.theme.colors.white};
   width: 33%;
-  height: 50px;
+  height: 5vh;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 24px;
+  font-size: 20px;
   text-align: center;
   background-color: ${(props) => props.theme.colors.mainBlack};
   border-bottom: 2px solid ${(props) => props.theme.colors.mainBlack};

@@ -36,4 +36,5 @@ const Wrapper = styled.div`
   grid-gap: 1rem;
   margin-bottom: 1rem;
   scroll-behavior: smooth;
+  margin-top: 10px;
 `;

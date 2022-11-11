@@ -10,15 +10,38 @@ function PlayerCard(props) {
       alt={props.title}
     >
       <div>
-        <h3 style={{ textAlign: "center", color: "white" }}>{props.title}</h3>
-        <h4 style={{ textAlign: "right", color: "white" }}>{props.value}</h4>
-        <h4 style={{ textAlign: "right", color: "white" }}>{props.count}</h4>
+        <PlayerName>{props.title}</PlayerName>
+        <PlayerCount>{props.count}</PlayerCount>
+        <PlayerValue>{props.value}</PlayerValue>
       </div>
     </div>
   );
 }
 
 export default PlayerCard;
+
+const PlayerName = styled.p`
+  font-size: 12px;
+  text-align: center;
+  color: white;
+  font-weight: bold;
+  /* display: inline-block;
+  width: 100px; */
+`;
+
+const PlayerValue = styled.p`
+  font-size: 10px;
+  text-align: right;
+  color: white;
+  font-weight: bold;
+`;
+
+const PlayerCount = styled.p`
+  font-size: 10px;
+  text-align: right;
+  color: white;
+  font-weight: bold;
+`;
 
 const Wrapper = styled.div`
   display: flex;
