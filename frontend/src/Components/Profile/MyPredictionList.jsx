@@ -9,7 +9,6 @@ export default function MyPredictionList() {
 
   return (
     <Wrapper>
-      <h2>내가 예측한 경기</h2>
       <PredictionMain>
         <PredictionTH>
           <div>경기</div>
@@ -50,6 +49,7 @@ const PredictionMain = styled.main`
   border: 2px solid ${(props) => props.theme.colors.mainRed};
   border-radius: 5px;
   padding: 10px;
+  margin-top: 15px;
 `;
 
 const PredictionTH = styled.div`
