@@ -379,6 +379,9 @@ const GachaList = styled.div`
   display: grid;
   grid-template-columns: repeat(5, 1fr);
   grid-row-gap: 20px;
+  > div {
+    height: 30vh;
+  }
 `;
 
 const GachaOneList = styled.div`
@@ -386,4 +389,7 @@ const GachaOneList = styled.div`
   max-width: 400px;
   height: 80vh;
   margin: auto;
+  > div {
+    height: 80vh;
+  }
 `;
