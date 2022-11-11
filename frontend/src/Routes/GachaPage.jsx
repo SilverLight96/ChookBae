@@ -231,7 +231,7 @@ const ButtonContainer = styled.div`
 
 const GachaMain = styled.div`
   width: 100%;
-  height: 82vh;
+  height: 85vh;
   background: linear-gradient(#141e30, #243b55);
   margin: auto;
   display: flex;

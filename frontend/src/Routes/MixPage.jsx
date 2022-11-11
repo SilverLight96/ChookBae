@@ -298,7 +298,7 @@ const ButtonContainer = styled.div`
 
 const MixMain = styled.div`
   width: 100%;
-  height: 85vh;
+  height: 90vh;
   background: linear-gradient(#141e30, #243b55);
   margin: auto;
   display: flex;
