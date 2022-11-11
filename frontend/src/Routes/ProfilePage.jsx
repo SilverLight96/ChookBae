@@ -49,12 +49,13 @@ function ProfilePage() {
         <NavStyle to="playerlist">선수 목록</NavStyle>
         <NavStyle to="points">포인트 내역</NavStyle>
       </ButtonContainer>
-
-      <Routes path="/profile" element={<ProfilePage />}>
-        <Route path="" element={<ProfilePredictionPage />} />
-        <Route path="playerlist" element={<ProfilePlayerList />} />
-        <Route path="points" element={<ProfilePointPage />} />
-      </Routes>
+      <MainBody>
+        <Routes path="/profile" element={<ProfilePage />}>
+          <Route path="" element={<ProfilePredictionPage />} />
+          <Route path="playerlist" element={<ProfilePlayerList />} />
+          <Route path="points" element={<ProfilePointPage />} />
+        </Routes>
+      </MainBody>
     </Wrapper>
   );
 }
@@ -103,7 +104,10 @@ const NavStyle = styled(NavLink)`
     border-top-left-radius: 10px;
     border-top-right-radius: 10px;
     font-weight: bold;
-    border: 2px solid ${(props) => props.theme.colors.mainBlack};
-    border-bottom: none;
+    border: 2px solid ${(props) => props.theme.colors.mainRed};
   }
+`;
+
+const MainBody = styled.div`
+  background: linear-gradient(#141e30, #243b55);
 `;
