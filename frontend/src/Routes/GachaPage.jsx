@@ -120,13 +120,14 @@ function GachaPage() {
                   image={playerCard.player_image}
                   key={playerCard.player_image}
                   value={playerCard.value}
+                  // flag={playerCard.logo}
                 />
               );
             })}
           </GachaOneList>
         ) : null}
         {isGacha.gacha_count === 10 ? (
-          <GachaList>
+          <GachaList className="cards">
             {gachaResult.map((playerCard, idx) => {
               return (
                 <PlayerCard
@@ -134,6 +135,7 @@ function GachaPage() {
                   image={playerCard.player_image}
                   key={idx}
                   value={playerCard.value}
+                  // flag={playerCard.logo}
                 />
               );
             })}

@@ -90,24 +90,9 @@ const Title = styled.div`
   text-align: center;
   border-bottom-left-radius: 5px;
   border-bottom-right-radius: 5px;
+>>>>>>> c5cc097f639c7d824351ac241f1d16e1b906a3dc
   position: absolute;
-  bottom: 0px;
-`;
-
-const Title2 = styled.div`
-  display: flex;
-
-  width: 100%;
-  height: 30%;
-  font-size: 30px;
-  font-family: "KOTRAHOPE";
-  font-weight: normal;
-  font-style: normal;
-  color: ${(props) => props.theme.colors.white};
-  text-align: center;
-  border-bottom-left-radius: 5px;
-  border-bottom-right-radius: 5px;
-  position: absolute;
-  bottom: 20px;
-  left: 20px;
+  right: 5px;
+  top: 5px;
+  width: 10%;
 `;
