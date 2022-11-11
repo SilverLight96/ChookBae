@@ -1,9 +1,9 @@
 import React from "react";
-import styled from "styled-components";
 import { BrowserRouter,Route, Routes, Link } from "react-router-dom";
 import { CookiesProvider } from "react-cookie";
 import { loggedinState } from "./atoms";
 import { useRecoilValue } from "recoil";
+import GlobalStyles from "./styles/GlobalStyle";
 
 //routes
 import MainPage from './Routes/MainPage';
@@ -30,6 +30,7 @@ function App() {
   const loggedin = useRecoilValue(loggedinState);
   return (
     <CookiesProvider>
+      <GlobalStyles/>
       <BrowserRouter >    
       <NavBar/>
       <Routes>  

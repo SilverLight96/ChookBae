@@ -9,7 +9,6 @@ export default function MyPredictionList() {
 
   return (
     <Wrapper>
-      <h2>내가 예측한 경기</h2>
       <PredictionMain>
         <PredictionTH>
           <div>경기</div>
@@ -46,10 +45,13 @@ const Wrapper = styled.div`
 `;
 
 const PredictionMain = styled.main`
+  background-color: #fffffff4;
+  text-align: center;
   font-size: 22px;
   border: 2px solid ${(props) => props.theme.colors.mainRed};
   border-radius: 5px;
   padding: 10px;
+  margin-top: 15px;
 `;
 
 const PredictionTH = styled.div`
@@ -67,9 +69,6 @@ const PredictionBody = styled.div`
   grid-gap: 0rem;
   margin-bottom: 1rem;
   scroll-behavior: smooth;
-  > div {
-    border: 1px solid white;
-  }
 `;
 
 const PredictionResult = styled.div`
@@ -79,5 +78,5 @@ const PredictionResult = styled.div`
       ? props.theme.colors.mainOrange
       : props.result === 1
       ? props.theme.colors.pointBlue
-      : props.theme.colors.pointBlack};
+      : props.theme.colors.subBlack};
 `;

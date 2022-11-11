@@ -120,13 +120,14 @@ function GachaPage() {
                   image={playerCard.player_image}
                   key={playerCard.player_image}
                   value={playerCard.value}
+                  // flag={playerCard.logo}
                 />
               );
             })}
           </GachaOneList>
         ) : null}
         {isGacha.gacha_count === 10 ? (
-          <GachaList>
+          <GachaList className="cards">
             {gachaResult.map((playerCard, idx) => {
               return (
                 <PlayerCard
@@ -134,6 +135,7 @@ function GachaPage() {
                   image={playerCard.player_image}
                   key={idx}
                   value={playerCard.value}
+                  // flag={playerCard.logo}
                 />
               );
             })}
@@ -147,7 +149,7 @@ function GachaPage() {
 export default GachaPage;
 
 const Wrapper = styled.div`
-  background-color: ${(props) => props.theme.colors.mainBlack};
+  background: linear-gradient(#141e30, #243b55);
   max-width: 600px;
   margin: auto;
 `;
@@ -161,8 +163,8 @@ const NavStyle = styled(NavLink)`
   justify-content: center;
   font-size: 26px;
   text-align: center;
-  background-color: ${(props) => props.theme.colors.mainRed};
-  border-bottom: 2px solid ${(props) => props.theme.colors.mainRed};
+  background-color: ${(props) => props.theme.colors.mainBlack};
+  border-bottom: 2px solid ${(props) => props.theme.colors.mainBlack};
   /* border-top-left-radius: 10px;
   border-top-right-radius: 10px; */
   outline: invert;
@@ -171,11 +173,11 @@ const NavStyle = styled(NavLink)`
   }
   &.active {
     color: ${(props) => props.theme.colors.white};
-    background-color: ${(props) => props.theme.colors.mainBlack};
+    background-color: ${(props) => props.theme.colors.mainRed};
     /* border-top-left-radius: 10px;
     border-top-right-radius: 10px; */
     font-weight: bold;
-    border: 2px solid ${(props) => props.theme.colors.mainBlack};
+    border: 2px solid ${(props) => props.theme.colors.mainRed};
   }
 `;
 
@@ -230,7 +232,7 @@ const ButtonContainer = styled.div`
 const GachaMain = styled.div`
   width: 100%;
   height: 82vh;
-  background-color: ${(props) => props.theme.colors.mainBlack};
+  background: linear-gradient(#141e30, #243b55);
   margin: auto;
   display: flex;
   flex-direction: column;

@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 import styled from "styled-components";
-import { Routes, Route, Link, NavLink } from "react-router-dom";
+import { Routes, Route, NavLink } from "react-router-dom";
 import { myInformation } from "../atoms";
 import { useRecoilState } from "recoil";
 import { fetchData } from "../utils/apis/api";
@@ -62,9 +62,10 @@ function ProfilePage() {
 export default ProfilePage;
 
 const Wrapper = styled.div`
+  background: linear-gradient(#141e30, #243b55);
+  min-height: 100vh;
   max-width: 600px;
   margin: auto;
-  margin-bottom: 70px;
 `;
 
 const ButtonContainer = styled.div`
@@ -82,11 +83,11 @@ const ButtonContainer = styled.div`
 const NavStyle = styled(NavLink)`
   color: ${(props) => props.theme.colors.white};
   width: 33%;
-  height: 50px;
+  height: 5vh;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 24px;
+  font-size: 20px;
   text-align: center;
   background-color: ${(props) => props.theme.colors.mainBlack};
   border-bottom: 2px solid ${(props) => props.theme.colors.mainBlack};

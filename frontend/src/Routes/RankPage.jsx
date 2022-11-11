@@ -1,15 +1,34 @@
 
-import React, { useState, useEffect } from 'react';
+import React, { useState,useEffect } from 'react';
 import styled from 'styled-components';
-import { Routes, Route, Link, NavLink } from "react-router-dom";
+import { NavLink } from "react-router-dom";
+import { fetchData } from "../utils/apis/api";
+import { getCookie } from "../utils/functions/cookies";
 
 import UserRankList from '../Components/Rank/UserRankList';
-
+import { rankApis } from '../utils/apis/userApis';
 
 
 function Ranking(props){
- const [type, setType] = useState('user')
- return(
+  const [rankResult, setRankResult] = useState([]);
+
+  const [isModal, setIsModal] = useState(false);
+  const getRank = async () => {
+    const response = await fetchData
+      .get(rankApis.RANK("value"))
+      .then((res) => {
+        setRankResult(res.data);
+      });
+    return response;
+  };
+
+  useEffect(() => {
+    return 
+  }, );
+
+  
+
+  return(
     <Wrapper>
       {/* <ProfileCard props={profileInfo} /> */}
       <ButtonContainer>
@@ -33,9 +52,9 @@ function Ranking(props){
 export default Ranking;
 
 const Wrapper = styled.div`
-  max-width: 860px;
+  background-color: ${(props) => props.theme.colors.mainWhite};
+  max-width: 600px;
   margin: auto;
-  margin-bottom: 70px;
 `;
 
 const ButtonContainer = styled.div`
@@ -88,11 +107,11 @@ const ButtonContainer = styled.div`
 const NavStyle = styled(NavLink)`
   color: ${(props) => props.theme.colors.white};
   width: 50%;
-  height: 60px;
+  height: 50px;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 26px;
+  font-size: 24px;
   text-align: center;
   background-color: ${(props) => props.theme.colors.mainBlack};
   border-bottom: 2px solid ${(props) => props.theme.colors.mainBlack};
