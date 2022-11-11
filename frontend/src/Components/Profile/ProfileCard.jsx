@@ -41,6 +41,7 @@ function ProfileCard() {
 export default ProfileCard;
 
 const Wrapper = styled.div`
+  background-color: white;
   position: relative;
   margin: auto;
   max-width: 600px;
