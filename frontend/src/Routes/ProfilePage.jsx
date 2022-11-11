@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 import styled from "styled-components";
-import { Routes, Route, Link, NavLink } from "react-router-dom";
+import { Routes, Route, NavLink } from "react-router-dom";
 import { myInformation } from "../atoms";
 import { useRecoilState } from "recoil";
 import { fetchData } from "../utils/apis/api";
