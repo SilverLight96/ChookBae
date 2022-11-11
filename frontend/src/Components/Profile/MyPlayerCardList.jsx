@@ -20,7 +20,7 @@ function MyPlayerCardList() {
             key={playerCard.player_image}
             count={playerCard.count}
             value={playerCard.value}
-            // flag={playerCard.logo}
+            flag={playerCard.logo}
           />
         );
       })}

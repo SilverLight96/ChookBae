@@ -13,6 +13,7 @@ function PlayerCard(props) {
         <PlayerName>{props.title}</PlayerName>
         <PlayerCount>{props.count}</PlayerCount>
         <PlayerValue>{props.value}</PlayerValue>
+        <Image src={props.flag}/>
       </div>
     </div>
   );
@@ -20,6 +21,14 @@ function PlayerCard(props) {
 
 export default PlayerCard;
 
+<<<<<<< frontend/src/Components/common/PlayerCard.jsx
+
+const Image = styled.img`
+  width: 30%;
+  position: absolute; 
+  bottom: 5%;
+  left: 5%;
+=======
 const PlayerName = styled.p`
   font-size: 12px;
   text-align: center;
@@ -41,4 +50,5 @@ const PlayerCount = styled.p`
   text-align: right;
   color: white;
   font-weight: bold;
+>>>>>>> frontend/src/Components/common/PlayerCard.jsx
 `;
