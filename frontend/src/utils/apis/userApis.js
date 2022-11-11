@@ -9,3 +9,7 @@ export const userApis = {
 export const gachaApis = {
   GACHA : 'v1/card'
 }
+
+export const rankApis ={
+  RANK :(ranktype) => `v1/rank?type=${ranktype}`
+}
