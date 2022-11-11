@@ -308,7 +308,7 @@ const MixMain = styled.div`
 const MixButtonWrapper = styled.div`
   display: flex;
   justify-content: center;
-  margin-bottom: 30px;
+  margin-bottom: 40px;
 `;
 
 const MixButton = styled.div`
@@ -360,7 +360,7 @@ const MixButtonContainer = styled.div`
   max-width: 600px;
   flex-direction: row;
   justify-content: space-around;
-  margin-bottom: 25px;
+  margin-bottom: 70px;
   > button {
     border-radius: 5px;
     font-size: 22px;
@@ -421,7 +421,8 @@ const Steam = keyframes`
 const Glow = styled.span`
   z-index: 1;
   position: absolute;
-  width: 40%;
+  max-width: 250px;
+  width: 50%;
   height: 70%;
   background: linear-gradient(0deg, #000, #272727);
   :before,
@@ -483,7 +484,8 @@ const CardPack = styled.div`
   //background-image: linear-gradient(135deg, #b118ac 0%, #26c7da 100%);
   position: absolute;
   z-index: 2;
-  width: 40%;
+  max-width: 250px;
+  width: 50%;
   height: 70%;
   display: flex;
   align-items: center;
@@ -546,4 +548,7 @@ const CombinedCard = styled.div`
   max-width: 400px;
   height: 80vh;
   margin: auto;
+  > div {
+    height: 80vh;
+  }
 `;
