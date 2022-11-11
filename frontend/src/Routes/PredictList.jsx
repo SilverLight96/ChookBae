@@ -58,7 +58,7 @@ const Container = styled.div`
     height: auto;
     margin-left: auto;
     margin-right: auto;
-    background-color: ${(props) => props.theme.colors.mainBlack};
+    background: linear-gradient(#141e30, #243b55);
 
     display: flex;
     flex-direction: column;

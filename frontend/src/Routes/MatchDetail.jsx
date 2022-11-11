@@ -135,11 +135,14 @@ function MatchDetail() {
 export default MatchDetail
 
 const Data = styled.div`
+    p {
+        margin: 0;
+    }
     height: 50%;
     width: 30%;
     padding: 1%;
     
-    font-size: 5%;
+    font-size: 85%;
 
     display: flex;
     flex-direction: column;
@@ -165,7 +168,7 @@ const Container = styled.div`
     flex-direction: column;
     justify-content: space-around;
     align-items: center;
-    background-color: ${(props) => props.theme.colors.mainBlack};
+    background: linear-gradient(#141e30, #243b55);
 `
 
 const DataContainer = styled.div`
@@ -177,9 +180,12 @@ const DataContainer = styled.div`
 `
 
 const DescriptionContainer = styled.div`
+    p {
+        font-size: 80%;
+        margin: 0;
+    }
     width: 50%;
     height: auto;
-    font-size: 5%;
     background-color: #760D27;
     color: white;
     margin-top: 5%;
@@ -265,19 +271,21 @@ const TableContainer = styled.div`
     display: flex;
     justify-content: space-between;
     align-items: center;
+    border-radius: 10px;
 
 `
 
 const ChartContainer = styled.div`
-    width: 95%;
+    width: 90%;
     height: auto;
 
     margin-top: 3%;
-    margin-bottom: 40%;
+    margin-bottom: 35vh;
     background-color: white;
 
     display: flex;
     align-items: center;
+    justify-content: center;
 `
 
 const StyledLink = styled(Link)`
