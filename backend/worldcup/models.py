@@ -98,6 +98,7 @@ class PlayerCard(models.Model):
     id = models.AutoField(primary_key=True)
     player_id = models.ForeignKey(Player, models.DO_NOTHING, db_column='player_id')
     user_id = models.ForeignKey(User, models.DO_NOTHING, db_column='user_id')
+    count = models.IntegerField(default=1)
 
     class Meta:
             db_table='playercard'
