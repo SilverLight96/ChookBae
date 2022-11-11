@@ -10,7 +10,7 @@ export default function MyPointList() {
 
   return (
     <Wrapper>
-      <h2>포인트 내역</h2>
+      {/* <h2>포인트 내역</h2> */}
       <PredictionMain>
         <PredictionTH>
           <div>일자</div>
@@ -39,6 +39,7 @@ const Wrapper = styled.div`
 `;
 
 const PredictionMain = styled.main`
+  margin-top: 15px;
   font-size: 22px;
   border: 2px solid ${(props) => props.theme.colors.mainRed};
   border-radius: 5px;
