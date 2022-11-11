@@ -19,12 +19,14 @@ export default function MyPredictionList() {
         {myInfo[0].predict_match.map((prediction, id) => {
           return (
             <PredictionBody key={prediction.id}>
-              <div>{prediction.match_id_id}</div>
+              <div>
+                {prediction.team1} VS {prediction.team2}
+              </div>
               <div>{prediction.bet_time}</div>
-              <PredictionResult result={prediction.predict}>
-                {prediction.predict === 1 ? (
+              <PredictionResult result={prediction.result}>
+                {prediction.result === 1 ? (
                   <div>적중</div>
-                ) : prediction.predict === 2 ? (
+                ) : prediction.result === 0 ? (
                   <div>미적중</div>
                 ) : (
                   <div>대기중</div>

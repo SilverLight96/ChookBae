@@ -29,14 +29,13 @@ const Background = styled.div`
   justify-content: center;
   align-items: center;
   & section {
+    position: fixed;
+    top: 5%;
     width: 90%;
     max-width: 600px;
-    height: 80vh;
+    height: 85vh;
     background-color: ${(props) => props.theme.colors.subBlack};
     border-radius: 5px;
-    & main {
-      padding: 0 20px;
-    }
   }
 `;
 export default GachaModal;

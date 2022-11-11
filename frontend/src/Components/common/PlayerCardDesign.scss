@@ -4,34 +4,18 @@
   --back: url(https://cdn2.bulbagarden.net/upload/1/17/Cardback.jpg);
   --mewtwo1: #efb2fb;
   --mewtwo2: #acc6f8;
-  // --mewtwofront: url(https://assets.codepen.io/13471/mewtwo-gx.webp);
 }
 
 
 
-.card {
-
-  width: 71.5vw;
-  height: 100vw;
-    // width: clamp(200px, 61vh, 18vw);
-    // height: clamp(280px, 85vh, 25.2vw);
-  @media screen and (min-width: 600px) {
-    // width: 61vh;
-    // height: 85vh;
-    // max-width: 500px;
-    // max-height: 700px;
-    width: clamp(12.9vw, 61vh, 18vw);
-    height: clamp(18vw, 85vh, 25.2vw);
-  }
-  
+.card { 
+  height: 100%;
   position: relative;
-  overflow: hidden;
-  margin: 20px;
-  overflow: hidden;
+  overflow: cover;
+  margin: 5px;
   z-index: 10;
-  touch-action: none;
-  
-  border-radius: 5% / 3.5%;
+  touch-action: none;  
+  border-radius: 10px;
   box-shadow: 
     -5px -5px 5px -5px var(--color1), 
     5px 5px 5px -5px var(--color2), 
@@ -43,7 +27,7 @@
   transition: transform 0.5s ease, box-shadow 0.2s ease;
   will-change: transform, filter;
   
-  // background-color: rgb(244, 242, 242);
+
   background-image: var(--front);
   background-size: cover;
   background-repeat: no-repeat;
@@ -65,7 +49,6 @@
 .card.mewtwo {
   --color1: var(--mewtwo1);
   --color2: var(--mewtwo2);
-  // --front: var(--mewtwofront);
 }
 
 .card:before,
@@ -79,10 +62,11 @@
   background-repeat: no-repeat;
   opacity: .5;
   mix-blend-mode: color-dodge;
-  transition: all .33s ease;
+  transition: all 1s ease;
 }
 
 .card:before {
+  border-radius: 10px;
   background-position: 50% 50%;
   background-size: 300% 300%;
   background-image: linear-gradient(
@@ -95,7 +79,7 @@
     transparent 100%
   );
   opacity: .5;
-  filter: brightness(.5) contrast(1);
+  filter: brightness(.3) contrast(0.1);
   z-index: 1;
 }
 
@@ -108,10 +92,11 @@
   background-size: 160%;
   background-blend-mode: overlay;
   z-index: 2;
-  filter: brightness(1) contrast(1);
+  filter: brightness(0.3) contrast(1);
   transition: all .33s ease;
   mix-blend-mode: color-dodge;
   opacity: .75;
+  border-radius: 10px;
 }
 
 .card.active:after,
@@ -139,7 +124,7 @@
   background-position: 50% 50%;
   background-size: 250% 250%;
   opacity: .88;
-  filter: brightness(.66) contrast(1.33);
+  filter: brightness(.66) contrast(1);
   transition: none;
 }
 
@@ -153,14 +138,14 @@
 
 .card.animated {
   transition: none;
-  animation: holoCard 12s ease 0s 1;
+  animation: holoCard 20s ease 0s 1;
   &:before { 
     transition: none;
-    animation: holoGradient 12s ease 0s 1;
+    animation: holoGradient 20s ease 0s 1;
   }
   &:after {
     transition: none;
-    animation: holoSparkle 12s ease 0s 1;
+    animation: holoSparkle 20s ease 0s infinite;
   }
 }
 
@@ -169,19 +154,19 @@
 
 @keyframes holoSparkle {
   0%, 100% {
-    opacity: .75; background-position: 50% 50%; filter: brightness(1.2) contrast(1.25);
+    opacity: .75; background-position: 50% 50%; filter: brightness(1) contrast(1);
   }
   5%, 8% {
-    opacity: 1; background-position: 40% 40%; filter: brightness(.8) contrast(1.2);
+    opacity: 1; background-position: 40% 40%; filter: brightness(.6) contrast(0.8);
   }
   13%, 16% {
-    opacity: .5; background-position: 50% 50%; filter: brightness(1.2) contrast(.8);
+    opacity: .5; background-position: 50% 50%; filter: brightness(1) contrast(.8);
   }
   35%, 38% {
-    opacity: 1; background-position: 60% 60%; filter: brightness(1) contrast(1);
+    opacity: 1; background-position: 60% 60%; filter: brightness(0.8) contrast(0.8);
   }
   55% {
-    opacity: .33; background-position: 45% 45%; filter: brightness(1.2) contrast(1.25);
+    opacity: .33; background-position: 45% 45%; filter: brightness(1) contrast(1);
   }
 }
 
@@ -193,21 +178,21 @@
   }
   5%, 9% {
     background-position: 100% 100%;
-    opacity: 1;
+    opacity: 0.6;
     filter: brightness(.75) contrast(1.25);
   }
   13%, 17% {
     background-position: 0% 0%;
-    opacity: .88;
+    opacity: .6;
   }
   35%, 39% {
     background-position: 100% 100%;
-    opacity: 1;
+    opacity: 0.5;
     filter: brightness(.5) contrast(1);
   }
   55% {
     background-position: 0% 0%;
-    opacity: 1;
+    opacity: 0.7;
     filter: brightness(.75) contrast(1.25);
   }
 }
@@ -231,95 +216,6 @@
 }
 
 
-
-
-
-
-
-.demo .card {
-  background-image: var(--back);
-  font-size: 2vh
-}
-.demo .card > span {
-  position: relative;
-  top: 45%;
-}
-
-.demo .card:nth-of-type(1),
-.demo .card:nth-of-type(2),
-.demo .card:nth-of-type(3) {
-  width: 20vh;
-  height: 27.5vh;
-  box-shadow: inset 0 0 0 1px rgba(white,0.4), 0 25px 15px -10px rgba(0, 0, 0, 0.5);
-  animation: none;
-}
-
-.demo .card:nth-of-type(1),
-.demo .card:nth-of-type(2),
-.demo .card:nth-of-type(3) {
-  &:before, &:after {
-    animation: none;
-    // opacity: 1;
-  } 
-}
-.demo .card:nth-of-type(1) {
-  &:before, &:after { display: none; }
-}
-.demo .card:nth-of-type(2) {
-  background: none;
-  &:before { display: none; }
-}
-.demo .card:nth-of-type(3) {
-  background: none;
-  &:after { display: none; }
-}
-
-.operator {
-  display: inline-block;
-  vertical-align: middle;
-  font-size: 6vh;
-}
-
-
-// h1 {
-//   display: block;
-//   margin: 30px 0;
-// }
-// p {
-//   margin-top: 5px;
-//   font-weight: 200;
-// }
-// #app {
-//   position: relative;
-// }
-
-.demo,
-.cards { 
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: space-evenly;
-  perspective: 2000px;
-  position: relative;
-  z-index: 1;
-  transform: translate3d(0.1px, 0.1px, 0.1px )
-}
-.demo {
-  flex-direction: row;
-  justify-content: center;
-}
-
-@media screen and (min-width: 600px) {
-  .cards {
-    flex-direction: row;
-  }
-}
-
-
-
-
-
-
 .cards .card {
   &:nth-child(2) {
     &, &:before, &:after {
@@ -337,27 +233,3 @@
     }
   }
 }
-
-
-// p {
-//   font-weight: 400;
-//   font-size: 18px;
-//   padding: 1em;
-//   background: rgba(0,0,0,0.3);
-//   margin-top: 0;
-// }
-
-// p.bottom {
-//   position: absolute;
-//   bottom: 0;
-//   left: 0;
-//   right: 0;
-//   margin-bottom: 0;
-// }
-// p a {
-//   color: cyan;
-// }
-
-// html,body,main {
-//   min-height: 100%;
-// }
