@@ -30,8 +30,8 @@ export default MainPage;
 
 const Wrapper = styled.div`
   max-width: 600px;
+  min-height: 100vh;
   margin: auto;
-  height: 92vh;
   box-sizing: border-box;
   box-shadow: 0 15px 25px rgba(0, 0, 0, 0.6);
   border-radius: 10px;
@@ -39,11 +39,6 @@ const Wrapper = styled.div`
   /* background: black; */
 `;
 
-const ChookBae = styled.header`
-  background-color: ${(props) => props.theme.colors.white};
-  color: ${(props) => props.theme.colors.mainRed};
-  font-size: ${(props) => props.theme.fontSizes.h1};
-`;
 
 const NeonHeader = styled.header`
   padding-top: 20px;

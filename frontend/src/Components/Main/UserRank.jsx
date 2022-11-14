@@ -23,13 +23,14 @@ function UserRank() {
 
   return (
     <Wrapper>
-
       <UserRankHeader>
         <h3 contenteditable spellcheck="false">
           유저 랭킹
         </h3>
       </UserRankHeader>
-      <StyledLink to="/Ranking">더보기</StyledLink>
+      <LinkHeader>
+       <StyledLink to="/Ranking">더보기</StyledLink>
+      </LinkHeader>
       <UserRankTable className="container">
         <div class="table-responsive">
           <table class="table">
@@ -53,14 +54,15 @@ function UserRank() {
             </tbody>
           </table>
         </div>
-      </UserRankTable>
-      
+      </UserRankTable>      
       <PlayerRankHeader>
         <h3 contenteditable spellcheck="false">
           선수 랭킹
         </h3>
       </PlayerRankHeader>
-      <StyledLink to="/PlayerRanking">더보기</StyledLink>
+      <LinkHeader>
+       <StyledLink to="/PlayerRanking">더보기</StyledLink>
+      </LinkHeader>
       <PlayerRankTable>
         <div class="table-responsive">
           <table class="table">
@@ -87,8 +89,6 @@ function UserRank() {
           </table>
         </div>
       </PlayerRankTable>
-      
-
     </Wrapper>
   );
 }
@@ -98,29 +98,26 @@ export default UserRank;
 const Wrapper = styled.div`
   width: 90%;
   margin: auto;
+  margin-bottom: 60px;
 `;
 
+const LinkHeader = styled.div`
+  display: flex;
+  justify-content: flex-end;
+`
+
 const StyledLink = styled(Link)`
-  // box-sizing: border-box;
-  // display: block;
-  padding: 2px 4px;
-  font-size: 12px;
-  margin-left: 480px;
-  margin-right: 10px;
   text-decoration: none;
   color: #fff;
-  // float: right;
-  text-align: right;
-  margin-top: 5px;
-  margin-bottom: 15px;
-  border-radius: 5px;
+  padding: 4px;
+
+ 
   &:hover {
     background-color: #fff;
     color: #000;
+    border-radius: 5px;
+    padding: 4px;
   }
-
-  width: auto;
-  align-self: end;
 `;
 
 const UserRankHeader = styled.div`
