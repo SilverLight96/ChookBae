@@ -1,6 +1,6 @@
 import React,{useState, useEffect} from "react";
 import styled from "styled-components";
-
+import { Routes, Route, NavLink } from "react-router-dom";
 import { fetchData } from "../../utils/apis/api";
 import { rankApis } from "../../utils/apis/userApis";
 
@@ -23,12 +23,12 @@ export default function UserRankList() {
     console.log(rankResult);
   return (
     <Wrapper>
-      <h2>유저 전체 랭킹</h2>
+      <Title>유저 전체 랭킹</Title>
       <RankingMain>
         <RankingTH>
+          <div>등수</div>
           <div>유저</div>
           <div>포인트</div>
-          <div>등수</div>
         </RankingTH>
         {rankResult.map((rank, id) => {
           return (
@@ -48,6 +48,8 @@ const Wrapper = styled.div`
   margin: auto;
   width: 90%;
 `;
+const Title = styled.div`
+  font-size: 25px;`;
 
 const RankingMain = styled.main`
   font-size: 22px;
