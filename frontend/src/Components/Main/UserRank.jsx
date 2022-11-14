@@ -18,9 +18,9 @@ function UserRank() {
           });
         return response;
       };
-
+    
     console.log(rankResult);
-
+    
     useEffect(() => {
       getRank();
     }, []);
@@ -38,13 +38,30 @@ function UserRank() {
           <div>UserName</div>
           <div>Points</div>
         </RankTH>
-        {rankResult.user_list.map((rank, id) => {
+        {/* {rankResult.user_list.map((rank, id) => { */}
+        {rankResult.user_list?.map((rank, id) => {
           return (
             <RankBody key={id}>
               <div>{rank.rank}</div>
               <div>{rank.nickname} </div>
               <div>{rank.value}</div>
             </RankBody>
+          );
+        })}
+        <RankTHtwo>
+          <div>등수</div>
+          <div>선수</div>
+          <div>골</div>
+          <div>시세</div>
+        </RankTHtwo>
+        {rankResult.player_list?.map((rank, id) => {
+          return (
+            <RankBodytwo key={id}>
+              <div>{rank.rank}</div>
+              <div>{rank.fullname}</div>
+              <div>{rank.goal}</div>
+              <div>{rank.value}</div>
+            </RankBodytwo>
           );
         })}
       </RankMain>
@@ -60,6 +77,7 @@ const Wrapper = styled.div`
 `;
 
 const RankHeader = styled.header`
+  color: #fff;
   display: flex;
   align-items: flex-end;
   justify-content: space-between;
@@ -87,17 +105,38 @@ const RankMain = styled.div`
 `;
 
 const RankTH = styled.div`
+  color: #fff;
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   grid-gap: 1rem;
   margin-bottom: 1rem;
   scroll-behavior: smooth;
 `;
-
+const RankTHtwo = styled.div`
+  color: #fff;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  grid-gap: 1rem;
+  margin-bottom: 1rem;
+  scroll-behavior: smooth;
+`;
 const RankBody = styled.div`
-  font-size: 30px;
+  color: #fff;
+  font-size: 18px;
   display: grid;
   grid-template-columns: repeat(3, 1fr);
+  grid-gap: 0rem;
+  margin-bottom: 1rem;
+  scroll-behavior: smooth;
+  > div {
+    border: 1px solid white;
+  }
+`;
+const RankBodytwo = styled.div`
+  color: #fff;
+  font-size: 18px;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
   grid-gap: 0rem;
   margin-bottom: 1rem;
   scroll-behavior: smooth;
