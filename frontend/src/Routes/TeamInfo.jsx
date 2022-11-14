@@ -12,8 +12,8 @@ export default function TeamInfo () {
     useEffect(() => {
         const getData = async(id) => {
             const dataAxios = await axios
-            // >>>>TODO<<<<
-            .get(baseURL + 'v1/match/teaminfo/' + 434, {
+
+            .get(baseURL + 'v1/match/teaminfo/' + id, {
                 headers: {
                     'Content-Type': 'application/json',
                 },
