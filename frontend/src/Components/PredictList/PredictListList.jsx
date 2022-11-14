@@ -71,7 +71,6 @@ const Container = styled.div`
 const PredictionCard = styled.div`
     width: 95%;
     height: 20%;
-    margin-top: 5%;
     display: flex;
     flex-direction: row;
     justify-content: space-between;
@@ -79,13 +78,13 @@ const PredictionCard = styled.div`
 `
 
 const Flag = styled.img`
-    width: 25%;
-    height: 90%;
+    width: 20%;
+    height: auto;
 
 `
 
 const DataContainer = styled.div`
-    width: 20%;
+    width: auto;
     height: 90%;
 
     display: flex;
