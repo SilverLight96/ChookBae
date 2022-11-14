@@ -13,12 +13,20 @@ function PlayerCard(props) {
         <PlayerName>{props.title}</PlayerName>
         <PlayerCount>{props.count}</PlayerCount>
         <PlayerValue>{props.value}</PlayerValue>
+        <Image src={props.flag}/>
       </div>
     </div>
   );
 }
 
 export default PlayerCard;
+
+const Image = styled.img`
+  width: 30%;
+  position: absolute; 
+  bottom: 5%;
+  left: 5%;
+`;
 
 const PlayerName = styled.p`
   font-size: 12px;
@@ -41,58 +49,4 @@ const PlayerCount = styled.p`
   text-align: right;
   color: white;
   font-weight: bold;
-`;
-
-const Wrapper = styled.div`
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  width: 100%;
-  height: 100%;
-`;
-
-const BestCardContainer = styled.div`
-  position: relative;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  width: 90%;
-  height: 91%;
-  border-radius: 3px;
-  box-shadow: 5px 5px 15px 1px black;
-  overflow: hidden;
-  &:hover {
-    transform: scale(1.05);
-    transition: transform 0.8s;
-  }
-`;
-
-const Image = styled.img`
-  width: 100%;
-  height: 100%;
-  border-radius: 5px;
-  object-fit: cover !important;
-`;
-
-const Title = styled.div`
-  display: flex;
-  background: linear-gradient(to bottom, rgba(1, 0, 0, 0), rgba(1, 1, 1, 0.8));
-  justify-content: center;
-  align-items: center;
-  width: 100%;
-  height: 30%;
-  font-size: 30px;
-  font-family: "KOTRAHOPE";
-  font-weight: normal;
-  font-style: normal;
-  color: ${(props) => props.theme.colors.white};
-  text-align: center;
-  border-bottom-left-radius: 5px;
-  border-bottom-right-radius: 5px;
->>>>>>> c5cc097f639c7d824351ac241f1d16e1b906a3dc
-  position: absolute;
-  right: 5px;
-  top: 5px;
-  width: 10%;
 `;

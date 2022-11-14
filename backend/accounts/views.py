@@ -265,7 +265,7 @@ def mypage(request):
             M_list.append({'team1': team_name1, 'team2' : team_name2, 'bet_time' : i.bet_time.date(), 'result': i.result})
 
         #유저의 포인트 사용 내역 전부 가져오기 values()로 가져오면 딕셔너리 형태로 가져옴 튜플은 values_list()
-        point_list = Point.objects.filter(user_id=user.id)
+        point_list = Point.objects.filter(user_id=user.id).order_by('-id')
         for i in point_list:
             P_list.append({'point': i.point, 'info': i.info, 'time': i.time.strftime("%Y-%m-%d %H:%M")})
 

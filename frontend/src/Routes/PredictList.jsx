@@ -37,6 +37,7 @@ export default function PredictList () {
             <CalendarContainer>
                 <StyledCalendar onChange={onChangeTemp} value={value} />
             </CalendarContainer>
+            <StyledHr/>
             <h1>{valueMoment}</h1>
             {predictList.length > 0 ? null : <BlankDiv height='60vh'></BlankDiv>}
             <ListContainer>
@@ -54,28 +55,28 @@ export default function PredictList () {
 }
 
 const Container = styled.div`
+    max-width: 600px;
+    min-height: 100vh;
     width: 100%;
     height: auto;
     margin-left: auto;
     margin-right: auto;
-    background-color: ${(props) => props.theme.colors.mainBlack};
+    background: linear-gradient(#141e30, #243b55);
 
     display: flex;
     flex-direction: column;
     justify-content: space-between;
     align-items: center;
     color: white;
-
-    position: absolute;
-    top: 0;
-    left: 0;
-    border: 1px solid black;
 `
 
 const CalendarContainer = styled.div`
-    width: auto;
+    width: 100%;
     height: auto;
     margin-top: 3%;
+
+    display: flex;
+    justify-content: center;
 `
 
 const StyledCalendar = styled(Calendar)`
@@ -88,15 +89,19 @@ const StyledCalendar = styled(Calendar)`
 const ListContainer = styled.div`
     width: 100%;
     height: auto;
-
+    margin: 0 auto;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
     align-items: center;
-
-    border: 1px solid black;
 `
 
 const BlankDiv = styled.div`
     height: ${props => props.height};
+`
+const StyledHr = styled.hr`
+    width: 90%;
+    height: 0;
+    background-color: #914154;
+    border: 1px solid #914154;
 `
