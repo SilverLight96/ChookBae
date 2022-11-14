@@ -244,9 +244,13 @@ class card(APIView):
         
 
         if(group_id == "상관없음"):
-            point=0*gacha_count
+            point=500*gacha_count
         else:
-            point=0*gacha_count
+            point=2000*gacha_count
+        
+        if(gacha_count==10):
+            point*=0.9
+
 
         if(user.points<point):
             return ('보유하고 있는 포인트를 확인해 주세요.')
