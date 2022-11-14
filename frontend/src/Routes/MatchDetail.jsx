@@ -136,8 +136,8 @@ export default MatchDetail
 
 const Data = styled.div`
     p {
-        font-size: 1em;
-        margin: 1% 0;
+        font-size: 0.9em;
+        margin: 4% 0;
     }
     height: 50%;
     width: 30%;
@@ -154,6 +154,7 @@ const Data = styled.div`
 
 const Container = styled.div`
     max-width: 600px;
+    min-height: 100vh;
     height: auto;
     width: 100%;
 
@@ -277,7 +278,7 @@ const ChartContainer = styled.div`
     height: auto;
 
     margin-top: 3%;
-    margin-bottom: 35vh;
+    margin-bottom: 10vh;
 
     display: flex;
     align-items: center;
@@ -285,7 +286,9 @@ const ChartContainer = styled.div`
 `
 
 const StyledLink = styled(Link)`
+    border-radius: 5px;
+    border: 2px solid white;
     text-decoration: none;
     font-weight: bold;
-    color: red;
+    color: white;
 `
