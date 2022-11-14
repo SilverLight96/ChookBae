@@ -230,7 +230,7 @@ const NavStyle = styled(NavLink)`
   justify-content: center;
   font-size: 26px;
   text-align: center;
-  background-color: ${(props) => props.theme.colors.mainBlack};
+  background-color: ${(props) => props.theme.colors.mainRed};
   border-bottom: 2px solid ${(props) => props.theme.colors.mainBlack};
   /* border-top-left-radius: 10px;
   border-top-right-radius: 10px; */
@@ -240,12 +240,11 @@ const NavStyle = styled(NavLink)`
   }
   &.active {
     color: ${(props) => props.theme.colors.white};
-    background-color: ${(props) => props.theme.colors.mainRed};
+    background: linear-gradient(#141e30, #243b55);
     /* border-top-left-radius: 10px;
     border-top-right-radius: 10px; */
     font-weight: bold;
-    border: 2px solid ${(props) => props.theme.colors.mainRed};
-    border-bottom: none;
+    border: 2px solid linear-gradient(#141e30, #243b55);
   }
 `;
 

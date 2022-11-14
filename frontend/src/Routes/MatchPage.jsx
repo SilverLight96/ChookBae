@@ -222,6 +222,7 @@ const SelectedCard = styled.p`
 
 const Container = styled.div`
     margin: 0 auto;
+    min-height: 100vh;
     max-width: 600px;
     width: 100%;
     height: auto;
