@@ -252,7 +252,7 @@ def mypage(request):
         for i in card_list:
             C=Player.objects.get(id=i.player_id.id)
             player_name=player_k(C.id)
-            C_list.append({'player_image' : C.player_image, 'fullname' : player_name, 'logo' : C.team_id.logo, 'value' : C.value, 'count' : i.count })  
+            C_list.append({'id':C.id, 'player_image' : C.player_image, 'fullname' : player_name, 'logo' : C.team_id.logo, 'value' : C.value, 'count' : i.count })  
 
         C_list.sort(key=lambda x: (-x['count'], x['fullname']))
         #유저의 예측 내역 조회
