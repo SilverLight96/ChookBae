@@ -204,6 +204,7 @@ function MixPage() {
                 image={combinedCard.player_image}
                 key={combinedCard.player_image}
                 value={combinedCard.value}
+                flag={combinedCard.logo}
               />
             </CombinedCard>
           </ModalBody>

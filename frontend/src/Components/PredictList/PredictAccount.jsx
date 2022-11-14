@@ -82,7 +82,7 @@ export default function PredictAccount (props) {
 
 const Container = styled.div`
     width: 90%;
-    height: 60%;
+    height: 80%;
     padding: 3%;
     
     display: flex;
@@ -95,9 +95,12 @@ const Container = styled.div`
 `
 
 const MyInfoContainer = styled.div`
-    width: 40%;
-    height: 30%;
-    font-size: 10%;
+    p {
+        font-size: 1.5em;
+        margin: 5% 0;
+    }
+    width: auto;
+    height: auto;
 
     display: flex;
     flex-direction: column;
@@ -108,7 +111,7 @@ const MyInfoContainer = styled.div`
 
 const CountryInfoContainer = styled.div`
     width: 90%;
-    height: 60%;
+    height: 80%;
 
     display: flex;
     flex-direction: row;
@@ -118,9 +121,12 @@ const CountryInfoContainer = styled.div`
 `
 
 const CountryInfo = styled.div`
+    p {
+        font-size: 1em;
+        margin: 2% 0;
+    }
     width: 50%;
     height: 100%;
-    font-size: 50%;
     background-color: ${props => props.color};
 
     display: flex;

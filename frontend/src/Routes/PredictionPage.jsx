@@ -17,7 +17,7 @@ const Wrapper = styled.div`
 `;
 
 const ChookBae = styled.header`
-  background-color: ${(props) => props.theme.colors.white};
+  background: linear-gradient(#141e30, #243b55);
   color: ${(props) => props.theme.colors.mainRed};
   font-size: ${(props) => props.theme.fontSizes.h1};
 `;

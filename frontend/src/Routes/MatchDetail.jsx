@@ -135,11 +135,13 @@ function MatchDetail() {
 export default MatchDetail
 
 const Data = styled.div`
+    p {
+        font-size: 1em;
+        margin: 1% 0;
+    }
     height: 50%;
     width: 30%;
     padding: 1%;
-    
-    font-size: 5%;
 
     display: flex;
     flex-direction: column;
@@ -151,21 +153,18 @@ const Data = styled.div`
 `
 
 const Container = styled.div`
+    max-width: 600px;
     height: auto;
     width: 100%;
 
-    margin: 0;
+    margin: 0 auto;
     padding: 0;
-    
-    position: absolute;
-    top: 0;
-    left: 0;
     
     display: flex;
     flex-direction: column;
     justify-content: space-around;
     align-items: center;
-    background-color: ${(props) => props.theme.colors.mainBlack};
+    background: linear-gradient(#141e30, #243b55);
 `
 
 const DataContainer = styled.div`
@@ -177,9 +176,12 @@ const DataContainer = styled.div`
 `
 
 const DescriptionContainer = styled.div`
+    p {
+        font-size: 1em;
+        margin: 1%;
+    }
     width: 50%;
     height: auto;
-    font-size: 5%;
     background-color: #760D27;
     color: white;
     margin-top: 5%;
@@ -201,7 +203,7 @@ const FlagContainer = styled.div`
     margin-top: 3%;
 
     display: flex;
-    justify-content: space-between;
+    justify-content: space-evenly;
     align-items: center;
 
     border-radius: 10px;
@@ -215,11 +217,11 @@ const Flag = styled.img`
 
 const Predict = styled.div`
     width: 30%;
-    height: 50%;
+    height: auto;
 
     display: flex;
     flex-direction: column;
-    justify-content: center;
+    justify-content: space-evenly;
     align-items: center;
 
     color: white;
@@ -238,7 +240,7 @@ const Group = styled.div`
 const PredictBtn = styled.button`
     width: 5em;
     height: 25%;
-    margin: 0;
+    margin: 5% 0;
     padding: 0;
     background-color: #914154;
     color: white;
@@ -250,9 +252,10 @@ const PredictBtn = styled.button`
     border: 2px solid white;
     border-radius: 10px;
     p {
+        font-size: 1em;
         height: auto;
         width: auto;
-        margin: 0;
+        margin: 1%;
         padding: 1%;
     }
 `
@@ -265,19 +268,20 @@ const TableContainer = styled.div`
     display: flex;
     justify-content: space-between;
     align-items: center;
+    border-radius: 10px;
 
 `
 
 const ChartContainer = styled.div`
-    width: 95%;
+    width: 90%;
     height: auto;
 
     margin-top: 3%;
-    margin-bottom: 40%;
-    background-color: white;
+    margin-bottom: 35vh;
 
     display: flex;
     align-items: center;
+    justify-content: center;
 `
 
 const StyledLink = styled(Link)`

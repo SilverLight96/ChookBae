@@ -96,24 +96,30 @@ function MatchData(props) {
 export default MatchData
 
 const StyledCard = styled.div`
+    max-width: 600px;
     height: 20vh;
-    width: 90vw;
+    width: 90%;
     margin-left: auto;
     margin-right: auto;
     margin-bottom: 3%;
-
+    margin-top: 3%;
+    
     padding: 10px 5px;
 
     background-color: #760D27;
     position: relative;
 
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
     border-radius: 10px;
 
 `
 
 const TextDiv = styled.div`
+    max-width: 300px;
     height: auto;
-    width: 50vw;
+    width: 60%;
     margin-left: auto;
     margin-right: auto;
     text-align: center;
@@ -127,8 +133,8 @@ const StyledP = styled.p`
 `
 
 const FlagDiv = styled.div`
-    height: 10vh;
-    width: 90vw;
+    height: auto;
+    width: 90%;
     margin-left: auto;
     margin-right: auto;
 
@@ -142,8 +148,8 @@ const FlagDiv = styled.div`
 `
 
 const FlagContainer = styled.div`
-    height: 13vh;
-    width: 30vw;
+    height: auto;
+    width: 30%;
 
     display: flex;
     flex-direction: column;
@@ -154,18 +160,24 @@ const FlagContainer = styled.div`
 const Flag = styled.img`
     height: 80%;
     width: 80%;
+
+    /* position: absolute; */
 `
 
 const FlagName = styled.div`
     height: 20%;
     width: 100%;
-    font-size: 5%;
+    font-size: 1em;
     text-align: center;
     color: white;
 `
 
 const Group = styled.p`
     color: white;
-    font-size: 3em
+    font-size: 1.5em;
     margin: 0;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
 `
