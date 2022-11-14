@@ -231,7 +231,6 @@ class card(APIView):
         'point': openapi.Schema(type=openapi.TYPE_NUMBER, description="소모 포인트"),
         })
 
-    @transaction.atomic()
     def get_object(self, user_id, group_id, gacha_count):
         
         gacha_count=int(gacha_count)
@@ -263,12 +262,17 @@ class card(APIView):
 
 
 
-            find=PlayerCard.objects.filter(Q(player_id=card.id) & Q(user_id=user_id)).count()
-            if(find==0):
+            find=PlayerCard.objects.filter(Q(player_id=card.id) & Q(user_id=user_id))
+            if (len(find) ==0 ):
+                new_card=PlayerCard.objects.create(player_id=card, user_id=user)
                 user.value+=card.value
-            new_card=PlayerCard.objects.create(player_id=card, user_id=user)
+            else :
+                cc=PlayerCard.objects.get(player_id=card.id , user_id=user_id)
+                cc.count += 1
+                cc.save()
+            
             player_name= player_k(card.id)
-            list={'fullname' : player_name, 'player_image' : card.player_image, 'value' : card.value }
+            list={'fullname' : player_name, 'player_image' : card.player_image, 'logo' : card.team_id.logo, 'value' : card.value }
             c_list.append(list)
         user.points-=point
         user.save()
@@ -292,8 +296,8 @@ class card(APIView):
 
     @swagger_auto_schema(operation_id="유저의 보유하고 있는 카드 확인", operation_description="해당 유저가 보유하고 있는 모든 카드의 정보를 가져온다.")
     def get(self, request, id):
+        print(datetime.datetime.now())
         c_list=[]
-        hashmap = {}
         country = id
         if (country>0):
             team=Team.objects.get(id=country)
@@ -305,19 +309,13 @@ class card(APIView):
         card=PlayerCard.objects.filter(user_id=user_id).order_by('player_id')
 
         for i in card:
-            if i.player_id.id in hashmap :
-                num=hashmap[i.player_id.id]
-                hashmap[i.player_id.id]=num+1
-            else :
-                hashmap[i.player_id.id]=1
-
-        for i in hashmap.keys():
-            C=Player.objects.get(id=i)
+            C=Player.objects.get(id=i.player_id.id)
             if (country>0):
                 if(C.team_id != team):
                     continue
             player_name=player_k(C.id)
-            c_list.append({'id' : C.id, 'player_image' : C.player_image, 'fullname' : player_name, 'value' : C.value, 'count' : hashmap.get(i) })
+            c_list.append({'id' : C.id, 'player_image' : C.player_image, 'fullname' : player_name, 'logo' : C.team_id.logo, 'value' : C.value, 'count' : i.count })
+
 
         c_list.sort(key=lambda x: x["fullname"])    
         return Response(c_list)       
@@ -334,17 +332,18 @@ class combine(APIView):
     @transaction.atomic()
     def get_object(self, user_id, card1, card2):  
         user=User.objects.get(id=user_id)
+
         try:
-            first=PlayerCard.objects.filter(Q(player_id=card1) & Q(user_id=user_id)).order_by('?').first()
-            second=PlayerCard.objects.filter(Q(player_id=card1) & Q(user_id=user_id) & ~Q(id=first.id)).order_by('?').first()
-            if second is None :
+            first=PlayerCard.objects.get(Q(player_id=card1) & Q(user_id=user_id))
+            second=PlayerCard.objects.get(Q(player_id=card2) & Q(user_id=user_id))
+
+            if (first != second  and first.count<1 and second.count<1) :
+                raise Exception
+            elif (first==second and first.count<2):
                 raise Exception
             team=-1
         except:
             return ('보유하고 있지 않은 선수카드입니다.')
-        
-            
-        
 
 
         if(first.player_id.team_id == second.player_id.team_id):
@@ -359,25 +358,39 @@ class combine(APIView):
         if card is None:
             return ('뽑을 선수가 없습니다.')
     
-        find=PlayerCard.objects.filter(Q(player_id=card.id) & Q(user_id=user_id)).count()
-        if(find==0):
-           user.value+=card.value
+        find=PlayerCard.objects.filter(Q(player_id=card.id) & Q(user_id=user_id))
 
-        firstfind=PlayerCard.objects.filter(Q(player_id=first.player_id.id) & Q(user_id=user_id)).count()
-        secondfind=PlayerCard.objects.filter(Q(player_id=second.player_id.id) & Q(user_id=user_id)).count()
+        if (len(find)==0):
+            new_card=PlayerCard.objects.create(player_id=card, user_id=user)
+            user.value+=card.value
+        else :
+            cc=PlayerCard.objects.get(player_id=card.id,user_id=user_id)
+            cc.count += 1
+            cc.save()
         
 
-        if(firstfind==1):
+        if(first.count==1):
             user.value-=first.player_id.value
-        if(secondfind==1):
-            user.value-=second.player_id.value
+            first.delete()
+        else :
+            if(first==second):
+                second.count-=1
+                second.save()
+            else :
+                first.count-=1
+                first.save()
 
+        if(second.count==1):
+            user.value-=second.player_id.value
+            second.delete()
+        else:
+            second.count-=1
+            second.save()
+
+        
         user.save()
-        first.delete()
-        second.delete()
-        new_card=PlayerCard.objects.create(player_id=card, user_id=user)
         player_name= player_k(card.id)
-        list={'fullname' : player_name, 'player_image' : card.player_image, 'value' : card.value }
+        list={'fullname' : player_name, 'player_image' : card.player_image, 'logo' : card.team_id.logo, 'value' : card.value }
 
         return (list)
 

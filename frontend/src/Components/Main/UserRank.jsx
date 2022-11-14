@@ -1,43 +1,49 @@
-import React from "react";
+import React,{useState,useEffect} from "react";
 import styled from "styled-components";
 import RankIcon from "../../assets/Rank_Icon.png";
+import { fetchData } from "../../utils/apis/api";
+import { rankApis } from "../../utils/apis/userApis";
 import { Link } from "react-router-dom";
 
 
 function UserRank() {
-  const rankings = [
-    { id: 1, username: "Kim", points: 1240000 },
-    { id: 2, username: "Im", points: 1130000 },
-    { id: 3, username: "Kang", points: 1040000 },
-    { id: 4, username: "Park", points: 940000 },
-    { id: 5, username: "Lee", points: 860000 },
-  ];
+  const [rankResult, setRankResult] = useState([]);
+
+    // const [isModal, setIsModal] = useState(false);
+    const getRank = async () => {
+      const response = await fetchData
+          .get(rankApis.RANKTOP)
+          .then((res) => {
+            setRankResult(res.data);
+          });
+        return response;
+      };
+
+    console.log(rankResult);
+
+    useEffect(() => {
+      getRank();
+    }, []);
 
   return (
     <Wrapper>
       <RankHeader>
-        <h3>
         Top Rank <img src={RankIcon} alt="랭크 아이콘" />
-        </h3>
-        
         <Link to="/Ranking">전체 랭킹 보기</Link>
-        
-     </RankHeader>
-      <RankAll>
-      </RankAll>
+      </RankHeader>
+      
       <RankMain>
-
-        <RankTH>
+      <RankTH>
           <div>Rank</div>
           <div>UserName</div>
           <div>Points</div>
         </RankTH>
-        {rankings.map((rank, id) => {
+        {rankResult.user_list.map((rank, id) => {
           return (
             <RankBody key={id}>
-              <div>{rank.id}</div>
-              <div>{rank.username}</div>
-              <div>{rank.points}</div>
+              <div>{rank.rank}</div>
+              <div>{rank.nickname} </div>
+              <div>{rank.value}</div>
             </RankBody>
           );
         })}
@@ -89,7 +95,7 @@ const RankTH = styled.div`
 `;
 
 const RankBody = styled.div`
-  font-size: 18px;
+  font-size: 30px;
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   grid-gap: 0rem;
@@ -99,5 +105,3 @@ const RankBody = styled.div`
     border: 1px solid white;
   }
 `;
-
-

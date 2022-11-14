@@ -1,8 +1,8 @@
 import React from "react";
 import styled from "styled-components";
-import PlayerRankList from "../Components/Rank/PlayerRankList";
+import PlayerRankList from "../Components/Rank/PlayerRankList.jsx";
 
-function PlayerRankingList() {
+function PlayerRanking() {
     return (
       <Wrapper>
         <PlayerRankList />
@@ -10,7 +10,7 @@ function PlayerRankingList() {
     );
   }
   
-  export default PlayerRankingList;
+  export default PlayerRanking;
   
   const Wrapper = styled.div`
     max-width: 860px;
