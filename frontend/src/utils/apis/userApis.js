@@ -11,5 +11,6 @@ export const gachaApis = {
 }
 
 export const rankApis ={
-  RANK :(ranktype) => `v1/rank?type=${ranktype}`
+  RANK :(ranktype) => `v1/rank?type=${ranktype}`,
+  RANKTOP: 'v1/rank/top',
 }
