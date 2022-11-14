@@ -1,43 +1,46 @@
-import React,{useState,useEffect} from "react";
+import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import RankIcon from "../../assets/Rank_Icon.png";
 import { fetchData } from "../../utils/apis/api";
 import { rankApis } from "../../utils/apis/userApis";
 import { Link } from "react-router-dom";
-
+import "../../styles/LoginPageHeaderDesign.css";
 
 function UserRank() {
   const [rankResult, setRankResult] = useState([]);
 
-    // const [isModal, setIsModal] = useState(false);
-    const getRank = async () => {
-      const response = await fetchData
-          .get(rankApis.RANKTOP)
-          .then((res) => {
-            setRankResult(res.data);
-          });
-        return response;
-      };
-    
-    console.log(rankResult);
-    
-    useEffect(() => {
-      getRank();
-    }, []);
+  // const [isModal, setIsModal] = useState(false);
+  const getRank = async () => {
+    const response = await fetchData.get(rankApis.RANKTOP).then((res) => {
+      setRankResult(res.data);
+    });
+    return response;
+  };
+
+  console.log(rankResult);
+
+  useEffect(() => {
+    getRank();
+  }, []);
 
   return (
     <Wrapper>
-      <RankHeader>
+      {/* <RankHeader>
         Top Rank <img src={RankIcon} alt="랭크 아이콘" />
         <Link to="/Ranking">전체 랭킹 보기</Link>
-      </RankHeader>
-      
+      </RankHeader> */}
+      <MainPageHeader>
+        <h3 contenteditable spellcheck="false">
+          유저 랭킹
+        </h3>
+      </MainPageHeader>
+
       <RankMain>
-      <RankTH>
+        {/* <RankTH>
           <div>Rank</div>
           <div>UserName</div>
           <div>Points</div>
-        </RankTH>
+        </RankTH> */}
         {/* {rankResult.user_list.map((rank, id) => { */}
         {rankResult.user_list?.map((rank, id) => {
           return (
@@ -48,6 +51,12 @@ function UserRank() {
             </RankBody>
           );
         })}
+
+        <MainPageHeader>
+          <h3 contenteditable spellcheck="false">
+            선수 랭킹
+          </h3>
+        </MainPageHeader>
         <RankTHtwo>
           <div>등수</div>
           <div>선수</div>
@@ -142,5 +151,36 @@ const RankBodytwo = styled.div`
   scroll-behavior: smooth;
   > div {
     border: 1px solid white;
+  }
+`;
+
+const MainPageHeader = styled.div`
+  padding-bottom: 20px;
+  h3 {
+    white-space: nowrap;
+    width: auto;
+    text-align: center;
+    font-size: 1.8rem;
+    font-style: italic;
+    color: #fff;
+    padding: 0.5rem 0.5rem 0.5rem;
+    border: 0.2rem solid #fff;
+    border-radius: 2rem;
+    text-transform: uppercase;
+    animation: flicker 1.5s infinite alternate;
+  }
+
+  h3::-moz-selection {
+    background-color: var(--neon-border-color);
+    color: var(--neon-text-color);
+  }
+
+  h3::selection {
+    background-color: var(--neon-border-color);
+    color: var(--neon-text-color);
+  }
+
+  h3:focus {
+    outline: none;
   }
 `;

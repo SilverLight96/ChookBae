@@ -47,6 +47,7 @@ const ChookBae = styled.header`
 
 const NeonHeader = styled.header`
   padding-top: 30px;
+  padding-bottom: 30px;
   /* reset */
 
   p {
