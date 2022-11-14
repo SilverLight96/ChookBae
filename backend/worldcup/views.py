@@ -12,7 +12,7 @@ from django.db.models import Q,Subquery
 from rest_framework import status
 from rest_framework.response import Response
 from .Serializers import UserrankSerializer,matchidSerializer
-from .models import  Point, Venue, Team, Match, Player, PlayerCard, Prediction, Bet, EmailCert
+from .models import  Point, Venue, Team, Match, Player, PlayerCard, Prediction, Bet
 from accounts.models import User
 from .translation import venue_k, team_k, player_k, player_pos
 from .playervaluesetup import value_p
