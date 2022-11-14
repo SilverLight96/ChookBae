@@ -54,7 +54,7 @@ export default function PredictListList (props) {
 }
 
 const Container = styled.div`
-    width: 90vw;
+    width: 90%;
     height: auto;
     margin-top: 3%;
 
@@ -70,7 +70,7 @@ const Container = styled.div`
 
 const PredictionCard = styled.div`
     width: 95%;
-    height: 20vh;
+    height: 20%;
     margin-top: 5%;
     display: flex;
     flex-direction: row;
