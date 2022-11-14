@@ -23,13 +23,12 @@ function UserRank() {
 
   return (
     <Wrapper>
-
       <UserRankHeader>
         <h3 contenteditable spellcheck="false">
           유저 랭킹
         </h3>
       </UserRankHeader>
-      <StyledLink to="/Ranking">더보기</StyledLink>
+      {/* <StyledLink to="/Ranking">더보기</StyledLink> */}
       <UserRankTable className="container">
         <div class="table-responsive">
           <table class="table">
@@ -54,13 +53,13 @@ function UserRank() {
           </table>
         </div>
       </UserRankTable>
-      
+
       <PlayerRankHeader>
         <h3 contenteditable spellcheck="false">
           선수 랭킹
         </h3>
       </PlayerRankHeader>
-      <StyledLink to="/PlayerRanking">더보기</StyledLink>
+      {/* <StyledLink to="/PlayerRanking">더보기</StyledLink> */}
       <PlayerRankTable>
         <div class="table-responsive">
           <table class="table">
@@ -87,8 +86,6 @@ function UserRank() {
           </table>
         </div>
       </PlayerRankTable>
-      
-
     </Wrapper>
   );
 }
