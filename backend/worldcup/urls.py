@@ -12,7 +12,6 @@ urlpatterns = [
     path('card', views.card.as_view()),
     path('card/<int:id>', views.card.as_view()),
     path('card/combine', views.combine.as_view()),
-    path('card/team',views.teamlist.as_view()),
     path('rank', views.rank.as_view()),
     path('rank/top', views.TopRank.as_view()),
     path('match/group', views.GroupInfo.as_view()),

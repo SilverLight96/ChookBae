@@ -25,7 +25,6 @@ from secret.apikey import API_KEY
 # Create your views here.
 
 # 승부 예측 POST
- 
 class matchpredict(APIView):
     param = openapi.Schema(type=openapi.TYPE_OBJECT, required=['match_id', 'point', 'predict'],
     properties={
@@ -92,6 +91,7 @@ class matchpredict(APIView):
         else :
             return Response({'error' :ingredient},status=status.HTTP_400_BAD_REQUEST)
 
+
 #승부 예측 경기 리스트 GET
 class predictlist(APIView):
     date = openapi.Parameter('id', openapi.IN_PATH, description='date in YYYYMMDD', required=True, type=openapi.TYPE_NUMBER)
@@ -108,6 +108,7 @@ class predictlist(APIView):
         
         print(match_list)
         return Response(match_list,status=status.HTTP_200_OK)
+
 
 #승부 예측 정보 조회 GET
 class predicdetail(APIView):
@@ -143,6 +144,7 @@ class predicdetail(APIView):
         return Response({'win_count': win_count, 'win_total': bet.win, 'win_dang': win_dang,
         'draw_count': draw_count, 'draw_total': bet.draw, 'draw_dang': draw_dang,
         'lose_count': lose_count, 'lose_total': bet.lose, 'lose_dang': lose_dang,'total_point' :total, 'point' : point,},status=status.HTTP_200_OK)
+
 
 #승부 예측 여부 GET
 class predictinfo(APIView):
@@ -210,16 +212,17 @@ def predictcalc():
                 pre.result=0
                 pre.save()
 
-class teamlist(APIView):
-    @swagger_auto_schema(operation_id="전체 팀의 간단한 정보를 가져온다.", operation_description="유저가 국가를 선택하여 뽑기를 희망하는 경우 국가에 대한 간략한 정보를 보여준다")
-    def get(self, request):
-        teams = Team.objects.all().order_by('group')
-        g_list = []
-        for t in teams:
-            team_name = team_k(t.id)[0]
-            g_list.append({'id': t.id,  'country' : team_name, 'logo' : t.logo})
+
+# class teamlist(APIView):
+#     @swagger_auto_schema(operation_id="전체 팀의 간단한 정보를 가져온다.", operation_description="유저가 국가를 선택하여 뽑기를 희망하는 경우 국가에 대한 간략한 정보를 보여준다")
+#     def get(self, request):
+#         teams = Team.objects.all().order_by('group')
+#         g_list = []
+#         for t in teams:
+#             team_name = team_k(t.id)[0]
+#             g_list.append({'id': t.id,  'country' : team_name, 'logo' : t.logo})
         
-        return Response(g_list,status=status.HTTP_200_OK)
+#         return Response(g_list,status=status.HTTP_200_OK)
         
 
 #선수 뽑기 POST
@@ -320,6 +323,7 @@ class card(APIView):
         c_list.sort(key=lambda x: x["fullname"])    
         return Response(c_list)       
 
+
 #선수 합성 POST
 class combine(APIView):
     param = openapi.Schema(type=openapi.TYPE_OBJECT, required=['player_card_id1', 'player_card_id2'],
@@ -406,6 +410,7 @@ class combine(APIView):
         else:
             return Response(comb,status=status.HTTP_200_OK)
 
+
 # 랭킹 조회 POST
 class rank(APIView):
 
@@ -429,9 +434,7 @@ class rank(APIView):
         return Response(R_list,status=status.HTTP_200_OK)   
 
 
-   
-
-
+#상위 랭킹 조회 GET
 class TopRank(APIView):
 
     def get(self, request):
