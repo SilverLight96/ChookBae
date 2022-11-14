@@ -13,12 +13,20 @@ function PlayerCard(props) {
         <PlayerName>{props.title}</PlayerName>
         <PlayerCount>{props.count}</PlayerCount>
         <PlayerValue>{props.value}</PlayerValue>
+        <Image src={props.flag}/>
       </div>
     </div>
   );
 }
 
 export default PlayerCard;
+
+const Image = styled.img`
+  width: 30%;
+  position: absolute; 
+  bottom: 5%;
+  left: 5%;
+`;
 
 const PlayerName = styled.p`
   font-size: 12px;
