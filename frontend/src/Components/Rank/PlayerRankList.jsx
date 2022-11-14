@@ -1,6 +1,6 @@
 import React,{useState, useEffect} from "react";
 import styled from "styled-components";
-
+import { Routes, Route, NavLink } from "react-router-dom";
 import { fetchData } from "../../utils/apis/api";
 import { rankApis } from "../../utils/apis/userApis";
 
@@ -22,7 +22,7 @@ export default function PlayerRankList() {
     }, []);
   return (
     <Wrapper>
-      <h2>선수 전체 랭킹</h2>
+      <Title>선수 전체 랭킹</Title>
       <RankingMain>
         <RankingTH>
           <div>등수</div>
@@ -49,6 +49,8 @@ const Wrapper = styled.div`
   margin: auto;
   width: 95%;
 `;
+const Title = styled.div`
+  font-size: 25px;`;
 
 const RankingMain = styled.main`
   font-size: 22px;
