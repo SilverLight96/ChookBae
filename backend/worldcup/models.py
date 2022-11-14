@@ -124,12 +124,3 @@ class Bet(models.Model):
     class Meta:
             db_table='bet'
 
-
-class EmailCert(models.Model):
-    id = models.AutoField(primary_key=True)
-    email = models.CharField(max_length=200)
-    cert_num = models.CharField(max_length=200)
-    cert_time = models.DateTimeField()
-
-    class Meta:
-            db_table='emailcert'
