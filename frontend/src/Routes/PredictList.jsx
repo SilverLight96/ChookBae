@@ -56,8 +56,9 @@ export default function PredictList () {
 
 const Container = styled.div`
     max-width: 600px;
+    min-height: 100vh;
     width: 100%;
-    height: 100vh;
+    height: auto;
     margin-left: auto;
     margin-right: auto;
     background: linear-gradient(#141e30, #243b55);
