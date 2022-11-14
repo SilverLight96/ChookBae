@@ -70,7 +70,7 @@ const Container = styled.div`
 
 const PredictionCard = styled.div`
     width: 95%;
-    height: 20%;
+    height: auto;
     display: flex;
     flex-direction: row;
     justify-content: space-between;
@@ -95,10 +95,10 @@ const DataContainer = styled.div`
 `
 
 const StyledBtn = styled.button`
-    width: 20%;
-    height: 20%;
-    font-size: 5%;
+    width: auto;
+    height: auto;
     text-align: center;
+    margin-left: 2%;
 
     display: flex;
     justify-content: center;
@@ -108,11 +108,13 @@ const StyledBtn = styled.button`
     border: 2px solid white;
     border-radius: 10px;
     p {
+        font-size: auto;
         height: auto;
         width: auto;
         margin: 0;
         padding: 1%;
         color: white;
+        white-space: nowrap;
     }
 `
 
