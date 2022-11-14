@@ -77,6 +77,7 @@ const Wrapper = styled.div`
 `;
 
 const RankHeader = styled.header`
+  color: #fff;
   display: flex;
   align-items: flex-end;
   justify-content: space-between;
@@ -104,6 +105,7 @@ const RankMain = styled.div`
 `;
 
 const RankTH = styled.div`
+  color: #fff;
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   grid-gap: 1rem;
@@ -111,6 +113,7 @@ const RankTH = styled.div`
   scroll-behavior: smooth;
 `;
 const RankTHtwo = styled.div`
+  color: #fff;
   display: grid;
   grid-template-columns: repeat(4, 1fr);
   grid-gap: 1rem;
@@ -118,6 +121,7 @@ const RankTHtwo = styled.div`
   scroll-behavior: smooth;
 `;
 const RankBody = styled.div`
+  color: #fff;
   font-size: 18px;
   display: grid;
   grid-template-columns: repeat(3, 1fr);
@@ -129,6 +133,7 @@ const RankBody = styled.div`
   }
 `;
 const RankBodytwo = styled.div`
+  color: #fff;
   font-size: 18px;
   display: grid;
   grid-template-columns: repeat(4, 1fr);
