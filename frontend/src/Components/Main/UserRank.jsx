@@ -29,19 +29,69 @@ function UserRank() {
         Top Rank <img src={RankIcon} alt="랭크 아이콘" />
         <Link to="/Ranking">전체 랭킹 보기</Link>
       </RankHeader> */}
-      <MainPageHeader>
+      <UserRankHeader>
         <h3 contenteditable spellcheck="false">
           유저 랭킹
         </h3>
-      </MainPageHeader>
+      </UserRankHeader>
 
-      <RankMain>
-        {/* <RankTH>
-          <div>Rank</div>
-          <div>UserName</div>
-          <div>Points</div>
-        </RankTH> */}
-        {/* {rankResult.user_list.map((rank, id) => { */}
+      <UserRankTable className="container">
+        <div class="table-responsive">
+          <table class="table">
+            <thead>
+              <tr>
+                <th scope="col">순위</th>
+                <th scope="col">이름</th>
+                <th scope="col">포인트</th>
+              </tr>
+            </thead>
+            <tbody>
+              {rankResult.user_list?.map((rank, id) => {
+                return (
+                  <tr key={id}>
+                    <td class="noBorder">{rank.rank}</td>
+                    <td class="noBorder">{rank.nickname} </td>
+                    <td class="noBorder">{rank.value}</td>
+                  </tr>
+                );
+              })}
+            </tbody>
+          </table>
+        </div>
+      </UserRankTable>
+
+      <PlayerRankHeader>
+        <h3 contenteditable spellcheck="false">
+          선수 랭킹
+        </h3>
+      </PlayerRankHeader>
+      <PlayerRankTable>
+        <div class="table-responsive">
+          <table class="table">
+            <thead>
+              <tr>
+                <th scope="col">순위</th>
+                <th scope="col">이름</th>
+                <th scope="col">득점</th>
+                <th scope="col">가치</th>
+              </tr>
+            </thead>
+            <tbody>
+              {rankResult.player_list?.map((rank, id) => {
+                return (
+                  <tr key={id}>
+                    <td class="noBorder">{rank.rank}</td>
+                    <td class="noBorder">{rank.fullname}</td>
+                    <td class="noBorder">{rank.goal}</td>
+                    <td class="noBorder">{rank.value}</td>
+                  </tr>
+                );
+              })}
+            </tbody>
+          </table>
+        </div>
+      </PlayerRankTable>
+      {/* <RankMain>
         {rankResult.user_list?.map((rank, id) => {
           return (
             <RankBody key={id}>
@@ -73,7 +123,7 @@ function UserRank() {
             </RankBodytwo>
           );
         })}
-      </RankMain>
+      </RankMain> */}
     </Wrapper>
   );
 }
@@ -154,8 +204,8 @@ const RankBodytwo = styled.div`
   }
 `;
 
-const MainPageHeader = styled.div`
-  padding-bottom: 20px;
+const UserRankHeader = styled.div`
+  padding-bottom: 10px;
   h3 {
     white-space: nowrap;
     width: auto;
@@ -182,5 +232,86 @@ const MainPageHeader = styled.div`
 
   h3:focus {
     outline: none;
+  }
+`;
+
+const UserRankTable = styled.div`
+  body {
+    background: #1e1930;
+    color: #d2d1d5;
+  }
+  tr:nth-child(even) {
+    text-align: center;
+    background-color: #2e2649;
+    color: #d2d1d5;
+  }
+  tr:nth-child(odd) {
+    text-align: center;
+    background-color: #2a3a4f;
+    color: #d2d1d5;
+  }
+  th {
+    background-color: #760d27;
+    color: white;
+    text-align: center;
+  }
+  .noBorder {
+    border: none !important;
+  }
+`;
+
+const PlayerRankHeader = styled.div`
+  padding-bottom: 10px;
+  h3 {
+    white-space: nowrap;
+    width: auto;
+    text-align: center;
+    font-size: 1.8rem;
+    font-style: italic;
+    color: #fff;
+    padding: 0.5rem 0.5rem 0.5rem;
+    border: 0.2rem solid #fff;
+    border-radius: 2rem;
+    text-transform: uppercase;
+    animation: flicker 1.5s infinite alternate;
+  }
+
+  h3::-moz-selection {
+    background-color: var(--neon-border-color);
+    color: var(--neon-text-color);
+  }
+
+  h3::selection {
+    background-color: var(--neon-border-color);
+    color: var(--neon-text-color);
+  }
+
+  h3:focus {
+    outline: none;
+  }
+`;
+
+const PlayerRankTable = styled.div`
+  body {
+    background: #1e1930;
+    color: #d2d1d5;
+  }
+  tr:nth-child(even) {
+    text-align: center;
+    background-color: #2e2649;
+    color: #d2d1d5;
+  }
+  tr:nth-child(odd) {
+    text-align: center;
+    background-color: #2a3a4f;
+    color: #d2d1d5;
+  }
+  th {
+    background-color: #760d27;
+    color: white;
+    text-align: center;
+  }
+  .noBorder {
+    border: none !important;
   }
 `;

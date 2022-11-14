@@ -4,6 +4,7 @@ import App from './App';
 import { RecoilRoot } from 'recoil';
 import { ThemeProvider } from 'styled-components';
 import { theme } from './styles/theme';
+import 'bootstrap/dist/css/bootstrap.min.css';
 
 
 
