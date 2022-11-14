@@ -37,6 +37,7 @@ export default function PredictList () {
             <CalendarContainer>
                 <StyledCalendar onChange={onChangeTemp} value={value} />
             </CalendarContainer>
+            <StyledHr />
             <h1>{valueMoment}</h1>
             {predictList.length > 0 ? null : <BlankDiv height='60vh'></BlankDiv>}
             <ListContainer>
@@ -96,4 +97,10 @@ const ListContainer = styled.div`
 
 const BlankDiv = styled.div`
     height: ${props => props.height};
+`
+const StyledHr = styled.hr`
+    width: 90%;
+    height: 0;
+    background-color: #914154;
+    border: 1px solid #914154;
 `
