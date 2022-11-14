@@ -29,10 +29,10 @@ function UserRank() {
     <Wrapper>
       <RankHeader>
         Top Rank <img src={RankIcon} alt="랭크 아이콘" />
-        <Link to="/Ranking">전체 랭킹 보기</Link>
       </RankHeader>
       
       <RankMain>
+      <StyledLink to="/Ranking">유저랭킹 더보기</StyledLink>
       <RankTH>
           <div>Rank</div>
           <div>UserName</div>
@@ -48,6 +48,7 @@ function UserRank() {
             </RankBody>
           );
         })}
+        <StyledLink to="/playerRanking">선수랭킹 더보기</StyledLink>
         <RankTHtwo>
           <div>등수</div>
           <div>선수</div>
@@ -102,22 +103,50 @@ const RankAll = styled.header`
 `;
 const RankMain = styled.div`
   font-size: 22px;
+  display: flex;
+  flex-direction: column;
+`;
+
+const StyledLink = styled(Link)`
+	// box-sizing: border-box;
+	// display: block;
+	padding: 2px 4px;
+  font-size:12px;
+  margin-right: 10px;
+  text-decoration: none;
+  color: #fff;
+  // float: right;
+	text-align: right;
+  margin-top: 10px;
+  margin-bottom: 10px;
+  border-radius: 5px;
+  &:hover {
+    background-color: #fff;
+    color: #000;
+  }
+  
+  width: auto;
+  align-self: end;
 `;
 
 const RankTH = styled.div`
+  font-weight: bold;
   color: #fff;
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  grid-gap: 1rem;
+  grid-gap: 0rem;
   margin-bottom: 1rem;
+  margin-top: 1rem;
   scroll-behavior: smooth;
 `;
 const RankTHtwo = styled.div`
+  font-weight: bold;
   color: #fff;
   display: grid;
   grid-template-columns: repeat(4, 1fr);
-  grid-gap: 1rem;
+  grid-gap: 0rem;
   margin-bottom: 1rem;
+  margin-top: 1rem;
   scroll-behavior: smooth;
 `;
 const RankBody = styled.div`
@@ -129,7 +158,7 @@ const RankBody = styled.div`
   margin-bottom: 1rem;
   scroll-behavior: smooth;
   > div {
-    border: 1px solid white;
+    // border: 1px solid white;
   }
 `;
 const RankBodytwo = styled.div`
@@ -141,6 +170,6 @@ const RankBodytwo = styled.div`
   margin-bottom: 1rem;
   scroll-behavior: smooth;
   > div {
-    border: 1px solid white;
+    // border: 1px solid white;
   }
 `;
