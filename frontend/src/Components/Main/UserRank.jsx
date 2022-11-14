@@ -1,44 +1,68 @@
-import React from "react";
+import React,{useState,useEffect} from "react";
 import styled from "styled-components";
 import RankIcon from "../../assets/Rank_Icon.png";
+import { fetchData } from "../../utils/apis/api";
+import { rankApis } from "../../utils/apis/userApis";
 import { Link } from "react-router-dom";
 
 
 function UserRank() {
-  const rankings = [
-    { id: 1, username: "Kim", points: 1240000 },
-    { id: 2, username: "Im", points: 1130000 },
-    { id: 3, username: "Kang", points: 1040000 },
-    { id: 4, username: "Park", points: 940000 },
-    { id: 5, username: "Lee", points: 860000 },
-  ];
+  const [rankResult, setRankResult] = useState([]);
+
+    // const [isModal, setIsModal] = useState(false);
+    const getRank = async () => {
+      const response = await fetchData
+          .get(rankApis.RANKTOP)
+          .then((res) => {
+            setRankResult(res.data);
+          });
+        return response;
+      };
+    
+    console.log(rankResult);
+    
+    useEffect(() => {
+      getRank();
+    }, []);
 
   return (
     <Wrapper>
       <RankHeader>
-        <h3>
         Top Rank <img src={RankIcon} alt="랭크 아이콘" />
-        </h3>
-        
-        <Link to="/Ranking">전체 랭킹 보기</Link>
-        
-     </RankHeader>
-      <RankAll>
-      </RankAll>
+      </RankHeader>
+      
       <RankMain>
-
-        <RankTH>
+      <StyledLink to="/Ranking">유저랭킹 더보기</StyledLink>
+      <RankTH>
           <div>Rank</div>
           <div>UserName</div>
           <div>Points</div>
         </RankTH>
-        {rankings.map((rank, id) => {
+        {/* {rankResult.user_list.map((rank, id) => { */}
+        {rankResult.user_list?.map((rank, id) => {
           return (
             <RankBody key={id}>
-              <div>{rank.id}</div>
-              <div>{rank.username}</div>
-              <div>{rank.points}</div>
+              <div>{rank.rank}</div>
+              <div>{rank.nickname} </div>
+              <div>{rank.value}</div>
             </RankBody>
+          );
+        })}
+        <StyledLink to="/playerRanking">선수랭킹 더보기</StyledLink>
+        <RankTHtwo>
+          <div>등수</div>
+          <div>선수</div>
+          <div>골</div>
+          <div>시세</div>
+        </RankTHtwo>
+        {rankResult.player_list?.map((rank, id) => {
+          return (
+            <RankBodytwo key={id}>
+              <div>{rank.rank}</div>
+              <div>{rank.fullname}</div>
+              <div>{rank.goal}</div>
+              <div>{rank.value}</div>
+            </RankBodytwo>
           );
         })}
       </RankMain>
@@ -54,6 +78,7 @@ const Wrapper = styled.div`
 `;
 
 const RankHeader = styled.header`
+  color: #fff;
   display: flex;
   align-items: flex-end;
   justify-content: space-between;
@@ -78,17 +103,54 @@ const RankAll = styled.header`
 `;
 const RankMain = styled.div`
   font-size: 22px;
+  display: flex;
+  flex-direction: column;
+`;
+
+const StyledLink = styled(Link)`
+	// box-sizing: border-box;
+	// display: block;
+	padding: 2px 4px;
+  font-size:12px;
+  margin-right: 10px;
+  text-decoration: none;
+  color: #fff;
+  // float: right;
+	text-align: right;
+  margin-top: 10px;
+  margin-bottom: 10px;
+  border-radius: 5px;
+  &:hover {
+    background-color: #fff;
+    color: #000;
+  }
+  
+  width: auto;
+  align-self: end;
 `;
 
 const RankTH = styled.div`
+  font-weight: bold;
+  color: #fff;
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  grid-gap: 1rem;
+  grid-gap: 0rem;
   margin-bottom: 1rem;
+  margin-top: 1rem;
   scroll-behavior: smooth;
 `;
-
+const RankTHtwo = styled.div`
+  font-weight: bold;
+  color: #fff;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  grid-gap: 0rem;
+  margin-bottom: 1rem;
+  margin-top: 1rem;
+  scroll-behavior: smooth;
+`;
 const RankBody = styled.div`
+  color: #fff;
   font-size: 18px;
   display: grid;
   grid-template-columns: repeat(3, 1fr);
@@ -96,8 +158,18 @@ const RankBody = styled.div`
   margin-bottom: 1rem;
   scroll-behavior: smooth;
   > div {
-    border: 1px solid white;
+    // border: 1px solid white;
   }
 `;
-
-
+const RankBodytwo = styled.div`
+  color: #fff;
+  font-size: 18px;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  grid-gap: 0rem;
+  margin-bottom: 1rem;
+  scroll-behavior: smooth;
+  > div {
+    // border: 1px solid white;
+  }
+`;

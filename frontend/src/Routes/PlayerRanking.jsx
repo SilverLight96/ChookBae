@@ -1,10 +1,35 @@
-import React, { useEffect, useState } from "react";
-import styled, { keyframes } from "styled-components";
-import { Routes,Route,NavLink } from "react-router-dom";
+import React, {useState,useEffect} from "react";
+import styled from "styled-components";
+import { NavLink } from "react-router-dom";
 import PlayerRanking from "./PlayerRankingList";
+import { rankApis } from '../utils/apis/userApis';
+import { fetchData } from "../utils/apis/api";
+import { getCookie } from "../utils/functions/cookies";
 
 
 function PlayerRankingPage(props){
+
+  const [rankResult, setRankResult] = useState([]);
+
+  const [isModal, setIsModal] = useState(false);
+  const getRank = async () => {
+    const response = await fetchData
+      .get(rankApis.RANK("player"), {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `${getCookie("token")}`,
+        },
+      })
+      .then((res) => {
+        setRankResult(res.data);
+      });
+    return response;
+  };
+
+  useEffect(() => {
+    return 
+  }, );
+
     return (
       
       <Wrapper>
@@ -25,36 +50,9 @@ function PlayerRankingPage(props){
 export default PlayerRankingPage;
 
 const Wrapper = styled.div`
-  max-width: 860px;
+  background-color: ${(props) => props.theme.colors.mainWhite};
+  max-width: 600px;
   margin: auto;
-`;
-
-const NavStyle = styled(NavLink)`
-  color: ${(props) => props.theme.colors.white};
-  width: 50%;
-  height: 60px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 26px;
-  text-align: center;
-  background-color: ${(props) => props.theme.colors.mainBlack};
-  border-bottom: 2px solid ${(props) => props.theme.colors.mainBlack};
-  border-top-left-radius: 10px;
-  border-top-right-radius: 10px;
-  outline: invert;
-  &:link {
-    text-decoration: none;
-  }
-  &.active {
-    color: ${(props) => props.theme.colors.white};
-    background-color: ${(props) => props.theme.colors.mainRed};
-    border-top-left-radius: 10px;
-    border-top-right-radius: 10px;
-    font-weight: bold;
-    border: 2px solid ${(props) => props.theme.colors.mainBlack};
-    border-bottom: none;
-  }
 `;
 
 const ButtonContainer = styled.div`
@@ -102,5 +100,32 @@ const ButtonContainer = styled.div`
       box-shadow: 0 0 #ab3c3c;
       top: 6px;
     }
+  }
+`;
+const NavStyle = styled(NavLink)`
+  color: ${(props) => props.theme.colors.white};
+  width: 50%;
+  height: 50px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24px;
+  text-align: center;
+  background-color: ${(props) => props.theme.colors.mainBlack};
+  border-bottom: 2px solid ${(props) => props.theme.colors.mainBlack};
+  border-top-left-radius: 10px;
+  border-top-right-radius: 10px;
+  outline: invert;
+  &:link {
+    text-decoration: none;
+  }
+  &.active {
+    color: ${(props) => props.theme.colors.white};
+    background-color: ${(props) => props.theme.colors.mainRed};
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+    font-weight: bold;
+    border: 2px solid ${(props) => props.theme.colors.mainBlack};
+    border-bottom: none;
   }
 `;

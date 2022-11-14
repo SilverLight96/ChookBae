@@ -110,6 +110,7 @@ export default function TeamInfo () {
 }
 
 const Container = styled.div`
+    max-width: 600px;
     width: 100%;
     height: auto;
     margin-right: auto;
@@ -120,17 +121,13 @@ const Container = styled.div`
     flex-direction: column;
     align-items: center;
 
-    position: absolute;
-    left: 0;
-    top: 0;
-
-    background-color: ${(props) => props.theme.colors.mainBlack};
+    background: linear-gradient(#141e30, #243b55);
 `
 
 const Title = styled.div`
     p {
         margin: 0;
-        font-size: 2em;
+        font-size: 3em;
     }
     width: 90%;
     height: auto;
@@ -147,6 +144,7 @@ const Fm = styled.div`
     p {
         margin: 0;
         padding: 1%;
+        font-size: 1.5em;
     }
     div {
         width: auto;
@@ -236,7 +234,10 @@ const PositionDiv = styled.div`
         width: 45%;
         background-color: ${(props) => props.theme.colors.mainRed};
         border-radius: 10px;
-        font-size: 80%;
+        font-size: 1em;
+        p {
+            margin: 2% 0;
+        }
     }
 `
 
@@ -245,7 +246,7 @@ const Position = styled.p`
     height: auto;
     text-align: center;
     border-radius: 10px;
-
+    font-size: 1.5em;
     background-color: ${(props) => props.theme.colors.mainRed};
 
 `

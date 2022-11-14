@@ -2,6 +2,7 @@ import requests
 import operator
 from datetime import datetime
 import pytz
+from worldcup.translation import team_name
 from secret.apikey import API_KEY
 
 # DB에 데이터를 넣을때 필요한 모듈 및 코드
@@ -55,6 +56,7 @@ team_list = sorted(list(team_set), key=operator.itemgetter(1, 0))      # 팀 ID 
 # print(team_list)                # 팀 ID 전체 리스트
 
 
+'''
 ############### 경기장 정보 ###############
 venue_table = []        # 전체 경기장 정보를 담을 빈리스트 생성
 # 경기장 ID 8개 순회
@@ -76,7 +78,7 @@ for v in venue_list:
     venue_table.append(curr_venue)
 
 print('-'*30 + 'venue table: \n', venue_table)
-
+'''
 
 ############### 팀 정보 + 선수 ID 리스트 추출 ###############
 team_table = []         # 전체 팀 정보를 담을 빈리스트 생성
@@ -110,6 +112,7 @@ print('-'*30 + 'team table: \n', team_table)
 ### 월드컵 API에서 제공하는 선수정보가 없는동안 해당 코드는 사용불가 (11월 2주쯤 API 업데이트 예정)
 print(player_list)      # 모든 선수들의 ID를 담고있는 리스트
 
+'''
 ### 임시 선수 데이터 리스트 생성
 BASE_URL = 'https://api.statorium.com/api/v1/'
 path = 'teams/'
@@ -129,8 +132,9 @@ for num in [2, 10]:     # 토트넘 & 뉴캐슬 선수 추출
         player_list_tmp.append(int(team['players'][p]['playerID']))
 
 print(player_list_tmp)
+'''
 
-### 임시 선수 테이블 생성
+### 선수 테이블 생성
 BASE_URL = 'https://api.statorium.com/api/v1/'
 path = 'players/'
 params = {
@@ -138,8 +142,8 @@ params = {
     'apikey': API_KEY
     }
 
-player_table_tmp = []
-for p in player_list_tmp:
+player_table = []
+for p in player_list:
     player_id = str(p) + '/'
     response = requests.get(BASE_URL+path+player_id, params=params)
 
@@ -147,13 +151,34 @@ for p in player_list_tmp:
     player = data['player']
 
     # 참고: API에서 제공되는 국가코드(200여개 국가 대상으로 부여된 번호)는 Team 테이블의 국가 고유번호(국가대표팀을 포함한 모든 축구팀에게 부여된 번호)와 다른 번호임.
-    curr_player = [int(player['playerID']), player['fullName'], player['homeName'], player['photo'], int(player['teams'][0]['playerNumber']),
-                    player['additionalInfo']['birthdate'], int(player['additionalInfo']['weight'][:-3]), int(player['additionalInfo']['height'][:-3]),
-                    int(player['country']['id']), #player['currentTeam']['name'],   # 월드컵 API 선수정보 나올때까지 teams -> teamName 으로 임시 대체
-                    player['teams'][0]['teamName'], int(player['additionalInfo']['position']), 0, 0, 0, 0, 0, 0]
-    player_table_tmp.append(curr_player)
+    p_pid, p_fn, p_hn, p_pp, p_pn, p_bd, p_w, p_h, p_cid, p_tn, p_pos = 0, "N/A", "N/A", "N/A", 0, "N/A", 0, 0, "N/A", "N/A", 0
+    if player['playerID']:
+        p_pid = int(player['playerID'])
+    if player['fullName']:
+        p_fn = player['fullName']
+    if player['homeName']:
+        p_hn = player['homeName']
+    if player['photo']:
+        p_pp = player['photo']
+    if player['teams']:
+        p_pn = int(player['teams'][0]['playerNumber'])
+        p_tn = player['teams'][0]['teamName']
+    if player['additionalInfo']['birthdate']:
+        p_bd = player['additionalInfo']['birthdate']
+    if player['additionalInfo']['weight']:
+        p_w = int(player['additionalInfo']['weight'][:-3])
+    if player['additionalInfo']['height']:
+        p_h = int(player['additionalInfo']['height'][:-3])
+    if player['country']['name']:
+        p_cn = player['country']['name']
+        p_cid = team_name(p_cn)
+    if player['additionalInfo']['position']:
+        p_pos = int(player['additionalInfo']['position'])
     
-print('-'*30 + 'player table(tmp): \n', player_table_tmp)
+    curr_player = [p_pid, p_fn, p_hn, p_pp, p_pn, p_bd, p_w, p_h, p_cid, p_tn, p_pos, 0, 0, 0, 0, 0, 0]
+    player_table.append(curr_player)
+    
+print('-'*30 + 'player table(tmp): \n', player_table)
 
 
 
@@ -223,9 +248,10 @@ for row in match_table:
     Match.objects.create(id=id_t, match_status=match_status_t, match_name=match_name_t, match_type=match_type_t,
                         team1_id=team1_id_pk, team2_id=team2_id_pk, start_date=start_date_t, start_time=start_time_t,
                         venue_id=venue_id_pk, team1_score=team1_score_t, team2_score=team2_score_t)
+'''
 
 ## 선수 정보 DB에 넣기
-for row in player_table_tmp:
+for row in player_table:
     print(row[0])
     id_t = row[0]
     fullname_t = row[1]
@@ -235,9 +261,8 @@ for row in player_table_tmp:
     birthday_t = row[5]
     weight_t = row[6]
     height_t = row[7]
-    # team_id_t = row[8]                            # 임시 선수 데이터에서는 사용 불가
-    # team_id_pk = Team.objects.get(id=team_id_t)   # 임시 선수 데이터에서는 사용 불가
-    team_id_pk = Team.objects.get(id=434) #int(row[8])                        # 임시 선수 데이터일때 대체 코드
+    team_id_t = row[8]
+    team_id_pk = Team.objects.get(id=team_id_t)
     current_team_t = row[9]
     position_t = row[10]
     goal_t = row[11]
@@ -250,4 +275,3 @@ for row in player_table_tmp:
                             birthday=birthday_t, weight=weight_t, height=height_t, team_id=team_id_pk, current_team=current_team_t,
                             position=position_t, goal=goal_t, assist=assist_t, yellow_card=yellow_card_t, red_card=red_card_t,
                             run_time=run_time_t, value=value_t)
-'''

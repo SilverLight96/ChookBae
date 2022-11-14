@@ -54,7 +54,7 @@ export default function PredictListList (props) {
 }
 
 const Container = styled.div`
-    width: 90vw;
+    width: 90%;
     height: auto;
     margin-top: 3%;
 
@@ -70,8 +70,7 @@ const Container = styled.div`
 
 const PredictionCard = styled.div`
     width: 95%;
-    height: 20vh;
-    margin-top: 5%;
+    height: auto;
     display: flex;
     flex-direction: row;
     justify-content: space-between;
@@ -79,13 +78,13 @@ const PredictionCard = styled.div`
 `
 
 const Flag = styled.img`
-    width: 25%;
-    height: 90%;
+    width: 20%;
+    height: auto;
 
 `
 
 const DataContainer = styled.div`
-    width: 20%;
+    width: auto;
     height: 90%;
 
     display: flex;
@@ -96,10 +95,10 @@ const DataContainer = styled.div`
 `
 
 const StyledBtn = styled.button`
-    width: 20%;
-    height: 20%;
-    font-size: 5%;
+    width: auto;
+    height: auto;
     text-align: center;
+    margin-left: 2%;
 
     display: flex;
     justify-content: center;
@@ -109,11 +108,13 @@ const StyledBtn = styled.button`
     border: 2px solid white;
     border-radius: 10px;
     p {
+        font-size: auto;
         height: auto;
         width: auto;
         margin: 0;
         padding: 1%;
         color: white;
+        white-space: nowrap;
     }
 `
 

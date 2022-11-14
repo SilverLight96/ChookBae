@@ -18,6 +18,9 @@ function MixPage() {
       value: "",
     },
   ]);
+  const [buttonLeftText, setButtonLeftText] = useState("선수 등록");
+  const [buttonRightText, setButtonRightText] = useState("선수 등록");
+
   const [selectCombine, setSelectCombine] = useState({
     player_card_id1: 0,
     player_card_id2: 0,
@@ -69,6 +72,8 @@ function MixPage() {
     setSelectCombine((prev) => {
       return { ...prev, player_card_id1: e.target.id };
     });
+    console.log(e.target.name);
+    setButtonLeftText(e.target.name);
     ModalHandler();
     setMixSelect(0);
   };
@@ -76,6 +81,8 @@ function MixPage() {
     setSelectCombine((prev) => {
       return { ...prev, player_card_id2: e.target.id };
     });
+    console.log(e.target.name);
+    setButtonRightText(e.target.name);
     ModalHandler();
     setMixSelect(0);
   };
@@ -108,6 +115,13 @@ function MixPage() {
     };
     cardCombine();
   };
+  const resetSelect = () => {
+    setSelectCombine(() => {
+      return { player_card_id1: 0, player_card_id2: 0 };
+    });
+    setButtonLeftText("선수 등록");
+    setButtonRightText("선수 등록");
+  };
 
   return (
     <Wrapper>
@@ -133,8 +147,8 @@ function MixPage() {
           <MixButton onClick={mixCard}>합성하기</MixButton>
         </MixButtonWrapper>
         <MixButtonContainer>
-          <button onClick={addLeft}>선수 등록 1</button>
-          <button onClick={addRight}>선수 등록 2</button>
+          <button onClick={addLeft}>{buttonLeftText}</button>
+          <button onClick={addRight}>{buttonRightText}</button>
         </MixButtonContainer>
       </MixMain>
       <MixModal open={isModal} close={ModalHandler}>
@@ -145,17 +159,16 @@ function MixPage() {
               {playerList.map((players) => {
                 return (
                   <MixCard onClick={addCardLeft} key={players.id}>
-                    <div>{players.value}</div>
+                    <div>보유수 {players.count}</div>
                     <h1>{players.fullname}</h1>
-                    <img src={players.player_image} alt="" id={players.id} />
+                    <h2>{players.value}</h2>
+                    <img
+                      src={players.player_image}
+                      alt=""
+                      id={players.id}
+                      name={players.fullname}
+                    />
                   </MixCard>
-                  // <PlayerCard
-                  //   onClick={addCardLeft}
-                  //   title={players.fullname}
-                  //   image={players.player_image}
-                  //   key={players.player_image}
-                  //   value={players.value}
-                  // />
                 );
               })}
             </CardList>
@@ -168,9 +181,15 @@ function MixPage() {
               {playerList.map((players) => {
                 return (
                   <MixCard onClick={addCardRight} key={players.id}>
-                    <div>{players.value}</div>
+                    <div>보유수 {players.count}</div>
                     <h1>{players.fullname}</h1>
-                    <img src={players.player_image} alt="" id={players.id} />
+                    <h2>{players.value}</h2>
+                    <img
+                      src={players.player_image}
+                      alt=""
+                      id={players.id}
+                      name={players.fullname}
+                    />
                   </MixCard>
                 );
               })}
@@ -179,13 +198,13 @@ function MixPage() {
         ) : null}
         {mixSelect === 3 ? (
           <ModalBody>
-            <CombinedCard>
+            <CombinedCard onClick={resetSelect}>
               <PlayerCard
-                onClick={addCardLeft}
                 title={combinedCard.fullname}
                 image={combinedCard.player_image}
                 key={combinedCard.player_image}
                 value={combinedCard.value}
+                flag={combinedCard.logo}
               />
             </CombinedCard>
           </ModalBody>
@@ -211,8 +230,8 @@ const NavStyle = styled(NavLink)`
   justify-content: center;
   font-size: 26px;
   text-align: center;
-  background-color: ${(props) => props.theme.colors.mainRed};
-  border-bottom: 2px solid ${(props) => props.theme.colors.mainRed};
+  background-color: ${(props) => props.theme.colors.mainBlack};
+  border-bottom: 2px solid ${(props) => props.theme.colors.mainBlack};
   /* border-top-left-radius: 10px;
   border-top-right-radius: 10px; */
   outline: invert;
@@ -221,7 +240,7 @@ const NavStyle = styled(NavLink)`
   }
   &.active {
     color: ${(props) => props.theme.colors.white};
-    background-color: ${(props) => props.theme.colors.mainBlack};
+    background-color: ${(props) => props.theme.colors.mainRed};
     /* border-top-left-radius: 10px;
     border-top-right-radius: 10px; */
     font-weight: bold;
@@ -280,8 +299,8 @@ const ButtonContainer = styled.div`
 
 const MixMain = styled.div`
   width: 100%;
-  height: 82vh;
-  background-color: ${(props) => props.theme.colors.mainBlack};
+  height: 90vh;
+  background: linear-gradient(#141e30, #243b55);
   margin: auto;
   display: flex;
   flex-direction: column;
@@ -290,7 +309,7 @@ const MixMain = styled.div`
 const MixButtonWrapper = styled.div`
   display: flex;
   justify-content: center;
-  margin-bottom: 30px;
+  margin-bottom: 40px;
 `;
 
 const MixButton = styled.div`
@@ -342,11 +361,11 @@ const MixButtonContainer = styled.div`
   max-width: 600px;
   flex-direction: row;
   justify-content: space-around;
-  margin-bottom: 25px;
+  margin-bottom: 70px;
   > button {
     border-radius: 5px;
-    font-size: 30px;
-    padding: 15px 25px;
+    font-size: 22px;
+    padding: 10px 15px;
     border-color: transparent;
     color: ${(props) => props.theme.colors.white};
     font-weight: bold;
@@ -403,7 +422,8 @@ const Steam = keyframes`
 const Glow = styled.span`
   z-index: 1;
   position: absolute;
-  width: 40%;
+  max-width: 250px;
+  width: 50%;
   height: 70%;
   background: linear-gradient(0deg, #000, #272727);
   :before,
@@ -465,7 +485,8 @@ const CardPack = styled.div`
   //background-image: linear-gradient(135deg, #b118ac 0%, #26c7da 100%);
   position: absolute;
   z-index: 2;
-  width: 40%;
+  max-width: 250px;
+  width: 50%;
   height: 70%;
   display: flex;
   align-items: center;
@@ -501,6 +522,12 @@ const MixCard = styled.div`
     right: 5%;
     bottom: 10%;
   }
+  > h2 {
+    position: absolute;
+    color: white;
+    right: 5%;
+    bottom: 10%;
+  }
 `;
 
 const ModalBody = styled.div`
@@ -522,4 +549,7 @@ const CombinedCard = styled.div`
   max-width: 400px;
   height: 80vh;
   margin: auto;
+  > div {
+    height: 80vh;
+  }
 `;
