@@ -37,7 +37,7 @@ export default function PredictList () {
             <CalendarContainer>
                 <StyledCalendar onChange={onChangeTemp} value={value} />
             </CalendarContainer>
-            <StyledHr />
+            <StyledHr/>
             <h1>{valueMoment}</h1>
             {predictList.length > 0 ? null : <BlankDiv height='60vh'></BlankDiv>}
             <ListContainer>
@@ -57,7 +57,7 @@ export default function PredictList () {
 const Container = styled.div`
     max-width: 600px;
     width: 100%;
-    height: auto;
+    height: 100vh;
     margin-left: auto;
     margin-right: auto;
     background: linear-gradient(#141e30, #243b55);
