@@ -12,8 +12,8 @@ export default function TeamInfo () {
     useEffect(() => {
         const getData = async(id) => {
             const dataAxios = await axios
-            // >>>>TODO<<<<
-            .get(baseURL + 'v1/match/teaminfo/' + 434, {
+
+            .get(baseURL + 'v1/match/teaminfo/' + id, {
                 headers: {
                     'Content-Type': 'application/json',
                 },
@@ -111,6 +111,7 @@ export default function TeamInfo () {
 
 const Container = styled.div`
     max-width: 600px;
+    min-height: 100vh;
     width: 100%;
     height: auto;
     margin-right: auto;
@@ -127,7 +128,7 @@ const Container = styled.div`
 const Title = styled.div`
     p {
         margin: 0;
-        font-size: 3em;
+        font-size: 2.5em;
     }
     width: 90%;
     height: auto;
