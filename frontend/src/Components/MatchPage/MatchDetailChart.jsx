@@ -59,5 +59,8 @@ export default function MatchDetailChart (props) {
 const Container = styled.div`
     width: 100%;
     height: 10%;
+    margin-top: 5%;
+    background-color: white;
     border: 5px solid #914154;
+    border-radius: 10px;
 `

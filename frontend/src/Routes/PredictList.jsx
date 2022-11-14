@@ -54,6 +54,7 @@ export default function PredictList () {
 }
 
 const Container = styled.div`
+    max-width: 600px;
     width: 100%;
     height: auto;
     margin-left: auto;
@@ -65,17 +66,15 @@ const Container = styled.div`
     justify-content: space-between;
     align-items: center;
     color: white;
-
-    position: absolute;
-    top: 0;
-    left: 0;
-    border: 1px solid black;
 `
 
 const CalendarContainer = styled.div`
-    width: auto;
+    width: 100%;
     height: auto;
     margin-top: 3%;
+
+    display: flex;
+    justify-content: center;
 `
 
 const StyledCalendar = styled(Calendar)`
@@ -88,13 +87,11 @@ const StyledCalendar = styled(Calendar)`
 const ListContainer = styled.div`
     width: 100%;
     height: auto;
-
+    margin: 0 auto;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
     align-items: center;
-
-    border: 1px solid black;
 `
 
 const BlankDiv = styled.div`

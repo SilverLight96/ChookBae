@@ -175,8 +175,13 @@ export default function PredictDetail () {
 }
 
 const Container = styled.div`
+    h1 {
+        font-size: 2em;
+        margin: 5% 0;
+    }
+    max-width: 600px;
     width: 100%;
-    height: auto;
+    height: 100vh;
     background: linear-gradient(#141e30, #243b55);
     color: white;
 
@@ -185,9 +190,7 @@ const Container = styled.div`
     justify-content: space-between;
     align-items: center;
 
-    position: absolute;
-    top: 0;
-    left: 0;
+    margin : 0 auto;
 `
 
 const DataContainer = styled.div`
@@ -201,6 +204,10 @@ const DataContainer = styled.div`
 `
 
 const DataDiv = styled.div`
+    p {
+        font-size: 1em;
+        margin: 2% 0;
+    }
     width: 32%;
     height: 10em;
 
@@ -218,6 +225,7 @@ const DetailDataDiv = styled.div`
     width: 100%;
     height: 100%;
 
+    margin-top: 5%;
     position: relative;
 
     display: flex;
@@ -284,7 +292,7 @@ const ApplyBtn = styled.button`
 `
 
 const PredictAccountDiv = styled.div`
-    width: 90%;
+    width: 100%;
     height: 40vh;
     display: flex;
     justify-content: center;
@@ -295,8 +303,8 @@ const PredictAccountDiv = styled.div`
 const TextWithImageDiv = styled.div`
     width: 100%;
     height: auto;
-    font-size: 60%;
-
+    font-size: 1em;
+    margin: 3% 0;
     display: flex;
     flex-direction: row;
     justify-content: space-evenly;
