@@ -51,8 +51,8 @@ const StyledTr = styled.tr`
 
 const StyledTh = styled.th`
     p {
-        font-size: 80%;
-        margin: 0;
+        font-size: 1em;
+        margin: 2% 0;
     }
     color: white;
 `

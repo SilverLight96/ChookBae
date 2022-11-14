@@ -136,13 +136,12 @@ export default MatchDetail
 
 const Data = styled.div`
     p {
-        margin: 0;
+        font-size: 1em;
+        margin: 1% 0;
     }
     height: 50%;
     width: 30%;
     padding: 1%;
-    
-    font-size: 85%;
 
     display: flex;
     flex-direction: column;
@@ -154,15 +153,12 @@ const Data = styled.div`
 `
 
 const Container = styled.div`
+    max-width: 600px;
     height: auto;
     width: 100%;
 
-    margin: 0;
+    margin: 0 auto;
     padding: 0;
-    
-    position: absolute;
-    top: 0;
-    left: 0;
     
     display: flex;
     flex-direction: column;
@@ -181,8 +177,8 @@ const DataContainer = styled.div`
 
 const DescriptionContainer = styled.div`
     p {
-        font-size: 80%;
-        margin: 0;
+        font-size: 1em;
+        margin: 1%;
     }
     width: 50%;
     height: auto;
@@ -207,7 +203,7 @@ const FlagContainer = styled.div`
     margin-top: 3%;
 
     display: flex;
-    justify-content: space-between;
+    justify-content: space-evenly;
     align-items: center;
 
     border-radius: 10px;
@@ -221,11 +217,11 @@ const Flag = styled.img`
 
 const Predict = styled.div`
     width: 30%;
-    height: 50%;
+    height: auto;
 
     display: flex;
     flex-direction: column;
-    justify-content: center;
+    justify-content: space-evenly;
     align-items: center;
 
     color: white;
@@ -244,7 +240,7 @@ const Group = styled.div`
 const PredictBtn = styled.button`
     width: 5em;
     height: 25%;
-    margin: 0;
+    margin: 5% 0;
     padding: 0;
     background-color: #914154;
     color: white;
@@ -256,9 +252,10 @@ const PredictBtn = styled.button`
     border: 2px solid white;
     border-radius: 10px;
     p {
+        font-size: 1em;
         height: auto;
         width: auto;
-        margin: 0;
+        margin: 1%;
         padding: 1%;
     }
 `
@@ -281,7 +278,6 @@ const ChartContainer = styled.div`
 
     margin-top: 3%;
     margin-bottom: 35vh;
-    background-color: white;
 
     display: flex;
     align-items: center;
