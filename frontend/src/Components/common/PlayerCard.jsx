@@ -1,14 +1,17 @@
-import React from "react";
+import React, {useState} from "react";
 import styled from "styled-components";
 import "./PlayerCardDesign.scss";
 
 function PlayerCard(props) {
+
   return (
     <div
       class="card mewtwo animated"
       style={{ backgroundImage: `url(${props.image})` }}
       alt={props.title}
+      onClick={() => props.setModalOpen(props.id)}
     >
+
       <div>
         <PlayerName>{props.title}</PlayerName>
         <PlayerCount>{props.count}</PlayerCount>
@@ -69,3 +72,4 @@ const PlayerCount = styled.p`
   color: white;
   font-weight: bold;
 `;
+
