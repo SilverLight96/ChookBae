@@ -31,8 +31,8 @@ const FlagImage = styled.img`
 `;
 
 const PlayerName = styled.p`
-  padding-top: 10px;
-  padding-bottom: 20px;
+  padding-top: 50px;
+  padding-bottom: 60px;
   font-size: 2rem;
   text-align: center;
   color: white;
@@ -52,7 +52,8 @@ const PlayerValueBg = styled.div`
   text-align: right;
   color: white;
   font-weight: bold;
-  padding-top: 20px;
+  padding-top: 80px;
+  padding-bottom: 20px;
   background: linear-gradient(to bottom, rgba(1, 0, 0, 0), rgba(1, 1, 1, 0.9));
   border-bottom-left-radius: 5px;
   border-bottom-right-radius: 5px;
