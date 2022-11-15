@@ -21,7 +21,7 @@ class User(AbstractBaseUser):
     #     default='user/default.png'
     # )
     # profile_image = models.FileField(upload_to=profile_image_path, null=True, blank=True)
-    profile_image = models.TextField(null=True, blank=True)
+    profile_image = models.TextField(null=True, blank=True, default='https://'+ settings.AWS_S3_CUSTOM_DOMAIN + settings.AWS_S3_DEFAULT)
     email = models.EmailField(max_length=50, null=False)
     is_active = models.BooleanField(default=False)
     USERNAME_FIELD = 'email'
