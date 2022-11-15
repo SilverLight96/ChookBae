@@ -83,7 +83,7 @@ def signup(request):
         if not user.nickname:
             user.nickname = nickname
 
-        user.save()
+       
         current_site = get_current_site(request)
         message = render_to_string('user_activate_email.html',{
                 'user': user,
@@ -95,6 +95,7 @@ def signup(request):
         user_email = user.email
         email = EmailMessage(mail_subject, message, to=[user_email])
         email.send()
+        user.save()
         return Response(serializers.data, status=status.HTTP_201_CREATED)
 
 #유저 닉네임 중복 체크 
@@ -204,7 +205,7 @@ def update(request):
         #토큰 값의 유저 닉네임을 변경
         user.nickname = request.data['new_nickname']
         user.profile_image = request.data.get('new_profile_image')
-        user.save()
+        
         new_password = request.data.get('new_password')
         new_password_confirm = request.data.get('new_password_confirm')
         
@@ -224,6 +225,7 @@ def update(request):
 
             me.set_password(new_password)
             me.save()
+        user.save()
             # 'image':user.profile_image.url 일단 봉인
         return Response({'id': user.id, 'new_nickname': user.nickname,\
              'email': user.email,'password':user.password},status=status.HTTP_200_OK)
