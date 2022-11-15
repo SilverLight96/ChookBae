@@ -377,13 +377,13 @@ const GachaButtonContainer = styled.div`
 `;
 
 const GachaList = styled.div`
-  margin-top: 10%;
-  height: 70vh;
+  margin-top: 15%;
   display: grid;
   grid-template-columns: repeat(5, 1fr);
   grid-row-gap: 20px;
-  > div {
-    height: 30vh;
+  @media screen and (max-width: 450px) {
+    grid-template-columns: repeat(4, 1fr);
+    margin-top: 0;
   }
 `;
 
