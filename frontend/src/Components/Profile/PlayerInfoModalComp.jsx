@@ -1,18 +1,27 @@
 import React from "react";
 import styled from "styled-components";
-import { useState, useEffect } from "react";
 
 export default function PlayerInfoModalComp(props) {
     return (
         <Container>
-            <UpperP>{props.value}</UpperP>
+            <UpperP
+            color={props.value >= 50000 ? 'linear-gradient(to right, red, orange, yellow, green, blue)' : 
+            (props.value >= 20000 ? 
+            (props.value >= 30000 ? 'linear-gradient(to right, white, #FFD700)' : 'linear-gradient(to right, white, #C0C0C0)') 
+            : 'linear-gradient(to right, white, #cc6633)')}>{props.value}</UpperP>
             <DataContainer>
                 <Pcontainer>
                     <InnerP>{props.country}</InnerP>
                     <InnerP>{props.position}</InnerP>
                     <InnerP>{props.number}</InnerP>
                 </Pcontainer>
-                <StyledImg src={props.img} alt='profile'/>
+                <ImgContainer
+                color={props.value >= 50000 ? 'linear-gradient(to top, red, orange, yellow, green, blue, navy, purple)' : 
+                (props.value >= 20000 ? 
+                (props.value >= 30000 ? 'linear-gradient(white, #FFD700)' : 'linear-gradient(white, #C0C0C0)') 
+                : 'linear-gradient(white, #cc6633)')}>
+                    <StyledImg src={props.img} alt='profile'/>
+                </ImgContainer>
             </DataContainer>
             <UnderP>{props.name}</UnderP>
             <UnderP>{props.birth}</UnderP>
@@ -36,13 +45,23 @@ const Container = styled.div`
 const UpperP = styled.p`
     font-size: 3em;
     margin-left: 5%;
+    background: ${props => props.color};
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+`
+
+const ImgContainer = styled.div`
+    width: 60%;
+    height: auto;
+    background: ${props => props.color};
+    border-radius: 10px;
 `
 const StyledImg = styled.img`
-    width: 60%;
+    width: 100%;
     height: auto;
 `
 const UnderP = styled.p`
-    
+    font-size: 1em;
 `
 
 const DataContainer = styled.div`
@@ -53,7 +72,7 @@ const DataContainer = styled.div`
 `
 
 const InnerP = styled.p`
-    
+    font-size: 1.5em;
 `
 
 const Pcontainer = styled.div`
