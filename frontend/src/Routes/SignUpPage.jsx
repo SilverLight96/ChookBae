@@ -356,13 +356,14 @@ const Label = styled.label`
 `;
 
 const LoginPageHeader = styled.div`
+  padding-bottom: 50px;
   h3 {
     font-size: 2.5rem;
     font-weight: 200;
     font-style: italic;
     color: #fff;
-    /* padding: 4rem 6rem 5.5rem; */
-    /* border: 0.4rem solid #fff; */
+    padding: 0.5rem 0.5rem 0.5rem;
+    border: 0.4rem solid #fff;
     border-radius: 2rem;
     text-transform: uppercase;
     animation: flicker 1.5s infinite alternate;
