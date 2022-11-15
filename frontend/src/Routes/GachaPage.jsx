@@ -8,6 +8,7 @@ import PlayerCard from "../Components/common/PlayerCard";
 import { gachaApis } from "../utils/apis/userApis";
 import { getCookie } from "../utils/functions/cookies";
 import Dropdown from "../Components/Gacha/SelectBox";
+import PlayerCardOne from "../Components/common/PlayerCardOne";
 
 function GachaPage() {
   const [sortKey, setSortKey] = useState("startTime");
@@ -115,7 +116,7 @@ function GachaPage() {
           <GachaOneList>
             {gachaResult.map((playerCard) => {
               return (
-                <PlayerCard
+                <PlayerCardOne
                   title={playerCard.fullname}
                   image={playerCard.player_image}
                   key={playerCard.player_image}
