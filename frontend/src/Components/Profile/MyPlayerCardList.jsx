@@ -38,4 +38,5 @@ const Wrapper = styled.div`
   margin-bottom: 1rem;
   scroll-behavior: smooth;
   margin-top: 10px;
+  min-height: 100vh;
 `;
