@@ -9,7 +9,7 @@
 
 
 .card { 
-  height: 15vh;
+  min-height: 25vh;
   position: relative;
   overflow: cover;
   margin: 5px;
@@ -29,7 +29,7 @@
   
 
   background-image: var(--front);
-  background-size: cover;
+  background-size: contain;
   background-repeat: no-repeat;
   background-position: 50% 50%;
   transform-origin: center;
@@ -233,3 +233,4 @@
     }
   }
 }
+
