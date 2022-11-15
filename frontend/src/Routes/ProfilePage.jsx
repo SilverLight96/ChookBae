@@ -105,8 +105,9 @@ const NavStyle = styled(NavLink)`
     font-weight: bold;
     border: 2px solid linear-gradient(#141e30, #243b55);
   }
-`
+`;
 
 const MainBody = styled.div`
   background: linear-gradient(#141e30, #243b55);
+  padding-bottom: 60px;
 `;
