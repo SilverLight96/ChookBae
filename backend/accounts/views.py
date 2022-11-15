@@ -24,7 +24,7 @@ from worldcup.models import Point
 from django.conf import settings
 from chookbae.settings import SECRET_KEY
 from .serializers import UserSerializer, AuthenticateSerializer, UserUpdateSerializer, PhotoSerializer
-
+from django.db import transaction
 from rest_framework.views import APIView
 
 from .models import User, profile_image_path
@@ -45,6 +45,7 @@ def make_random_code():
 # 회원가입
 @api_view(['POST'])
 @permission_classes([AllowAny])
+@transaction.atomic()
 def signup(request):
     nickname = request.data.get('nickname')
     password = request.data.get('password')
@@ -73,6 +74,8 @@ def signup(request):
         or not re.findall('[0-9]+', password) or not re.findall('[`~!@#$%^&*(),<.>/?]+', password):
         return Response({'비밀번호 형식이 맞지 않습니다. 영어, 숫자, 특수기호가 들어가야합니다.'}, status.HTTP_400_BAD_REQUEST)
 
+   
+
     serializers = UserSerializer(data=request.data)
 
     if serializers.is_valid(raise_exception=True):
@@ -82,8 +85,8 @@ def signup(request):
 
         if not user.nickname:
             user.nickname = nickname
-
         user.save()
+       
         current_site = get_current_site(request)
         message = render_to_string('user_activate_email.html',{
                 'user': user,
@@ -95,6 +98,9 @@ def signup(request):
         user_email = user.email
         email = EmailMessage(mail_subject, message, to=[user_email])
         email.send()
+        
+        
+        
         return Response(serializers.data, status=status.HTTP_201_CREATED)
 
 #유저 닉네임 중복 체크 
@@ -204,7 +210,7 @@ def update(request):
         #토큰 값의 유저 닉네임을 변경
         user.nickname = request.data['new_nickname']
         user.profile_image = request.data.get('new_profile_image')
-        user.save()
+        
         new_password = request.data.get('new_password')
         new_password_confirm = request.data.get('new_password_confirm')
         
@@ -224,6 +230,7 @@ def update(request):
 
             me.set_password(new_password)
             me.save()
+        user.save()
             # 'image':user.profile_image.url 일단 봉인
         return Response({'id': user.id, 'new_nickname': user.nickname,\
              'email': user.email,'password':user.password},status=status.HTTP_200_OK)
