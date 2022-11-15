@@ -63,6 +63,7 @@ const Dropdown = ({ getSortKey }) => {
 export default Dropdown;
 
 const Wrapper = styled.div`
+  padding-top: 5%;
   display: flex;
   justify-content: end;
   background: #141e30;
