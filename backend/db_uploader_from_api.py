@@ -56,7 +56,7 @@ team_list = sorted(list(team_set), key=operator.itemgetter(1, 0))      # 팀 ID 
 # print(team_list)                # 팀 ID 전체 리스트
 
 
-'''
+'''1
 ############### 경기장 정보 ###############
 venue_table = []        # 전체 경기장 정보를 담을 빈리스트 생성
 # 경기장 ID 8개 순회
@@ -78,7 +78,8 @@ for v in venue_list:
     venue_table.append(curr_venue)
 
 print('-'*30 + 'venue table: \n', venue_table)
-'''
+1'''
+
 
 ############### 팀 정보 + 선수 ID 리스트 추출 ###############
 team_table = []         # 전체 팀 정보를 담을 빈리스트 생성
@@ -109,10 +110,10 @@ for t in team_list:
 print('-'*30 + 'team table: \n', team_table)
 
 ############### 선수 정보 ###############
-### 월드컵 API에서 제공하는 선수정보가 없는동안 해당 코드는 사용불가 (11월 2주쯤 API 업데이트 예정)
 print(player_list)      # 모든 선수들의 ID를 담고있는 리스트
 
-'''
+'''1
+### 월드컵 API에서 제공하는 선수정보가 없는동안 아래의 tmp코드 사용 (11월 2주쯤 API 업데이트 예정)
 ### 임시 선수 데이터 리스트 생성
 BASE_URL = 'https://api.statorium.com/api/v1/'
 path = 'teams/'
@@ -132,7 +133,7 @@ for num in [2, 10]:     # 토트넘 & 뉴캐슬 선수 추출
         player_list_tmp.append(int(team['players'][p]['playerID']))
 
 print(player_list_tmp)
-'''
+1'''
 
 ### 선수 테이블 생성
 BASE_URL = 'https://api.statorium.com/api/v1/'
@@ -151,7 +152,7 @@ for p in player_list:
     player = data['player']
 
     # 참고: API에서 제공되는 국가코드(200여개 국가 대상으로 부여된 번호)는 Team 테이블의 국가 고유번호(국가대표팀을 포함한 모든 축구팀에게 부여된 번호)와 다른 번호임.
-    p_pid, p_fn, p_hn, p_pp, p_pn, p_bd, p_w, p_h, p_cid, p_tn, p_pos = 0, "N/A", "N/A", "N/A", 0, "N/A", 0, 0, "N/A", "N/A", 0
+    p_pid, p_fn, p_hn, p_pp, p_pn, p_bd, p_w, p_h, p_cid, p_tn, p_pos = 0, "N/A", "N/A", "https://chookbae.s3.ap-northeast-1.amazonaws.com/img/placeholder-profile.jpg", 0, "N/A", 0, 0, "N/A", "N/A", 0
     if player['playerID']:
         p_pid = int(player['playerID'])
     if player['fullName']:
