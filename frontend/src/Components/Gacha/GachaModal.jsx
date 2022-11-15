@@ -31,7 +31,7 @@ const Background = styled.div`
   & section {
     position: fixed;
     top: 5%;
-    width: 90%;
+    width: 100%;
     max-width: 600px;
     height: 85vh;
     background-color: ${(props) => props.theme.colors.subBlack};
