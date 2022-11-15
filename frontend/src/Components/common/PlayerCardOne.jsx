@@ -1,17 +1,14 @@
-import React, {useState} from "react";
+import React from "react";
 import styled from "styled-components";
 import "./PlayerCardDesign.scss";
 
-function PlayerCard(props) {
-
+function PlayerCardOne(props) {
   return (
     <div
       class="card mewtwo animated"
       style={{ backgroundImage: `url(${props.image})` }}
       alt={props.title}
-      onClick={() => props.setModalOpen(props.id)}
     >
-
       <div>
         <PlayerName>{props.title}</PlayerName>
         <PlayerCount>{props.count}</PlayerCount>
@@ -24,7 +21,7 @@ function PlayerCard(props) {
   );
 }
 
-export default PlayerCard;
+export default PlayerCardOne;
 
 const FlagImage = styled.img`
   width: 30%;
@@ -36,7 +33,7 @@ const FlagImage = styled.img`
 const PlayerName = styled.p`
   padding-top: 10px;
   padding-bottom: 20px;
-  font-size: 1rem;
+  font-size: 2rem;
   text-align: center;
   color: white;
   background: linear-gradient(to top, rgba(1, 0, 0, 0), rgba(1, 1, 1, 0.9));
@@ -64,6 +61,7 @@ const PlayerValueBg = styled.div`
 const PlayerValue = styled.p`
   margin-bottom: 10%;
   margin-right: 10%;
+  font-size: 2rem;
 `;
 
 const PlayerCount = styled.p`
@@ -72,4 +70,3 @@ const PlayerCount = styled.p`
   color: white;
   font-weight: bold;
 `;
-
