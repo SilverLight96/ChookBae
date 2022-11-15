@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef, useCallback } from "react";
 import styled from "styled-components";
 import MatchCard from "../Components/MatchPage/MatchCard"
 import MatchCountryCard from "../Components/MatchPage/MatchCountryCard"
@@ -17,6 +17,7 @@ function MatchPage() {
     const [cardState, setCardState] = useState([])
     const [selectCard, setSelectCard] = useState()
     const [type, setType] = useState('country')
+    const [scroll, setScroll] = useState(false)
     // value ----------------------------------------------------
     const baseURL = "https://k7a202.p.ssafy.io/"
     const valueMoment = moment(value).format("YYYY-MM-DD")
@@ -35,6 +36,17 @@ function MatchPage() {
 
         axiosGetGroup()
     }, [])
+
+    useEffect(() => {
+        if (scroll) {
+            scrollRef.current.scrollIntoView({behavior: 'smooth', block: 'start', inline: 'nearest'})
+        }
+        setScroll(false)
+    }, [scroll])
+
+    // useRef - move scroll
+    const scrollRef = useRef()
+
     // axios - get data countries with date-----------------------
     const axiosGet = async(subUrl) => {
         const dataAxios = await axios
@@ -86,13 +98,15 @@ function MatchPage() {
             <Container>
             <Tableheader />
                 <hr />
-                <MatchCountryCard 
+                <MatchCountryCard
+                setScroll={setScroll}
                 data={groupData}
                 setState={setCardState}
                 selectedCard={setSelectCard}
                 />
                 <StyledHr />
-                <SelectedCard>{selectCard}</SelectedCard>
+                <SelectedCard
+                ref={scrollRef}>{selectCard}</SelectedCard>
 
                 {cardState.map((match, index) => {
                     return (
