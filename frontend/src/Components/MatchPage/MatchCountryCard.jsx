@@ -18,6 +18,7 @@ function MatchCountryCard(props) {
         props.setState(dataAxios.data)
         props.selectedCard(name)
         console.log(props);
+        props.setScroll(true)
     }
     // fromating -------------------------------------------
     props.data.map((elem) => {
