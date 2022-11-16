@@ -14,7 +14,7 @@ django.setup()
 
 from worldcup.models import *  # django.setup() 이후에 임포트해야 오류가 나지 않음
 
-
+t1 = datetime.now()
 ############### 경기 정보 + 필요한 리스트 추출 ###############
 # URL 및 요청변수 설정
 BASE_URL = 'https://api.statorium.com/api/v1/'
@@ -105,12 +105,13 @@ for t in team_list:
 
     # 선수 ID 리스트에 담기
     for p in range(len(team['players'])):
-        player_list.append(int(team['players'][p]['playerID']))
+        player_list.append([int(team['players'][p]['playerID']), team['players'][p]['playerNumber']])
 
 print('-'*30 + 'team table: \n', team_table)
 
 ############### 선수 정보 ###############
 print(player_list)      # 모든 선수들의 ID를 담고있는 리스트
+
 
 '''1
 ### 월드컵 API에서 제공하는 선수정보가 없는동안 아래의 tmp코드 사용 (11월 2주쯤 API 업데이트 예정)
@@ -135,6 +136,7 @@ for num in [2, 10]:     # 토트넘 & 뉴캐슬 선수 추출
 print(player_list_tmp)
 1'''
 
+
 ### 선수 테이블 생성
 BASE_URL = 'https://api.statorium.com/api/v1/'
 path = 'players/'
@@ -145,7 +147,7 @@ params = {
 
 player_table = []
 for p in player_list:
-    player_id = str(p) + '/'
+    player_id = str(p[0]) + '/'
     response = requests.get(BASE_URL+path+player_id, params=params)
 
     data = response.json()
@@ -161,9 +163,10 @@ for p in player_list:
         p_hn = player['homeName']
     if player['photo']:
         p_pp = player['photo']
-    if player['teams']:
+    if p[1]:
+        p_pn = int(p[1])
+    elif player['teams']:
         p_pn = int(player['teams'][0]['playerNumber'])
-        p_tn = player['teams'][0]['teamName']
     if player['additionalInfo']['birthdate']:
         p_bd = player['additionalInfo']['birthdate']
     if player['additionalInfo']['weight']:
@@ -173,6 +176,8 @@ for p in player_list:
     if player['country']['name']:
         p_cn = player['country']['name']
         p_cid = team_name(p_cn)
+    if player['teams']:
+        p_tn = player['teams'][0]['teamName']
     if player['additionalInfo']['position']:
         p_pos = int(player['additionalInfo']['position'])
     
@@ -180,8 +185,7 @@ for p in player_list:
     player_table.append(curr_player)
     
 print('-'*30 + 'player table(tmp): \n', player_table)
-
-
+print(datetime.now()-t1)
 
 ###################################################################################################
 ######################################### DB에 데이터 넣기 #########################################
@@ -272,7 +276,23 @@ for row in player_table:
     red_card_t = row[14]
     run_time_t = row[15]
     value_t = row[16]
+    # try:
+    #     s_player = Player.objects.get(id=id_t)
+    #     s_player.fullname = fullname_t
+    #     s_player.homename = homename_t
+    #     s_player.player_image = player_image_t
+    #     s_player.number = number_t
+    #     s_player.birthday = birthday_t
+    #     s_player.weight = weight_t
+    #     s_player.height = height_t
+    #     s_player.team_id = team_id_pk
+    #     s_player.current_team = current_team_t
+    #     s_player.position = position_t
+    #     s_player.save()
+    #     print("updated!")
+    # except:
     Player.objects.create(id=id_t, fullname=fullname_t, homename=homename_t, player_image=player_image_t, number=number_t,
                             birthday=birthday_t, weight=weight_t, height=height_t, team_id=team_id_pk, current_team=current_team_t,
                             position=position_t, goal=goal_t, assist=assist_t, yellow_card=yellow_card_t, red_card=red_card_t,
                             run_time=run_time_t, value=value_t)
+    #    print("created!")
