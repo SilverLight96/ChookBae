@@ -63,6 +63,7 @@ const Dropdown = ({ getSortKey }) => {
 export default Dropdown;
 
 const Wrapper = styled.div`
+  padding-top: 5%;
   display: flex;
   justify-content: end;
   background: #141e30;
@@ -78,7 +79,7 @@ export const DropdownContainer = styled.main`
 `;
 
 const DropdownBody = styled.div`
-  width: 70px;
+  width: 80px;
   display: flex;
   align-items: center;
   height: 20px;
@@ -96,7 +97,6 @@ const DropdownSelect = styled.p`
   justify-content: space-between;
   font-weight: bold;
   > span {
-    right: 10px;
     font-size: 12px;
   }
 `;
@@ -105,8 +105,8 @@ const DropdownMenu = styled.ul`
   display: ${(props) => (props.isActive ? `block` : `none`)};
   border: 1px solid ${(props) => props.theme.colors.white};
   margin-top: -2px;
-  width: 60px;
-  height: 190px;
+  width: 80px;
+  height: 160px;
   color: ${(props) => props.theme.colors.white};
   background-color: ${(props) => props.theme.colors.mainRed};
   position: absolute;
