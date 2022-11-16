@@ -291,6 +291,8 @@ const GoBack = styled.img`
 `
 
 const GoTop = styled.img`
+    max-width: 50px;
+    max-height: 50px;
     height: 10vw;
     width: 10vw;
     margin-bottom: 5vh;
