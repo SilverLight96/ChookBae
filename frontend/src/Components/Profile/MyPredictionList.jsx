@@ -114,7 +114,7 @@ const PredictionResult = styled.div`
       ? props.theme.colors.mainOrange
       : props.result === 1
       ? props.theme.colors.pointBlue
-      : props.theme.colors.subBlack};
+      : props.theme.colors.textGray};
 `;
 
 const PredictTable = styled.div`

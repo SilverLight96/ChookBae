@@ -88,7 +88,7 @@ const NavStyle = styled(NavLink)`
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 20px;
+  font-size: 1.1rem;
   text-align: center;
   background-color: ${(props) => props.theme.colors.mainRed};
   border-top-left-radius: 10px;
