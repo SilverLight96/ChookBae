@@ -1,14 +1,17 @@
-import React from "react";
+import React, {useState} from "react";
 import styled from "styled-components";
 import "./ListPlayerCardDesign.scss";
 
-function PlayerCardOne(props) {
+function PlayerCard(props) {
+
   return (
     <div
       class="card mewtwo animated"
       style={{ backgroundImage: `url(${props.image})` }}
       alt={props.title}
+      onClick={() => props.setModalOpen(props.id)}
     >
+
       <div>
         <PlayerName>{props.title}</PlayerName>
         <PlayerCount>{props.count}</PlayerCount>
@@ -21,7 +24,7 @@ function PlayerCardOne(props) {
   );
 }
 
-export default PlayerCardOne;
+export default PlayerCard;
 
 const FlagImage = styled.img`
   width: 30%;
@@ -31,9 +34,9 @@ const FlagImage = styled.img`
 `;
 
 const PlayerName = styled.p`
-  padding-top: 50px;
-  padding-bottom: 60px;
-  font-size: 2rem;
+  padding-top: 10px;
+  padding-bottom: 20px;
+  font-size: 1rem;
   text-align: center;
   color: white;
   background: linear-gradient(to top, rgba(1, 0, 0, 0), rgba(1, 1, 1, 0.9));
@@ -52,8 +55,7 @@ const PlayerValueBg = styled.div`
   text-align: right;
   color: white;
   font-weight: bold;
-  padding-top: 80px;
-  padding-bottom: 20px;
+  padding-top: 20px;
   background: linear-gradient(to bottom, rgba(1, 0, 0, 0), rgba(1, 1, 1, 0.9));
   border-bottom-left-radius: 5px;
   border-bottom-right-radius: 5px;
@@ -62,7 +64,6 @@ const PlayerValueBg = styled.div`
 const PlayerValue = styled.p`
   margin-bottom: 10%;
   margin-right: 10%;
-  font-size: 2rem;
 `;
 
 const PlayerCount = styled.p`
@@ -71,3 +72,4 @@ const PlayerCount = styled.p`
   color: white;
   font-weight: bold;
 `;
+
