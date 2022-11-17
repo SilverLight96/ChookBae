@@ -39,10 +39,9 @@ const Wrapper = styled.div`
   /* background: black; */
 `;
 
-
 const NeonHeader = styled.header`
-  padding-top: 20px;
-  padding-bottom: 20px;
+  padding-top: 1.2vh;
+  padding-bottom: 1.2vh;
   /* reset */
 
   p {
@@ -89,7 +88,7 @@ const NeonHeader = styled.header`
 
   @media (max-width: 650px) {
     p {
-      font-size: 2em;
+      font-size: 1.5em;
     }
   }
 
@@ -103,8 +102,8 @@ const NeonHeader = styled.header`
     background: #141e30;
   }
   .notify-wrap-inner {
-    height: 40px;
-    line-height: 40px;
+    height: 5vh;
+    line-height: 4vh;
     padding: 0 20px;
     margin: 0 30px;
     background: #141e30;
