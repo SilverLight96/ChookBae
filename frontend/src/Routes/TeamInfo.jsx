@@ -9,6 +9,8 @@ export default function TeamInfo () {
     const baseURL = "https://k7a202.p.ssafy.io/"
     const location = useLocation()
     const [teamData, setTeamData] = useState([])
+    const [playerData, setPlayerData] = useState([])
+
     const teamId = location.state.team_id
     const navigate = useNavigate()
 
@@ -26,6 +28,7 @@ export default function TeamInfo () {
                     'Content-Type': 'application/json',
                 },
             })
+            console.log(dataAxios.data);
             setTeamData(dataAxios.data)
         }
         getData(teamId)
@@ -45,19 +48,22 @@ export default function TeamInfo () {
                         return(
                             <div key={idx}>
                                 <p>FM</p>
-                                <p>{data[0]} {data[1]}</p>
+                                <p>{data[1]}</p>
                             </div>
                         )
                     }
                 })}
             </Fm>
+            <StyledHr />
             <GkDiv>
                 <Position>GK</Position>
                 <PositionDiv>
                 {teamData.map((data, idx) => {
                     if (data[2] === 'GK') {
                         return(
-                            <div key={idx}>
+                            <div
+                            key={idx}
+                            onClick={() => {}}>
                                 <p>{data[0]}</p>
                                 <p>{data[1]}</p>
                             </div>
@@ -166,7 +172,7 @@ const Fm = styled.div`
         background-color: ${(props) => props.theme.colors.mainRed};
         border-radius: 10px;
     }
-    width: 40%;
+    width: 80%;
     padding: 1%;
     margin-top: 3%;
     text-align: center;

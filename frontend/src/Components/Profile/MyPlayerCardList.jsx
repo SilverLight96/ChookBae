@@ -1,7 +1,7 @@
 import React from "react";
 import styled from "styled-components";
 import { useState, useEffect } from "react";
-import PlayerCard from "../common/PlayerCard";
+import ListPlayerCard from "../common/ListPlayerCard";
 import PlayerInfoModalComp from "./PlayerInfoModalComp"
 import { useRecoilState } from "recoil";
 import { myInformation } from "../../atoms";
@@ -28,7 +28,8 @@ function MyPlayerCardList() {
   }
 
   return (
-    <Wrapper>
+    <Wrapper
+    rowData = {parseInt(cardData / 3)}>
       <ModalWrapper
         display={modalOpen? 'flex':'none'}
         onClick={() => closeModal()}>
@@ -48,21 +49,22 @@ function MyPlayerCardList() {
           yellow={cardData[12]}
           red={cardData[13]}
           runTime={cardData[14]}
-          value={cardData[15]} />
+          value={cardData[15]}
+          teamInfo={cardData[6]} />
         </PlayerInfoModal>
       </ModalWrapper>
       {myInfo[0].card_list.map((playerCard) => {
         return (
-          <PlayerCard
-            setModalOpen={openModal}
-            id={playerCard.id}
-            title={playerCard.fullname}
-            image={playerCard.player_image}
-            key={playerCard.player_image}
-            count={playerCard.count}
-            value={playerCard.value}
-            flag={playerCard.logo}
-          />
+            <ListPlayerCard
+              setModalOpen={openModal}
+              id={playerCard.id}
+              title={playerCard.fullname}
+              image={playerCard.player_image}
+              key={playerCard.player_image}
+              count={playerCard.count}
+              value={playerCard.value}
+              flag={playerCard.logo}
+            />
         );
       })}
     </Wrapper>
@@ -75,6 +77,7 @@ const Wrapper = styled.div`
   width: 100%;
   display: grid;
   grid-template-columns: repeat(3, 1fr);
+
   grid-gap: 1rem;
   margin-bottom: 1rem;
   scroll-behavior: smooth;
