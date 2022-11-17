@@ -72,7 +72,7 @@ export default function PredictDetail () {
                         percent={percent_win}
                         // percent={50}
                         color={'#914154'}
-                        >{percent_win > 10 ? <p>{percent_win}%</p> : null}</ProgressBar>
+                        >{percent_win > 10 ? <p>{percent_win.toFixed(2)}%</p> : null}</ProgressBar>
                         <Data>
                             
                         </Data>
@@ -101,7 +101,7 @@ export default function PredictDetail () {
                         percent={percent_draw}
                         // percent={10}
                         color={'#914154'}
-                        >{percent_draw > 10 ? <p>{percent_draw}%</p> : null}</ProgressBar>
+                        >{percent_draw > 10 ? <p>{percent_draw.toFixed(2)}%</p> : null}</ProgressBar>
                         <Data>
                             
                         </Data>
@@ -130,7 +130,7 @@ export default function PredictDetail () {
                         percent={percent_lose}
                         // percent={40}
                         color={'#914154'}
-                        >{percent_lose > 10 ? <p>{percent_lose}%</p> : null}</ProgressBar>
+                        >{percent_lose > 10 ? <p>{percent_lose.toFixed(2)}%</p> : null}</ProgressBar>
                         <Data>
                             
                         </Data>

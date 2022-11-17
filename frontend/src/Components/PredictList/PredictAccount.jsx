@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import styled from "styled-components";
 import axios from "axios"
+import { getCookie } from '../../utils/functions/cookies'
 
 export default function PredictAccount (props) {
     console.log(props.point);
@@ -16,7 +17,12 @@ export default function PredictAccount (props) {
             match_id: id,
             point: point,
             predict: predict
-    })
+        }, {
+            headers: {
+                "Content-Type": "application/json",
+                Authorization: `${getCookie("token")}`
+                }
+            })
         .then( res => console.log(res))
         .catch(err => {
             console.log(err);
