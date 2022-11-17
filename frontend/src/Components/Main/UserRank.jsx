@@ -38,7 +38,7 @@ function UserRank() {
               <tr>
                 <th scope="col">순위</th>
                 <th scope="col">이름</th>
-                <th scope="col">포인트</th>
+                <th scope="col">총 선수가치</th>
               </tr>
             </thead>
             <tbody>
@@ -172,6 +172,8 @@ const UserRankTable = styled.div`
     background-color: #760d27;
     color: white;
     text-align: center;
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
   }
   .noBorder {
     border: none !important;
@@ -231,6 +233,8 @@ const PlayerRankTable = styled.div`
     background-color: #760d27;
     color: white;
     text-align: center;
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
   }
   .noBorder {
     border: none !important;
