@@ -34,7 +34,7 @@ export default function UserRankList() {
               <tr>
                 <th scope="col">순위</th>
                 <th scope="col">이름</th>
-                <th scope="col">포인트</th>
+                <th scope="col">총 선수가치</th>
               </tr>
             </thead>
             <tbody>
