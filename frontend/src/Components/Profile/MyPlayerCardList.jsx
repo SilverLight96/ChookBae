@@ -28,7 +28,8 @@ function MyPlayerCardList() {
   }
 
   return (
-    <Wrapper>
+    <Wrapper
+    rowData = {parseInt(cardData / 3)}>
       <ModalWrapper
         display={modalOpen? 'flex':'none'}
         onClick={() => closeModal()}>
@@ -48,21 +49,22 @@ function MyPlayerCardList() {
           yellow={cardData[12]}
           red={cardData[13]}
           runTime={cardData[14]}
-          value={cardData[15]} />
+          value={cardData[15]}
+          teamInfo={cardData[6]} />
         </PlayerInfoModal>
       </ModalWrapper>
       {myInfo[0].card_list.map((playerCard) => {
         return (
-          <PlayerCard
-            setModalOpen={openModal}
-            id={playerCard.id}
-            title={playerCard.fullname}
-            image={playerCard.player_image}
-            key={playerCard.player_image}
-            count={playerCard.count}
-            value={playerCard.value}
-            flag={playerCard.logo}
-          />
+            <PlayerCard
+              setModalOpen={openModal}
+              id={playerCard.id}
+              title={playerCard.fullname}
+              image={playerCard.player_image}
+              key={playerCard.player_image}
+              count={playerCard.count}
+              value={playerCard.value}
+              flag={playerCard.logo}
+            />
         );
       })}
     </Wrapper>
@@ -75,6 +77,7 @@ const Wrapper = styled.div`
   width: 100%;
   display: grid;
   grid-template-columns: repeat(3, 1fr);
+
   grid-gap: 1rem;
   margin-bottom: 1rem;
   scroll-behavior: smooth;
@@ -98,14 +101,16 @@ const PlayerInfoModal = styled.div`
 `
 
 const ModalWrapper = styled.div`
+  position: fixed;
+  top: 0;
+
   max-width: 600px;
   min-height: 100vh;
   width: 100%;
-  height: 76%;
+  height: 76vh;
   
   background-color: rgba(0, 0, 0, 0.5);
 
   display: ${props => props.display};
   z-index: 98;
-  position: absolute;
 `
