@@ -1,6 +1,6 @@
 import React from "react";
 import styled from "styled-components";
-import "./PlayerCardDesign.scss";
+import "./ListPlayerCardDesign.scss";
 
 function PlayerCardOne(props) {
   return (

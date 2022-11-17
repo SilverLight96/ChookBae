@@ -1,7 +1,7 @@
 import React from "react";
 import styled from "styled-components";
 import { useState, useEffect } from "react";
-import ListPlayerCard from "../common/ListPlayerCard";
+import PlayerCard from "../common/PlayerCard";
 import PlayerInfoModalComp from "./PlayerInfoModalComp"
 import { useRecoilState } from "recoil";
 import { myInformation } from "../../atoms";
@@ -55,7 +55,7 @@ function MyPlayerCardList() {
       </ModalWrapper>
       {myInfo[0].card_list.map((playerCard) => {
         return (
-            <ListPlayerCard
+            <PlayerCard
               setModalOpen={openModal}
               id={playerCard.id}
               title={playerCard.fullname}
