@@ -5,6 +5,9 @@ import { removeCookie } from "../../utils/functions/cookies";
 import { useRecoilState, useSetRecoilState } from "recoil";
 import { loggedinState, myInformation } from "../../atoms";
 
+
+
+
 function ProfileCard() {
   const profileInfo = useRecoilState(myInformation);
 

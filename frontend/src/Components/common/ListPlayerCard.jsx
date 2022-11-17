@@ -2,7 +2,7 @@ import React, {useState} from "react";
 import styled from "styled-components";
 import "./ListPlayerCardDesign.scss";
 
-function PlayerCard(props) {
+function ListPlayerCard(props) {
 
   return (
     <div
@@ -24,7 +24,7 @@ function PlayerCard(props) {
   );
 }
 
-export default PlayerCard;
+export default ListPlayerCard;
 
 const FlagImage = styled.img`
   width: 30%;
