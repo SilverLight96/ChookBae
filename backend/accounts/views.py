@@ -278,8 +278,8 @@ def mypage(request):
         # profile = profile.__getstate__()['name'] #filefield에서 url을 가져오는 방법
         #https://docs.djangoproject.com/en/2.2/_modules/django/db/models/fields/files/
 
-        return Response({'predict_match':M_list,'nickname':user.nickname,'point':user.points \
-        ,'card_list':C_list,'profile':profile,'point_list':P_list},status=status.HTTP_200_OK)
+        return Response({'predict_match':M_list,'nickname':user.nickname,'point':user.points,'total_value':user.value,
+        'card_list':C_list,'profile':profile,'point_list':P_list},status=status.HTTP_200_OK)
     except jwt.ExpiredSignatureError:
         return Response({'error': ''}, status=status.HTTP_400_BAD_REQUEST)
     
