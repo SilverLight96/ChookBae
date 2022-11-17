@@ -32,16 +32,14 @@ function MatchDetail() {
         null,
         propData.team1_rank,
         propData.team1_last_five,
-        // propData.team1_manager,
-        'Manager',
+        propData.team1_manager,
     ]
 
     const detailData_2 = [
         null,
         propData.team2_rank,
         propData.team2_last_five,
-        // propData.team2_manager,
-        'Manager',
+        propData.team2_manager,
     ]
     // data formating -----------------------------------------------
     Object.keys(propDataSecond).map(elem => {
