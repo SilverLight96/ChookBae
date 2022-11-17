@@ -15,7 +15,7 @@ function ProfileCard() {
     removeCookie("token");
     navigate("/");
   };
-
+  console.log(profileInfo[0]);
   return (
     <Wrapper>
       <ButtonConatiner>
@@ -33,7 +33,8 @@ function ProfileCard() {
       </ProfileImgContainer>
       <ProfileMain>
         <NickName>{profileInfo[0].nickname} </NickName>
-        <p>포인트 : {profileInfo[0].point} 점</p>
+        <p>총 선수가치 {profileInfo[0].total_value}</p>
+        <p>포인트 {profileInfo[0].point}</p>
       </ProfileMain>
     </Wrapper>
   );
@@ -76,15 +77,17 @@ const ProfileMain = styled.main`
   margin-left: 5%;
   width: 70%;
   > p {
-    font-size: 18px;
+    font-size: 1rem;
     font-weight: bold;
+    text-align: right;
+    padding-right: 1rem;
   }
 `;
 
 const NickName = styled.h2`
   margin-top: 20%;
   margin-bottom: 10px;
-  font-size: 26px;
+  font-size: 2rem;
   font-weight: bold;
 `;
 
