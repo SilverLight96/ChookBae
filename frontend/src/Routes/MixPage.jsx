@@ -168,6 +168,7 @@ function MixPage() {
                       id={players.id}
                       name={players.fullname}
                     />
+                    <StyledLogoImg src={players.logo} />
                   </MixCard>
                 );
               })}
@@ -190,6 +191,7 @@ function MixPage() {
                       id={players.id}
                       name={players.fullname}
                     />
+                    <StyledLogoImg src={players.logo} />
                   </MixCard>
                 );
               })}
@@ -495,6 +497,7 @@ const CardPack = styled.div`
 `;
 
 const MixText = styled.p`
+  text-align: center;
   font-size: 30px;
   color: white;
 `;
@@ -505,7 +508,7 @@ const MixCard = styled.div`
   border: 1px solid ${(props) => props.theme.colors.white};
   > img {
     width: 100%;
-    height: 100%;
+    height: 10em;
   }
   > h1 {
     position: absolute;
@@ -519,7 +522,7 @@ const MixCard = styled.div`
     position: absolute;
     color: white;
     right: 5%;
-    bottom: 10%;
+    bottom: 20%;
   }
   > h2 {
     position: absolute;
@@ -528,7 +531,13 @@ const MixCard = styled.div`
     bottom: 10%;
   }
 `;
-
+const StyledLogoImg = styled.img`
+  position: absolute !important;
+  width: 30% !important;
+  height: 30% !important;
+  left: 1% !important;
+  bottom: 1% !important;
+`
 const ModalBody = styled.div`
   width: 100%;
 `;
