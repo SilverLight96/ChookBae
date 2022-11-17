@@ -84,7 +84,7 @@ const Wrapper = styled.div`
 
 const PlayerInfoModal = styled.div`
   width: 80%;
-  height: 70%;
+  height: 50%;
   display: ${props => props.display};
 
   position: absolute;
@@ -98,13 +98,16 @@ const PlayerInfoModal = styled.div`
 `
 
 const ModalWrapper = styled.div`
+  position: fixed;
+  top: 0;
+
   max-width: 600px;
+  min-height: 100vh;
   width: 100%;
-  height: 76%;
+  height: 76vh;
   
   background-color: rgba(0, 0, 0, 0.5);
 
   display: ${props => props.display};
   z-index: 98;
-  position: absolute;
 `

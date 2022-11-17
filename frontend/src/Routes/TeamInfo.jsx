@@ -1,14 +1,22 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import styled from "styled-components";
-import { useLocation } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import axios from 'axios'
+import goBackImg from '../assets/goBack.png'
+import goTop from '../assets/goTop.png'
 
 export default function TeamInfo () {
     const baseURL = "https://k7a202.p.ssafy.io/"
     const location = useLocation()
     const [teamData, setTeamData] = useState([])
     const teamId = location.state.team_id
+    const navigate = useNavigate()
 
+    const scrollRef = useRef()
+
+    const GoTopScroll = () => {
+        scrollRef.current.scrollIntoView({behavior: 'smooth', block: 'start', inline: 'nearest'})
+    }
     useEffect(() => {
         const getData = async(id) => {
             const dataAxios = await axios
@@ -25,6 +33,9 @@ export default function TeamInfo () {
 
     return (
         <Container>
+            <GoBackContainer ref={scrollRef}>
+                <GoBack src={goBackImg} onClick={() => navigate(-1)} />
+            </GoBackContainer>
             <Title>
                 <p>{location.state.team_name} 국가대표</p>
             </Title>
@@ -103,6 +114,7 @@ export default function TeamInfo () {
                 })}
                 </PositionDiv>
             </DfDiv>
+            <GoTop src={goTop} onClick={() => GoTopScroll()} />
             <BlankDiv>
             </BlankDiv>
         </Container>
@@ -135,7 +147,6 @@ const Title = styled.div`
     padding: 1%;
     border-radius: 10px;
 
-    margin-top: 3%;
     background-color: ${(props) => props.theme.colors.mainRed};
 
     display: flex;
@@ -218,7 +229,7 @@ const DfDiv = styled.div`
 `
 const BlankDiv = styled.div`
     width: 90%;
-    height: 10vh;
+    height: 6vh;
 
 `
 const PositionDiv = styled.div`
@@ -254,4 +265,38 @@ const Position = styled.p`
 const StyledHr = styled.hr`
     background-color: white;
     width: 100%;
+`
+
+const GoBackContainer = styled.div`
+    align-self: flex-end;
+    margin: 2vw 5vw;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    border: 2px solid white;
+    border-radius: 50%;
+    width: 10vw;
+    height: 10vw;
+    max-width: 50px;
+    max-height: 50px;
+`
+const GoBack = styled.img`
+    max-width: 50px;
+    max-height: 25px;
+    height: 5vw;
+    width: 10vw;
+    transform: scaleX(-1);
+`
+
+const GoTop = styled.img`
+    max-width: 50px;
+    max-height: 50px;
+    height: 10vw;
+    width: 10vw;
+    margin-bottom: 5vh;
+    transform: rotate(-90deg);
+    border: 2px solid white;
+    border-radius: 50%;
 `

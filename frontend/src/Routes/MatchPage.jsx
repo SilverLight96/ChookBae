@@ -38,7 +38,7 @@ function MatchPage() {
     }, [])
 
     useEffect(() => {
-        if (scroll) {
+        if (scroll && type==='country') {
             scrollRef.current.scrollIntoView({behavior: 'smooth', block: 'start', inline: 'nearest'})
         }
         setScroll(false)
@@ -67,6 +67,7 @@ function MatchPage() {
         getDataDate(valueMoment)
         onChange(e)
         console.log(dataDate)
+        setScroll(true)
         }
     // top position two button ----------------------------------- 
     const Tableheader = () => {
@@ -136,7 +137,9 @@ function MatchPage() {
             <Container>
                 <Tableheader />
                 <StyledCalendarContainer>
-                    <StyledCalendar onChange={onChangeTemp} value={value} />
+                    <StyledCalendar 
+                    onChange={onChangeTemp} 
+                    value={value} />
                 </StyledCalendarContainer>
                 <StyledHr />
                 <h1>{valueMoment}</h1>

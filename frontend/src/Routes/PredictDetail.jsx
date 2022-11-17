@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from "react";
 import styled from "styled-components";
-import { useLocation } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import axios from 'axios'
 import baedang from '../assets/baedang.png'
 import points from '../assets/points.png'
 import usernumber from '../assets/usernumber.png'
 import { getCookie } from '../utils/functions/cookies'
-
+import goBackImg from '../assets/goBack.png'
 import PredictAccount from '../Components/PredictList/PredictAccount'
 
 export default function PredictDetail () {
@@ -18,6 +18,8 @@ export default function PredictDetail () {
     const [predictData, setPredictData] = useState([])
     const [selected, setSelected] = useState(false)
     const [reload, setReload] = useState(false)
+
+    const navigate = useNavigate()
 
     useEffect(() => {
         const getPredictData = async(id) => {
@@ -39,8 +41,15 @@ export default function PredictDetail () {
 
     return (
         <Container>
-            <h1>어느 나라가 승리할까요?</h1>
+            <TitleDiv>
+                <h1>어느 나라가 승리할까요?</h1>
+                <GoBackContainer>
+                    <GoBack src={goBackImg} onClick={() => navigate(-1)} />
+                </GoBackContainer>
+            </TitleDiv>
+
             <DataContainer>
+
                 <DataDiv>
                     <p>{location.state.team1_country}</p>
                     <DetailDataDiv>
@@ -63,7 +72,7 @@ export default function PredictDetail () {
                         percent={percent_win}
                         // percent={50}
                         color={'#914154'}
-                        >{percent_win > 10 ? <p>{percent_win}%</p> : null}</ProgressBar>
+                        >{percent_win > 10 ? <p>{percent_win.toFixed(2)}%</p> : null}</ProgressBar>
                         <Data>
                             
                         </Data>
@@ -92,7 +101,7 @@ export default function PredictDetail () {
                         percent={percent_draw}
                         // percent={10}
                         color={'#914154'}
-                        >{percent_draw > 10 ? <p>{percent_draw}%</p> : null}</ProgressBar>
+                        >{percent_draw > 10 ? <p>{percent_draw.toFixed(2)}%</p> : null}</ProgressBar>
                         <Data>
                             
                         </Data>
@@ -121,7 +130,7 @@ export default function PredictDetail () {
                         percent={percent_lose}
                         // percent={40}
                         color={'#914154'}
-                        >{percent_lose > 10 ? <p>{percent_lose}%</p> : null}</ProgressBar>
+                        >{percent_lose > 10 ? <p>{percent_lose.toFixed(2)}%</p> : null}</ProgressBar>
                         <Data>
                             
                         </Data>
@@ -320,4 +329,32 @@ const StyledImg = styled.img`
 const BlankDiv = styled.div`
     height: ${props => props.height};
     background-color: ${(props) => props.theme.colors.mainBlack};
+`
+
+const GoBackContainer = styled.div`
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    border: 2px solid white;
+    border-radius: 50%;
+    max-width: 50px;
+    max-height: 50px;
+    width: 5vw;
+    height: 5vw;
+`
+const GoBack = styled.img`
+    max-width: 50px;
+    max-height: 25px;
+    height: 2.5vw;
+    width: 5vw;
+    transform: scaleX(-1);
+`
+
+const TitleDiv = styled.div`
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-evenly;
+    align-items: center;
 `

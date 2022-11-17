@@ -46,7 +46,7 @@ const StyledTable = styled.table`
 `
 
 const StyledTr = styled.tr`
-
+    text-align: center;
 `
 
 const StyledTh = styled.th`
