@@ -10,21 +10,7 @@ import { rankApis } from '../utils/apis/userApis';
 
 
 function Ranking(props){
-  const [rankResult, setRankResult] = useState([]);
-
-  const [isModal, setIsModal] = useState(false);
-  const getRank = async () => {
-    const response = await fetchData
-      .get(rankApis.RANK("value"))
-      .then((res) => {
-        setRankResult(res.data);
-      });
-    return response;
-  };
-
-  useEffect(() => {
-    return 
-  }, );
+  
 
   
 
