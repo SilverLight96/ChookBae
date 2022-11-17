@@ -24,7 +24,6 @@ from worldcup.models import Point
 from django.conf import settings
 from chookbae.settings import SECRET_KEY
 from .serializers import UserSerializer, AuthenticateSerializer, UserUpdateSerializer, PhotoSerializer
-from django.db import transaction
 from rest_framework.views import APIView
 
 from .models import User, profile_image_path
@@ -45,7 +44,6 @@ def make_random_code():
 # 회원가입
 @api_view(['POST'])
 @permission_classes([AllowAny])
-@transaction.atomic()
 def signup(request):
     nickname = request.data.get('nickname')
     password = request.data.get('password')

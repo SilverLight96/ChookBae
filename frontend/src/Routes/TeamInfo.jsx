@@ -4,11 +4,15 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import axios from 'axios'
 import goBackImg from '../assets/goBack.png'
 import goTop from '../assets/goTop.png'
+import PlayerInfoModalComp from "../Components/Profile/PlayerInfoModalComp"
 
 export default function TeamInfo () {
     const baseURL = "https://k7a202.p.ssafy.io/"
     const location = useLocation()
     const [teamData, setTeamData] = useState([])
+    const [playerData, setPlayerData] = useState([])
+    const [modalOpen, setModalOpen] = useState(false)
+
     const teamId = location.state.team_id
     const navigate = useNavigate()
 
@@ -17,15 +21,27 @@ export default function TeamInfo () {
     const GoTopScroll = () => {
         scrollRef.current.scrollIntoView({behavior: 'smooth', block: 'start', inline: 'nearest'})
     }
+    const getPlayerData = async(playerId) => {
+        const dataAxios = await axios
+        .get(baseURL + `v1/player/info/${playerId}`, {
+            headers: {
+                'Content-Type': 'application/json',
+            },
+        })
+        console.log(dataAxios.data);
+        setPlayerData(dataAxios.data)
+        setModalOpen(true)
+    }
+    
     useEffect(() => {
         const getData = async(id) => {
             const dataAxios = await axios
-
             .get(baseURL + 'v1/match/teaminfo/' + id, {
                 headers: {
                     'Content-Type': 'application/json',
                 },
             })
+            console.log(dataAxios.data);
             setTeamData(dataAxios.data)
         }
         getData(teamId)
@@ -33,6 +49,30 @@ export default function TeamInfo () {
 
     return (
         <Container>
+            <ModalWrapper
+                display={modalOpen? 'flex':'none'}
+                onClick={() => setModalOpen(false)}>
+                <PlayerInfoModal
+                display={modalOpen? 'flex':'none'}>
+                    <PlayerInfoModalComp
+                    img={playerData[2]}
+                    name={playerData[1]}
+                    country={playerData[3]}
+                    position={playerData[4]}
+                    birth={playerData[7]}
+                    height={playerData[9]}
+                    weight={playerData[8]}
+                    number={playerData[5]}
+                    goal={playerData[10]}
+                    assist={playerData[11]}
+                    yellow={playerData[12]}
+                    red={playerData[13]}
+                    runTime={playerData[14]}
+                    value={playerData[15]}
+                    teamInfo={playerData[6]} />
+                </PlayerInfoModal>
+            </ModalWrapper>
+
             <GoBackContainer ref={scrollRef}>
                 <GoBack src={goBackImg} onClick={() => navigate(-1)} />
             </GoBackContainer>
@@ -45,19 +85,23 @@ export default function TeamInfo () {
                         return(
                             <div key={idx}>
                                 <p>FM</p>
-                                <p>{data[0]} {data[1]}</p>
+                                <p>{data[1]}</p>
                             </div>
                         )
                     }
                 })}
             </Fm>
+            <StyledHr />
             <GkDiv>
                 <Position>GK</Position>
                 <PositionDiv>
                 {teamData.map((data, idx) => {
                     if (data[2] === 'GK') {
+                        const playerId = data[4]
                         return(
-                            <div key={idx}>
+                            <div
+                            key={idx}
+                            onClick={() => {getPlayerData(playerId)}}>
                                 <p>{data[0]}</p>
                                 <p>{data[1]}</p>
                             </div>
@@ -72,8 +116,11 @@ export default function TeamInfo () {
                 <PositionDiv>
                 {teamData.map((data, idx) => {
                     if (data[2] === 'FW') {
+                        const playerId = data[4]
                         return(
-                            <div key={idx}>
+                            <div
+                            key={idx}
+                            onClick={() => {getPlayerData(playerId)}}>
                                 <p>{data[0]}</p>
                                 <p>{data[1]}</p>
                             </div>
@@ -88,8 +135,11 @@ export default function TeamInfo () {
                 <PositionDiv>
                 {teamData.map((data, idx) => {
                     if (data[2] === 'MF') {
+                        const playerId = data[4]
                         return(
-                            <div key={idx}>
+                            <div
+                            key={idx}
+                            onClick={() => {getPlayerData(playerId)}}>
                                 <p>{data[0]}</p>
                                 <p>{data[1]}</p>
                             </div>
@@ -104,8 +154,11 @@ export default function TeamInfo () {
                 <PositionDiv>
                 {teamData.map((data, idx) => {
                     if (data[2] === 'DF') {
+                        const playerId = data[4]
                         return(
-                            <div key={idx}>
+                            <div
+                            key={idx}
+                            onClick={() => {getPlayerData(playerId)}}>
                                 <p>{data[0]}</p>
                                 <p>{data[1]}</p>
                             </div>
@@ -166,7 +219,7 @@ const Fm = styled.div`
         background-color: ${(props) => props.theme.colors.mainRed};
         border-radius: 10px;
     }
-    width: 40%;
+    width: 80%;
     padding: 1%;
     margin-top: 3%;
     text-align: center;
@@ -299,4 +352,34 @@ const GoTop = styled.img`
     transform: rotate(-90deg);
     border: 2px solid white;
     border-radius: 50%;
+`
+
+const PlayerInfoModal = styled.div`
+  width: 80%;
+  height: 50%;
+  display: ${props => props.display};
+
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+
+  border-radius: 10px;
+  border: 5px solid ${(props) => props.theme.colors.mainRed};
+  z-index: 99;
+`
+
+const ModalWrapper = styled.div`
+  position: fixed;
+  top: 0;
+
+  max-width: 600px;
+  min-height: 100vh;
+  width: 100%;
+  height: 76vh;
+  
+  background-color: rgba(0, 0, 0, 0.5);
+
+  display: ${props => props.display};
+  z-index: 98;
 `
