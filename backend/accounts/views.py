@@ -24,7 +24,6 @@ from worldcup.models import Point
 from django.conf import settings
 from chookbae.settings import SECRET_KEY
 from .serializers import UserSerializer, AuthenticateSerializer, UserUpdateSerializer, PhotoSerializer
-from django.db import transaction
 from rest_framework.views import APIView
 
 from .models import User, profile_image_path
@@ -45,7 +44,6 @@ def make_random_code():
 # 회원가입
 @api_view(['POST'])
 @permission_classes([AllowAny])
-@transaction.atomic()
 def signup(request):
     nickname = request.data.get('nickname')
     password = request.data.get('password')
@@ -156,11 +154,11 @@ def login(request):
     #오늘이 최초 회원가입일 경우
     if user.login_count == 0:
         user.last_login = timezone.now()
-        print("처음 회원가입 보상 1000포인트 지급")
-        user.points += 1000
+        print("처음 회원가입 보상 5000포인트 지급")
+        user.points += 5000
         
         #포인트 내역에 추가
-        Point.objects.create(user_id=user,point=1000, info="처음 회원가입 보상",time=timezone.now())
+        Point.objects.create(user_id=user,point=5000, info="처음 회원가입 보상",time=timezone.now())
         
         user.login_count += 1
         user.save(update_fields=['last_login','login_count', 'points'])
@@ -170,11 +168,11 @@ def login(request):
         user.login_count += 1
         #로그인 횟수를 저장
         user.last_login = timezone.now()
-        print("출석체크 보상으로 500포인트 지급되었습니다.")
+        print("출석체크 보상으로 2000포인트 지급되었습니다.")
         
         #포인트 내역에 추가
-        Point.objects.create(user_id=user,point=500, info="로그인 보상",time=timezone.now())
-        user.points += 500
+        Point.objects.create(user_id=user,point=2000, info="로그인 보상",time=timezone.now())
+        user.points += 2000
 
         user.save(update_fields=['last_login', 'login_count','points'])
     else:
@@ -280,8 +278,8 @@ def mypage(request):
         # profile = profile.__getstate__()['name'] #filefield에서 url을 가져오는 방법
         #https://docs.djangoproject.com/en/2.2/_modules/django/db/models/fields/files/
 
-        return Response({'predict_match':M_list,'nickname':user.nickname,'point':user.points \
-        ,'card_list':C_list,'profile':profile,'point_list':P_list},status=status.HTTP_200_OK)
+        return Response({'predict_match':M_list,'nickname':user.nickname,'point':user.points,'total_value':user.value,
+        'card_list':C_list,'profile':profile,'point_list':P_list},status=status.HTTP_200_OK)
     except jwt.ExpiredSignatureError:
         return Response({'error': ''}, status=status.HTTP_400_BAD_REQUEST)
     

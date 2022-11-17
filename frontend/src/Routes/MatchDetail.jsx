@@ -32,24 +32,23 @@ function MatchDetail() {
         null,
         propData.team1_rank,
         propData.team1_last_five,
-        // propData.team1_manager,
-        'Manager',
+        propData.team1_manager,
     ]
 
     const detailData_2 = [
         null,
         propData.team2_rank,
         propData.team2_last_five,
-        // propData.team2_manager,
-        'Manager',
+        propData.team2_manager,
     ]
     // data formating -----------------------------------------------
     Object.keys(propDataSecond).map(elem => {
+        console.log(elem)
         if (propDataSecond[elem][1] === propData.team1_country) {
-            detailData_1[0] = parseInt(elem[0]) + 1
+            detailData_1[0] = parseInt(propDataSecond[elem][0])
         }
         if (propDataSecond[elem][1] === propData.team2_country) {
-            detailData_2[0] = parseInt(elem[0]) + 1
+            detailData_2[0] = parseInt(propDataSecond[elem][0])
         }
     })
     console.log(propDataSecond);

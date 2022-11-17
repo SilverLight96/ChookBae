@@ -29,7 +29,7 @@ function UserRank() {
         </h3>
       </UserRankHeader>
       <LinkHeader>
-       <StyledLink to="/Ranking">더보기</StyledLink>
+        <StyledLink to="/Ranking">더보기</StyledLink>
       </LinkHeader>
       <UserRankTable className="container">
         <div class="table-responsive">
@@ -54,14 +54,14 @@ function UserRank() {
             </tbody>
           </table>
         </div>
-      </UserRankTable>      
+      </UserRankTable>
       <PlayerRankHeader>
         <h3 contenteditable spellcheck="false">
           선수 랭킹
         </h3>
       </PlayerRankHeader>
       <LinkHeader>
-       <StyledLink to="/PlayerRanking">더보기</StyledLink>
+        <StyledLink to="/PlayerRanking">더보기</StyledLink>
       </LinkHeader>
       <PlayerRankTable>
         <div class="table-responsive">
@@ -104,14 +104,13 @@ const Wrapper = styled.div`
 const LinkHeader = styled.div`
   display: flex;
   justify-content: flex-end;
-`
+`;
 
 const StyledLink = styled(Link)`
   text-decoration: none;
   color: #fff;
   padding: 4px;
 
- 
   &:hover {
     background-color: #fff;
     color: #000;
@@ -121,19 +120,19 @@ const StyledLink = styled(Link)`
 `;
 
 const UserRankHeader = styled.div`
-  padding-bottom: 10px;
+  padding-bottom: 1vh;
   h3 {
     white-space: nowrap;
     width: auto;
     text-align: center;
-    font-size: 1.8rem;
+    font-size: 1.5rem;
     font-style: italic;
     color: #fff;
     padding: 0.5rem 0.5rem 0.5rem;
     border: 0.2rem solid #fff;
     border-radius: 2rem;
     text-transform: uppercase;
-    animation: flicker 1.5s infinite alternate;
+    animation: flicker 0.1s infinite alternate;
   }
 
   h3::-moz-selection {
@@ -157,16 +156,19 @@ const UserRankTable = styled.div`
     color: #d2d1d5;
   }
   tr:nth-child(even) {
+    white-space: nowrap;
     text-align: center;
     background-color: #2e2649;
     color: #d2d1d5;
   }
   tr:nth-child(odd) {
+    white-space: nowrap;
     text-align: center;
     background-color: #2a3a4f;
     color: #d2d1d5;
   }
   th {
+    white-space: nowrap;
     background-color: #760d27;
     color: white;
     text-align: center;
@@ -177,19 +179,19 @@ const UserRankTable = styled.div`
 `;
 
 const PlayerRankHeader = styled.div`
-  padding-bottom: 10px;
+  padding-bottom: 1vh;
   h3 {
     white-space: nowrap;
     width: auto;
     text-align: center;
-    font-size: 1.8rem;
+    font-size: 1.5rem;
     font-style: italic;
     color: #fff;
     padding: 0.5rem 0.5rem 0.5rem;
     border: 0.2rem solid #fff;
     border-radius: 2rem;
     text-transform: uppercase;
-    animation: flicker 1.5s infinite alternate;
+    animation: flicker 0.1s infinite alternate;
   }
 
   h3::-moz-selection {
@@ -213,16 +215,19 @@ const PlayerRankTable = styled.div`
     color: #d2d1d5;
   }
   tr:nth-child(even) {
+    white-space: nowrap;
     text-align: center;
     background-color: #2e2649;
     color: #d2d1d5;
   }
   tr:nth-child(odd) {
+    white-space: nowrap;
     text-align: center;
     background-color: #2a3a4f;
     color: #d2d1d5;
   }
   th {
+    white-space: nowrap;
     background-color: #760d27;
     color: white;
     text-align: center;
