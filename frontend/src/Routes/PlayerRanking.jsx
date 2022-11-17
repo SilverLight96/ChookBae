@@ -9,26 +9,6 @@ import { getCookie } from "../utils/functions/cookies";
 
 function PlayerRankingPage(props){
 
-  const [rankResult, setRankResult] = useState([]);
-
-  const [isModal, setIsModal] = useState(false);
-  const getRank = async () => {
-    const response = await fetchData
-      .get(rankApis.RANK("player"), {
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `${getCookie("token")}`,
-        },
-      })
-      .then((res) => {
-        setRankResult(res.data);
-      });
-    return response;
-  };
-
-  useEffect(() => {
-    return 
-  }, );
 
     return (
       

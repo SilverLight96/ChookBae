@@ -24,8 +24,9 @@ export default function PlayerInfoModalComp(props) {
                 </ImgContainer>
             </DataContainer>
             <UnderP>{props.name}</UnderP>
+            <UnderP>{props.teamInfo}</UnderP>
             <UnderP>{props.birth}</UnderP>
-            <UnderP>{props.height} {props.weight}</UnderP>
+            <UnderP>{props.height}cm | {props.weight}kg</UnderP>
         </Container>
     )
 }
@@ -51,20 +52,21 @@ const UpperP = styled.p`
 `
 
 const ImgContainer = styled.div`
-    width: 60%;
+    width: auto;
     height: auto;
     background: ${props => props.color};
     border-radius: 10px;
 `
 const StyledImg = styled.img`
-    width: 100%;
-    height: auto;
+    width: 10em;
+    height: 13em;
 `
 const UnderP = styled.p`
     font-size: 1em;
 `
 
 const DataContainer = styled.div`
+    width: 100%;
     display: flex;
     flex-direction: row;
     justify-content: space-evenly;
