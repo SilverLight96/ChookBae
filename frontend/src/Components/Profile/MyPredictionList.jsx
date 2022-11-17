@@ -9,8 +9,44 @@ export default function MyPredictionList() {
 
   return (
     <Wrapper>
-      <PredictionMain>
-        <PredictionTH>
+      {/* <PredictionMain> */}
+      <PredictTable className="container">
+        <div class="table-responsive">
+          <table class="table">
+            <thead>
+              <tr>
+                <th scope="col">경기</th>
+                <th scope="col">예측일</th>
+                <th scope="col">결과</th>
+              </tr>
+            </thead>
+            <tbody>
+              {myInfo[0].predict_match.map((prediction, id) => {
+                return (
+                  <tr key={prediction.id}>
+                    <td class="noBorder">
+                      {prediction.team1} VS {prediction.team2}
+                    </td>
+                    <td class="noBorder">{prediction.bet_time} </td>
+                    <td class="noBorder">
+                      <PredictionResult result={prediction.result}>
+                        {prediction.result === 1 ? (
+                          <div>적중</div>
+                        ) : prediction.result === 0 ? (
+                          <div>미적중</div>
+                        ) : (
+                          <div>대기중</div>
+                        )}
+                      </PredictionResult>
+                    </td>
+                  </tr>
+                );
+              })}
+            </tbody>
+          </table>
+        </div>
+      </PredictTable>
+      {/* <PredictionTH>
           <div>경기</div>
           <div>예측일</div>
           <div>결과</div>
@@ -33,15 +69,15 @@ export default function MyPredictionList() {
               </PredictionResult>
             </PredictionBody>
           );
-        })}
-      </PredictionMain>
+        })} */}
+      {/* </PredictionMain> */}
     </Wrapper>
   );
 }
 
 const Wrapper = styled.div`
   margin: auto;
-  width: 90%;
+  /* width: 90%; */
 `;
 
 const PredictionMain = styled.main`
@@ -79,4 +115,36 @@ const PredictionResult = styled.div`
       : props.result === 1
       ? props.theme.colors.pointBlue
       : props.theme.colors.subBlack};
+`;
+
+const PredictTable = styled.div`
+  padding-top: 1.5vh;
+  font-size: 0.8rem;
+  body {
+    background: #1e1930;
+    color: #d2d1d5;
+  }
+  tr:nth-child(even) {
+    white-space: nowrap;
+    text-align: center;
+    background-color: #2e2649;
+    color: #d2d1d5;
+  }
+  tr:nth-child(odd) {
+    white-space: nowrap;
+    text-align: center;
+    background-color: #2a3a4f;
+    color: #d2d1d5;
+  }
+  th {
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+    white-space: nowrap;
+    background-color: #914154;
+    color: white;
+    text-align: center;
+  }
+  .noBorder {
+    border: none !important;
+  }
 `;
