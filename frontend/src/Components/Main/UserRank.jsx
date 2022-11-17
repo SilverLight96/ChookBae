@@ -38,7 +38,7 @@ function UserRank() {
               <tr>
                 <th scope="col">순위</th>
                 <th scope="col">이름</th>
-                <th scope="col">포인트</th>
+                <th scope="col">선수가치 총합</th>
               </tr>
             </thead>
             <tbody>

@@ -5,6 +5,9 @@ import { removeCookie } from "../../utils/functions/cookies";
 import { useRecoilState, useSetRecoilState } from "recoil";
 import { loggedinState, myInformation } from "../../atoms";
 
+
+
+
 function ProfileCard() {
   const profileInfo = useRecoilState(myInformation);
 
@@ -15,6 +18,8 @@ function ProfileCard() {
     removeCookie("token");
     navigate("/");
   };
+
+  
 
   return (
     <Wrapper>
@@ -34,6 +39,8 @@ function ProfileCard() {
       <ProfileMain>
         <NickName>{profileInfo[0].nickname} </NickName>
         <p>포인트 : {profileInfo[0].point} 점</p>
+
+        <p>시세 : {profileInfo[0].total_value} 점</p>
       </ProfileMain>
     </Wrapper>
   );
