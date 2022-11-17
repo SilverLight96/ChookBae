@@ -5,6 +5,7 @@ import { Keyframes } from "styled-components";
 import GachaModal from "../Components/Gacha/GachaModal";
 import { fetchData } from "../utils/apis/api";
 import PlayerCard from "../Components/common/PlayerCard";
+import ListPlayerCard from "../Components/common/ListPlayerCard";
 import { gachaApis } from "../utils/apis/userApis";
 import { getCookie } from "../utils/functions/cookies";
 import Dropdown from "../Components/Gacha/SelectBox";
@@ -131,7 +132,7 @@ function GachaPage() {
           <GachaList className="cards">
             {gachaResult.map((playerCard, idx) => {
               return (
-                <PlayerCard
+                <ListPlayerCard
                   title={playerCard.fullname}
                   image={playerCard.player_image}
                   key={idx}

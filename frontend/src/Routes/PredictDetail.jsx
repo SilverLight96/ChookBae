@@ -64,7 +64,7 @@ export default function PredictDetail () {
                             </TextWithImageDiv>
                             <TextWithImageDiv>
                                 <StyledImg src={baedang} />
-                                <p>{predictData.win_dang}</p>
+                                <p>{parseFloat(predictData.win_dang).toFixed(2)}</p>
                             </TextWithImageDiv>
                         </Data>
 
@@ -93,7 +93,7 @@ export default function PredictDetail () {
                             </TextWithImageDiv>
                             <TextWithImageDiv>
                                 <StyledImg src={baedang} />
-                                <p>{predictData.draw_dang}</p>
+                                <p>{parseFloat(predictData.draw_dang).toFixed(2)}</p>
                             </TextWithImageDiv>
                         </Data>
 
@@ -122,7 +122,7 @@ export default function PredictDetail () {
                             </TextWithImageDiv>
                             <TextWithImageDiv>
                                 <StyledImg src={baedang} />
-                                <p>{predictData.lose_dang}</p>
+                                <p>{parseFloat(predictData.lose_dang).toFixed(2)}</p>
                             </TextWithImageDiv>
                         </Data>
                         

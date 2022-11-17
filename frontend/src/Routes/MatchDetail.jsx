@@ -140,7 +140,7 @@ const Data = styled.div`
         margin: 4% 0;
     }
     height: 50%;
-    width: 30%;
+    width: 32%;
     padding: 1%;
 
     display: flex;
@@ -286,6 +286,7 @@ const ChartContainer = styled.div`
 `
 
 const StyledLink = styled(Link)`
+    width: auto;
     border-radius: 5px;
     border: 2px solid white;
     text-decoration: none;
