@@ -56,7 +56,7 @@
 
 ## 🗂️ 아키텍처
 
-<img src="./image/축배아키텍처.png">
+![축배아키텍처](image/축배아키텍처.png)
 
 <div id="4"></div>
 
