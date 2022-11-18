@@ -154,11 +154,11 @@ def login(request):
     #오늘이 최초 회원가입일 경우
     if user.login_count == 0:
         user.last_login = timezone.now()
-        print("처음 회원가입 보상 5000포인트 지급")
-        user.points += 5000
+        print("처음 회원가입 보상 300000포인트 지급")
+        user.points += 300000
         
         #포인트 내역에 추가
-        Point.objects.create(user_id=user,point=5000, info="처음 회원가입 보상",time=timezone.now())
+        Point.objects.create(user_id=user,point=300000, info="처음 회원가입 보상",time=timezone.now())
         
         user.login_count += 1
         user.save(update_fields=['last_login','login_count', 'points'])
@@ -168,11 +168,11 @@ def login(request):
         user.login_count += 1
         #로그인 횟수를 저장
         user.last_login = timezone.now()
-        print("출석체크 보상으로 2000포인트 지급되었습니다.")
+        print("출석체크 보상으로 50000포인트 지급되었습니다.")
         
         #포인트 내역에 추가
-        Point.objects.create(user_id=user,point=2000, info="로그인 보상",time=timezone.now())
-        user.points += 2000
+        Point.objects.create(user_id=user,point=50000, info="로그인 보상",time=timezone.now())
+        user.points += 50000
 
         user.save(update_fields=['last_login', 'login_count','points'])
     else:
