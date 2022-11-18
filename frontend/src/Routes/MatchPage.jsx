@@ -122,7 +122,7 @@ function MatchPage() {
                             team1_logo={match[6]}
                             team1_group={match[7]}
                             team2_country={match[8]}
-                            team2_logo={match[9]}
+                            team2_logo={match[9]}     
                         />
                         )
                     }

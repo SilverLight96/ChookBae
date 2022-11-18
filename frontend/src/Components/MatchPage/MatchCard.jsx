@@ -60,6 +60,10 @@ function MatchData(props) {
                 team2_goal_diff: detailData[28],
                 team2_manager: detailData[29],
                 team2_round: detailData[30],
+                match_status : detailData[31],
+                team1_score: detailData[32],
+                team2_score : detailData[33],
+        
             },
             secondData: {}  
         }
