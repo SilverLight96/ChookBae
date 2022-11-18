@@ -27,12 +27,18 @@ function MatchDetail() {
         '감독',
         '선수단',
     ]
+
+    const detailMatchStatus = [
+        propData.match_status
+    ]
+    console.log(detailMatchStatus)
     
     const detailData_1 = [
         null,
         propData.team1_rank,
         propData.team1_last_five,
         propData.team1_manager,
+   
     ]
 
     const detailData_2 = [
@@ -40,7 +46,9 @@ function MatchDetail() {
         propData.team2_rank,
         propData.team2_last_five,
         propData.team2_manager,
+      
     ]
+
     // data formating -----------------------------------------------
     Object.keys(propDataSecond).map(elem => {
         console.log(elem)
@@ -63,8 +71,7 @@ function MatchDetail() {
                 <p>{propData.venue_name}</p>
                 <p>{propData.venue_address}</p>
             </DescriptionContainer>
-
-            <FlagContainer>
+            {detailMatchStatus[0] === 0 ? (<FlagContainer>
                 <Flag src={propData.team1_logo} />
 
                 <Predict>
@@ -78,9 +85,38 @@ function MatchDetail() {
                         <p>승부예측</p>
                     </PredictBtn>
                 </Predict>
-
                 <Flag src={propData.team2_logo} />
-            </FlagContainer>
+            </FlagContainer>) : detailMatchStatus[0] === 1 ? 
+            (<FlagContainer>
+                <Flag src={propData.team1_logo} />
+                <ScoreContainer>
+                <Score>
+                    {propData.team1_score}
+                </Score>:
+                <Score>
+                    {propData.team2_score}
+                </Score>
+                </ScoreContainer>      
+                <Flag src={propData.team2_logo} />
+            </FlagContainer>) : 
+            (<FlagContainerLive>
+                <Flag src={propData.team1_logo} />
+                <MiddleContainer>
+                <LiveContainer>
+                LIVE
+                </LiveContainer>
+                <ScoreContainer>
+                <Score>
+                    {propData.team1_score}
+                </Score>:
+                <Score>
+                    {propData.team2_score}
+                </Score>
+                </ScoreContainer>      
+                </MiddleContainer>
+                <Flag src={propData.team2_logo} />
+            </FlagContainerLive>) }
+            
 
             <DataContainer>
                 <Data>
@@ -201,7 +237,19 @@ const FlagContainer = styled.div`
     height: 20%;
     background-color: #760D27;
     margin-top: 3%;
+    position: relative;
+    display: flex;
+    justify-content: space-evenly;
+    align-items: center;
 
+    border-radius: 10px;
+`
+const FlagContainerLive = styled.div`
+    width: 95%;
+    height: 20%;
+    background-color: #760D27;
+    margin-top: 3%;
+    position: relative;
     display: flex;
     justify-content: space-evenly;
     align-items: center;
@@ -291,4 +339,32 @@ const StyledLink = styled(Link)`
     text-decoration: none;
     font-weight: bold;
     color: white;
+`
+
+const ScoreContainer = styled.div`
+   
+    bottom: 10%;
+    display: flex;
+    justify-content: space-between;
+    color: white;
+    font-size: 4em;
+
+`
+
+const Score = styled.div`
+`
+
+const LiveContainer = styled.div`
+    text-align: center;
+    font-weight: bolder;
+    margin: auto;
+    top : 2%;
+    padding: 5px;
+    border-radius: 5px;
+    background-color: white;
+    color: ${(props) => props.theme.colors.mainRed};
+`
+
+const MiddleContainer = styled.div`
+    
 `
