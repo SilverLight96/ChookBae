@@ -14,7 +14,7 @@ function ListPlayerCard(props) {
 
       <div>
         <PlayerName>{props.title}</PlayerName>
-        <PlayerCount>{props.count}</PlayerCount>
+        <PlayerCount>선수 보유 수: {props.count}</PlayerCount>
         <PlayerValueBg>
           <PlayerValue>{props.value}</PlayerValue>
         </PlayerValueBg>
@@ -62,14 +62,19 @@ const PlayerValueBg = styled.div`
 `;
 
 const PlayerValue = styled.p`
-  margin-bottom: 10%;
+font-size: 14px;
+  margin-bottom: 15%;
   margin-right: 10%;
 `;
 
 const PlayerCount = styled.p`
-  font-size: 10px;
+  z-index: 5;
+  font-size: 12px;
   text-align: right;
   color: white;
   font-weight: bold;
+  position: absolute;
+  bottom: 5%;
+  right: 5%;
 `;
 
