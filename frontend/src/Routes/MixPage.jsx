@@ -300,7 +300,7 @@ const ButtonContainer = styled.div`
 
 const MixMain = styled.div`
   width: 100%;
-  height: 90vh;
+  height: 100vh;
   background: linear-gradient(#141e30, #243b55);
   margin: auto;
   display: flex;
@@ -467,7 +467,7 @@ const GachaCardListContainer = styled.div`
 const GachaCardContainer = styled.div`
   position: relative;
   width: 100%;
-  height: 100%;
+  height: 70%;
   display: flex;
   align-items: center;
   justify-content: center;

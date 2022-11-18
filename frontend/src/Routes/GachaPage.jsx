@@ -152,6 +152,7 @@ export default GachaPage;
 
 const Wrapper = styled.div`
   background: linear-gradient(#141e30, #243b55);
+  min-height: 100vh;
   max-width: 600px;
   margin: auto;
 `;
