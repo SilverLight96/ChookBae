@@ -1,15 +1,6 @@
 # ⚽축배: 월드컵 정보 제공 서비스🏆
 
-### :crown: Team A202
-
-팀장: 성지훈
-
-팀원: 강경은, 김수환, 박상수, 이종은, 임수환
-
-
 ---
-
-# CHOOK BAE
 
 ## 목차
 
@@ -63,9 +54,9 @@
 
 <div id="3"></div>
 
-## 🗂️ 시스템 아키텍처
+## 🗂️ 아키텍처
 
-<img src="./image/architecture.png">
+<img src="./image/축배아키텍처.png">
 
 <div id="4"></div>
 
