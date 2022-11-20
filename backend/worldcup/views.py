@@ -429,7 +429,7 @@ class rank(APIView):
                 num+=1
             
         elif(id=='player'):
-            player=Player.objects.all().order_by('-value')
+            player=Player.objects.all().order_by('-goal', '-value')
             for i in player:
                 player_name= player_k(i.id)
                 R_list.append({'fullname' : player_name, 'goal' : i.goal, 'value' : i.value ,'rank' : num })
@@ -662,8 +662,8 @@ def matchUpdate():
     data = response.json()
 
     ##### 임시 데이터 (월드컵 live matches가 없을때 테스트용) #####
-    import json
-    data = json.load(open('worldcup/livematchtest.json'))
+    # import json
+    # data = json.load(open('worldcup/livematchtest.json'))
     ##### 임시 데이터 끝 ########################################
 
     # match list 구하기
@@ -676,8 +676,11 @@ def matchUpdate():
     for m in data['matches']:
         if m['matchStatus']['value'] == "-1":       # -1 = 진행중인 경기
             # Match 테이블에 실시간 스코어 업데이트
+            t1_score = int(m['homeParticipant']['score'])
+            t2_score = int(m['awayParticipant']['score'])
+
             match = Match.objects.get(id=m['matchID'])
-            match.match_status = 1          # 매치 상태도 -1로 (진행중인 경기) 수정
+            match.match_status = -1          # 매치 상태도 -1로 (진행중인 경기) 수정
             match.team1_score = t1_score
             match.team2_score = t2_score
             match.save()
@@ -732,8 +735,8 @@ def matchUpdate():
         data = response.json()
 
         ##### 임시 데이터 (종료된 월드컵 경기가 없을때 테스트용) #####
-        import json
-        data = json.load(open('worldcup/matchdetailtest.json'))
+        # import json
+        # data = json.load(open('worldcup/matchdetailtest.json'))
         ##### 임시 데이터 끝 ######################################
 
         if data["match"]["matchStatus"]["statusID"] == "1":
