@@ -429,7 +429,7 @@ class rank(APIView):
                 num+=1
             
         elif(id=='player'):
-            player=Player.objects.all().order_by('-value')
+            player=Player.objects.all().order_by('-goal', '-value')
             for i in player:
                 player_name= player_k(i.id)
                 R_list.append({'fullname' : player_name, 'goal' : i.goal, 'value' : i.value ,'rank' : num })
