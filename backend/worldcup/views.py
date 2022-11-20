@@ -452,7 +452,7 @@ class TopRank(APIView):
             num+=1
 
         num=1 
-        player=Player.objects.all().order_by('-value')[:5]
+        player=Player.objects.all().order_by('-goal', '-value')[:5]
         for i in player:
             player_name= player_k(i.id)
             player_list.append({'fullname' : player_name, 'goal' : i.goal, 'value' : i.value ,'rank' : num })
