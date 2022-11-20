@@ -662,8 +662,8 @@ def matchUpdate():
     data = response.json()
 
     ##### 임시 데이터 (월드컵 live matches가 없을때 테스트용) #####
-    import json
-    data = json.load(open('worldcup/livematchtest.json'))
+    # import json
+    # data = json.load(open('worldcup/livematchtest.json'))
     ##### 임시 데이터 끝 ########################################
 
     # match list 구하기
@@ -732,8 +732,8 @@ def matchUpdate():
         data = response.json()
 
         ##### 임시 데이터 (종료된 월드컵 경기가 없을때 테스트용) #####
-        import json
-        data = json.load(open('worldcup/matchdetailtest.json'))
+        # import json
+        # data = json.load(open('worldcup/matchdetailtest.json'))
         ##### 임시 데이터 끝 ######################################
 
         if data["match"]["matchStatus"]["statusID"] == "1":
