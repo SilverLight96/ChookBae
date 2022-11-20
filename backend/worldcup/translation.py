@@ -946,6 +946,10 @@ def player_k(id):
         {"id": 46917, "fullNameKR": "아흐마드 누롤라히",},
         {"id": 46918, "fullNameKR": "바히드 아미리",},
         {"id": 46966, "fullNameKR": "케빈 로드리게스",},
+        {"id": 1817, "fullNameKR": "랜달 콜로 무아니",},
+        {"id": 6270, "fullNameKR": "카밀 그라바라",},
+        {"id": 9230, "fullNameKR": "아미르 아베자데",},
+        {"id": 21021, "fullNameKR": "나와프 알-아베드",},
     ]
     for kp in k_player:
         if kp["id"] == id:
