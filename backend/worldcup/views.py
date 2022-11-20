@@ -676,8 +676,11 @@ def matchUpdate():
     for m in data['matches']:
         if m['matchStatus']['value'] == "-1":       # -1 = 진행중인 경기
             # Match 테이블에 실시간 스코어 업데이트
+            t1_score = int(m['homeParticipant']['score'])
+            t2_score = int(m['awayParticipant']['score'])
+
             match = Match.objects.get(id=m['matchID'])
-            match.match_status = 1          # 매치 상태도 -1로 (진행중인 경기) 수정
+            match.match_status = -1          # 매치 상태도 -1로 (진행중인 경기) 수정
             match.team1_score = t1_score
             match.team2_score = t2_score
             match.save()
