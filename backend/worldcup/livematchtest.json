@@ -2,45 +2,24 @@
   "gmtUpdated":1624107889,
   "matches":[
      {
-        "matchID":"37632",
+        "matchID":"37637",
         "seasonID":"121",
         "matchdayID":"4102",
         "matchStatus":{
-           "value":"1"
-        },
-        "matchDate":"2022-11-20",
-        "matchTime":"16:00",
-        "matchVenue":{
-           "value":"1163"
-        },
-        "homeParticipant":{
-           "participantID":"434",
-           "score":"3"
-        },
-        "awayParticipant":{
-           "participantID":"436",
-           "score":"1"
-        }
-     },
-     {
-        "matchID":"38567",
-        "seasonID":"121",
-        "matchdayID":"4102",
-        "matchStatus":{
-           "value":"0"
+           "value":"-1"
         },
         "matchDate":"2022-11-21",
-        "matchTime":"19:00",
+        "matchTime":"16:00",
         "matchVenue":{
-           "value":"710"
+           "value":"1168"
         },
         "homeParticipant":{
-           "participantID":"1243",
+           "participantID":"1066",
            "score":"0"
         },
         "awayParticipant":{
-           "participantID":"394",
-           "score":"0"
+           "participantID":"385",
+           "score":"2"
         }
      }
   ]
