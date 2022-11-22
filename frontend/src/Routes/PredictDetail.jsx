@@ -1,11 +1,12 @@
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useEffect, useState } from "react";
 import styled from "styled-components";
-import { Route, Link, useLocation, useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import axios from 'axios'
 import baedang from '../assets/baedang.png'
 import points from '../assets/points.png'
 import usernumber from '../assets/usernumber.png'
-
+import { getCookie } from '../utils/functions/cookies'
+import goBackImg from '../assets/goBack.png'
 import PredictAccount from '../Components/PredictList/PredictAccount'
 
 export default function PredictDetail () {
@@ -13,15 +14,21 @@ export default function PredictDetail () {
 
     const baseURL = "https://k7a202.p.ssafy.io/"
     
-    const [selectState, setSelectState] = useState('무승부')
+    const [selectState, setSelectState] = useState('')
     const [predictData, setPredictData] = useState([])
     const [selected, setSelected] = useState(false)
     const [reload, setReload] = useState(false)
 
+    const navigate = useNavigate()
+
     useEffect(() => {
         const getPredictData = async(id) => {
             const axiosData = await axios
-            .get(baseURL + 'v1/predict/info/' + id)
+            .get(baseURL + 'v1/predict/info/' + id, {
+                headers: {
+                    "Content-Type": "application/json",
+                    Authorization: `${getCookie("token")}`
+                }})
             setPredictData(axiosData.data)
         }
         getPredictData(location.state.match_id)
@@ -34,8 +41,15 @@ export default function PredictDetail () {
 
     return (
         <Container>
-            <h1>어느 나라가 승리할까요?</h1>
+            <TitleDiv>
+                <h1>어느 나라가 승리할까요?</h1>
+                <GoBackContainer>
+                    <GoBack src={goBackImg} onClick={() => navigate(-1)} />
+                </GoBackContainer>
+            </TitleDiv>
+
             <DataContainer>
+
                 <DataDiv>
                     <p>{location.state.team1_country}</p>
                     <DetailDataDiv>
@@ -50,15 +64,15 @@ export default function PredictDetail () {
                             </TextWithImageDiv>
                             <TextWithImageDiv>
                                 <StyledImg src={baedang} />
-                                <p>{predictData.win_dang}</p>
+                                <p>{parseFloat(predictData.win_dang).toFixed(2)}</p>
                             </TextWithImageDiv>
                         </Data>
 
                         <ProgressBar
                         percent={percent_win}
                         // percent={50}
-                        color={'#B74A40'}
-                         />
+                        color={'#914154'}
+                        >{percent_win > 10 ? <p>{percent_win.toFixed(2)}%</p> : null}</ProgressBar>
                         <Data>
                             
                         </Data>
@@ -79,15 +93,15 @@ export default function PredictDetail () {
                             </TextWithImageDiv>
                             <TextWithImageDiv>
                                 <StyledImg src={baedang} />
-                                <p>{predictData.draw_dang}</p>
+                                <p>{parseFloat(predictData.draw_dang).toFixed(2)}</p>
                             </TextWithImageDiv>
                         </Data>
 
                         <ProgressBar
                         percent={percent_draw}
                         // percent={10}
-                        color={'#393838'}
-                        />
+                        color={'#914154'}
+                        >{percent_draw > 10 ? <p>{percent_draw.toFixed(2)}%</p> : null}</ProgressBar>
                         <Data>
                             
                         </Data>
@@ -108,14 +122,15 @@ export default function PredictDetail () {
                             </TextWithImageDiv>
                             <TextWithImageDiv>
                                 <StyledImg src={baedang} />
-                                <p>{predictData.lose_dang}</p>
+                                <p>{parseFloat(predictData.lose_dang).toFixed(2)}</p>
                             </TextWithImageDiv>
                         </Data>
                         
                         <ProgressBar
                         percent={percent_lose}
                         // percent={40}
-                        color={'#2A3A4F'} />
+                        color={'#914154'}
+                        >{percent_lose > 10 ? <p>{percent_lose.toFixed(2)}%</p> : null}</ProgressBar>
                         <Data>
                             
                         </Data>
@@ -137,7 +152,9 @@ export default function PredictDetail () {
             <ApplyBtn
             onClick={() => setSelected(true)}
             >{selectState}에 배팅하기</ApplyBtn>
+            {selected || <BlankDiv height="55vh"></BlankDiv>}
             {selected && 
+            <>
             <PredictAccountDiv>
                 <PredictAccount
                 country1 = {location.state.team1_country}
@@ -152,43 +169,55 @@ export default function PredictDetail () {
                 draw_num = {predictData.draw_count}
                 draw_point = {predictData.draw_total}
                 draw_mul = {predictData.draw_dang}
+                setSelectState = {setSelectState}
                 selectedState = {selectState}
                 match_id = {location.state.match_id}
+                point = {predictData.point}
                 reload = {setReload}
                 />
             </PredictAccountDiv>
+            <BlankDiv height="20vh"></BlankDiv>
+            </>
             }
         </Container>
     )
 }
 
 const Container = styled.div`
-    width: 95vw;
-    height: auto;
+    h1 {
+        font-size: 2em;
+        margin: 5% 0;
+    }
+    max-width: 600px;
+    width: 100%;
+    height: 100vh;
+    background: linear-gradient(#141e30, #243b55);
+    color: white;
 
     display: flex;
     flex-direction: column;
     justify-content: space-between;
     align-items: center;
 
-    border: 1px solid black;
+    margin : 0 auto;
 `
 
 const DataContainer = styled.div`
-    width: 100%;
+    width: 95%;
     height: auto;
     
     display: flex;
     flex-direction: row;
     justify-content: space-between;
     align-items: center;
-
-    border: 1px solid black;
-
 `
 
 const DataDiv = styled.div`
-    width: 50%;
+    p {
+        font-size: 1em;
+        margin: 2% 0;
+    }
+    width: 32%;
     height: 10em;
 
     display: flex;
@@ -196,21 +225,22 @@ const DataDiv = styled.div`
     justify-content: space-between;
     align-items: center;
 
-    border: 1px solid black;
+    background-color: ${(props) => props.theme.colors.mainRed};
+    border-radius: 10px;
+
 `
 
 const DetailDataDiv = styled.div`
     width: 100%;
     height: 100%;
 
+    margin-top: 5%;
     position: relative;
 
     display: flex;
     flex-direction: row;
     justify-content: space-between;
     align-items: center;
-
-    border: 1px solid black;
 `
 
 const Data = styled.div`
@@ -223,8 +253,6 @@ const Data = styled.div`
     align-items: center;
 
     z-index: 1;
-    
-    /* border: 1px solid black; */
 `
 const ProgressBar = styled.div`
     height: ${props => props.percent}%;
@@ -235,57 +263,98 @@ const ProgressBar = styled.div`
     bottom: 0;
     right: 0;
 
-    border: 1px solid black;
+    font-size: 100%;
 
+    display: flex;
+    justify-content: center;
+    align-items: center;
 `
 const PredictContainer = styled.div`
     width: 100%;
     height: auto;
-    
+    margin-top: 3%;
     display: flex;
     flex-direction: row;
-    justify-content: center;
+    justify-content: space-evenly;
     align-items: center;
-
-    border: 1px solid black;
 `
 
 const PredictBtn = styled.button`
     width: 20%;
     height: auto;
+
+    background-color: ${(props) => props.theme.colors.mainRed};
+    color: white;
+    border: 2px solid white;
+    border-radius: 10px;
 `
 
 const ApplyBtn = styled.button`
+    margin-top: 3%;
     width: auto;
     height: auto;
+    
+    background-color: ${(props) => props.theme.colors.mainRed};
+    color: white;
+    border: 2px solid white;
+    border-radius: 10px;
 `
 
 const PredictAccountDiv = styled.div`
     width: 100%;
     height: 40vh;
-
     display: flex;
     justify-content: center;
     align-items: center;
-
-    border: 1px solid black;
 
 `
 
 const TextWithImageDiv = styled.div`
     width: 100%;
     height: auto;
-    font-size: 60%;
-
+    font-size: 1em;
+    margin: 3% 0;
     display: flex;
     flex-direction: row;
     justify-content: space-evenly;
     align-items: center;
 
-    border: 1px solid black;
 `
 
 const StyledImg = styled.img`
     width: 1.5em;
     height: 1.5em;
+`
+
+const BlankDiv = styled.div`
+    height: ${props => props.height};
+    background-color: ${(props) => props.theme.colors.mainBlack};
+`
+
+const GoBackContainer = styled.div`
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    border: 2px solid white;
+    border-radius: 50%;
+    max-width: 50px;
+    max-height: 50px;
+    width: 5vw;
+    height: 5vw;
+`
+const GoBack = styled.img`
+    max-width: 50px;
+    max-height: 25px;
+    height: 2.5vw;
+    width: 5vw;
+    transform: scaleX(-1);
+`
+
+const TitleDiv = styled.div`
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-evenly;
+    align-items: center;
 `

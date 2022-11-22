@@ -1,9 +1,8 @@
 import { Chart as ChartJS, CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend,
   } from 'chart.js';
   import { Bar } from 'react-chartjs-2';
-import React, { useRef, useState, useMemo } from "react";
+import React from "react";
 import styled from "styled-components";
-import { Route, Link, useLocation } from 'react-router-dom';
 
 ChartJS.register(
     CategoryScale,
@@ -27,7 +26,7 @@ export default function MatchDetailChart (props) {
                 maxWidth: 10,
             },
             title: {
-                display: true,
+                display: false,
                 text: '경기 그래프'
             }
         },
@@ -60,4 +59,8 @@ export default function MatchDetailChart (props) {
 const Container = styled.div`
     width: 100%;
     height: 10%;
+    margin-top: 5%;
+    background-color: white;
+    border: 5px solid #914154;
+    border-radius: 10px;
 `

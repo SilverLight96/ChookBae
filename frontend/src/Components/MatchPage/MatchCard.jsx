@@ -1,13 +1,14 @@
-import React, { useRef, useState, useMemo } from "react";
+import React from "react";
 import styled from "styled-components";
-import { Route, Link, useLocation, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import axios from 'axios'
 
 function MatchData(props) {
+    // navigate ------------------------------------------------
     const navigate = useNavigate()
-
+    // value ---------------------------------------------------
     const baseURL = "https://k7a202.p.ssafy.io/"
-
+    // axios ---------------------------------------------------
     const clickCard = async(id, group) => {
         const dataAxios = await axios
         .get(baseURL + 'v1/match/detail/' + id, {
@@ -59,6 +60,10 @@ function MatchData(props) {
                 team2_goal_diff: detailData[28],
                 team2_manager: detailData[29],
                 team2_round: detailData[30],
+                match_status : detailData[31],
+                team1_score: detailData[32],
+                team2_score : detailData[33],
+        
             },
             secondData: {}  
         }
@@ -67,14 +72,13 @@ function MatchData(props) {
             })
         navigate('/Match/Detail', {state})
     }
-
-
+    // return match list --------------------------------------
     return (
         <>
         <StyledCard onClick={() => clickCard(props.match_id, props.team1_group)}>
                 <TextDiv>
-                    <p>{props.start_date} | {props.start_time.slice(0,-3)}</p>
-                    <p>{props.venue_address}</p>
+                    <StyledP>{props.start_date} | {props.start_time.slice(0,-3)}</StyledP>
+                    <StyledP>{props.venue_address}</StyledP>
                 </TextDiv>
 
                 <FlagDiv>
@@ -96,31 +100,45 @@ function MatchData(props) {
 export default MatchData
 
 const StyledCard = styled.div`
+    max-width: 600px;
     height: 20vh;
-    width: 90vw;
+    width: 90%;
     margin-left: auto;
     margin-right: auto;
+    margin-bottom: 3%;
+    margin-top: 3%;
+    
+    padding: 10px 5px;
 
+    background-color: #760D27;
     position: relative;
 
-    border: 1px solid black;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    border-radius: 10px;
+
 `
 
 const TextDiv = styled.div`
-    height: 5vh;
-    width: 50vw;
+    max-width: 300px;
+    height: auto;
+    width: 60%;
     margin-left: auto;
     margin-right: auto;
-    font-size: 5%;
     text-align: center;
+`
 
-    border: 1px solid black;
-
+const StyledP = styled.p`
+    font-size: 1em;
+    color: white;
+    height: auto;
+    margin: 0;
 `
 
 const FlagDiv = styled.div`
-    height: 10vh;
-    width: 90vw;
+    height: auto;
+    width: 90%;
     margin-left: auto;
     margin-right: auto;
 
@@ -131,40 +149,39 @@ const FlagDiv = styled.div`
     position: absolute;
     bottom: 15%;
 
-    border: 1px solid black;
 `
 
 const FlagContainer = styled.div`
-    height: 13vh;
-    width: 30vw;
+    height: auto;
+    width: 30%;
 
     display: flex;
     flex-direction: column;
     justify-content: space-between;
     align-items: center;
-
-    border: 1px solid black;
-
 `
 
 const Flag = styled.img`
     height: 80%;
     width: 80%;
 
-    border: 1px solid black;
-
+    /* position: absolute; */
 `
 
 const FlagName = styled.div`
     height: 20%;
     width: 100%;
-    font-size: 5%;
+    font-size: 1em;
     text-align: center;
-
-    border: 1px solid black;
-
+    color: white;
 `
 
 const Group = styled.p`
-    
+    color: white;
+    font-size: 1.5em;
+    margin: 0;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
 `

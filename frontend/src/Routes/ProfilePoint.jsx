@@ -13,6 +13,6 @@ function ProfilePointPage() {
 export default ProfilePointPage;
 
 const Wrapper = styled.div`
-  max-width: 860px;
+  max-width: 600px;
   margin: auto;
 `;

@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import logo from "../assets/ChookBae_logo.png";
+import "../styles/LoginPageHeaderDesign.css";
 import { keyframes } from "styled-components";
 import { REGEX, REGISTER_MESSAGE, STANDARD } from "../utils/constants/constant";
 import { Link, useNavigate } from "react-router-dom";
@@ -12,19 +13,20 @@ import { useSetRecoilState } from "recoil";
 import { loggedinState } from "../atoms";
 
 function LoginPage() {
+  const setLogged = useSetRecoilState(loggedinState);
+  const [cookies, setCookie] = useCookies(["token"]);
   const [userInfo, setUserInfo] = useState({
     email: "",
     password: "",
   });
-  const [cookies, setCookie] = useCookies(["token"]);
   const navigate = useNavigate();
-  const setLogged = useSetRecoilState(loggedinState);
   const [loginError, setLoginError] = useState();
   const [isError, setIsError] = useState(false);
 
   const {
     register,
     handleSubmit,
+    watch,
     formState: { errors },
   } = useForm({
     defaultValues: {
@@ -35,25 +37,22 @@ function LoginPage() {
   });
 
   useEffect(() => {
-    return () => {
-      login();
-    };
+    login();
   }, [userInfo]);
 
-  const login = async () => {
-    return await fetchData
+  const login = () => {
+    return fetchData
       .post(userApis.LOGIN, userInfo)
       .then((res) => {
-        console.log(res);
         setCookie("token", res.data.token);
         setLogged(true);
-        navigate("/");
+        navigate("/profile");
       })
       .catch((error) => {
-        console.log(error.response.data);
         setLoginError(error.response.data);
       });
   };
+  console.log(cookies);
 
   useEffect(
     (prev) => {
@@ -61,19 +60,21 @@ function LoginPage() {
     },
     [loginError]
   );
-  console.log(isError);
 
   const onValid = (data) => {
     setUserInfo((prev) => ({ ...prev, ...data }));
   };
-  console.log(cookies);
-  console.log(userInfo);
+
   return (
     <Wrapper>
       <LoginBox>
-        <h2>Sign Up</h2>
         <Logo>
           <img src={logo} alt="로그인 페이지 로고" />
+          <LoginPageHeader>
+            <h3 contenteditable spellcheck="false">
+              chookbae
+            </h3>
+          </LoginPageHeader>
         </Logo>
         <form onSubmit={handleSubmit(onValid)}>
           <UserBox>
@@ -90,6 +91,7 @@ function LoginPage() {
               })}
               placeholder=" "
               required
+              // onChange={handleEmail}
             />
             <Label htmlFor="email">이메일</Label>
             {errors.email && <small role="alert">{errors.email.message}</small>}
@@ -118,13 +120,19 @@ function LoginPage() {
               })}
               placeholder=" "
               required
+              // onChange={handlePassword}
             />
             <Label htmlFor="password">비밀번호</Label>
             {errors?.password?.message && (
               <small role="alert">{errors.password.message}</small>
             )}
           </UserBox>
-          <div>
+          <div
+            style={{
+              position: "relative",
+              float: "left",
+            }}
+          >
             <button type={"submit"}>
               <span></span>
               <span></span>
@@ -151,16 +159,18 @@ function LoginPage() {
 export default LoginPage;
 
 const Wrapper = styled.div`
-  max-width: 860px;
+  max-width: 600px;
   margin: auto;
   font-family: sans-serif;
+  display: flex;
+  justify-content: center;
 `;
 
 const Logo = styled.div`
+  text-align: center;
   margin: auto;
-  width: 30%;
   > img {
-    width: 100%;
+    width: 30%;
   }
 `;
 
@@ -198,20 +208,17 @@ const anim4 = keyframes`
 `;
 
 const LoginBox = styled.div`
-  position: absolute;
-  top: 45%;
-  left: 50%;
-  width: 450px;
+  height: 98vh;
+  width: 100vw;
   padding: 40px;
-  transform: translate(-50%, -50%);
+  /* transform: translate(-50%, -50%); */
   background: linear-gradient(#141e30, #243b55);
   box-sizing: border-box;
   box-shadow: 0 15px 25px rgba(0, 0, 0, 0.6);
   border-radius: 10px;
 
   > h2 {
-    margin: 0 0 30px;
-    padding: 0;
+    /* margin: 0 0 30px; */
     color: #fff;
     text-align: center;
     font-size: 30px;
@@ -310,7 +317,7 @@ const Input = styled.input`
   padding: 10px 0;
   font-size: 16px;
   color: #fff;
-  margin-bottom: 40px;
+  margin-bottom: 4vh;
   border: none;
   border-bottom: 1px solid #fff;
   outline: none;
@@ -336,9 +343,9 @@ const Label = styled.label`
 `;
 
 const SignUpButton = styled.button`
-  position: absolute;
-  right: 35px;
-  bottom: 40px;
+  position: relative;
+  float: right;
+
   padding: 10px 20px;
   color: #03e9f4;
   background-color: transparent;
@@ -394,5 +401,34 @@ const SignUpButton = styled.button`
       animation: ${anim4} 3s linear infinite;
       animation-delay: 2.25s;
     }
+  }
+`;
+
+const LoginPageHeader = styled.div`
+  padding-bottom: 50px;
+  h3 {
+    font-size: 2.5rem;
+    font-weight: 200;
+    font-style: italic;
+    color: #fff;
+    padding: 0.5rem 0.5rem 0.5rem;
+    border: 0.4rem solid #fff;
+    border-radius: 2rem;
+    text-transform: uppercase;
+    animation: flicker 1.5s infinite alternate;
+  }
+
+  h3::-moz-selection {
+    background-color: var(--neon-border-color);
+    color: var(--neon-text-color);
+  }
+
+  h3::selection {
+    background-color: var(--neon-border-color);
+    color: var(--neon-text-color);
+  }
+
+  h3:focus {
+    outline: none;
   }
 `;

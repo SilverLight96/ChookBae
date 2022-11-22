@@ -1,12 +1,13 @@
-import React, { useRef, useState, useMemo } from "react";
+import React from "react";
 import styled from "styled-components";
-import { Route, Link, useLocation } from 'react-router-dom';
 import axios from "axios";
 
 
 function MatchCountryCard(props) {
+    // value -----------------------------------------------
     const baseURL = "https://k7a202.p.ssafy.io/"
-
+    const data = {}
+    // axios -----------------------------------------------
     const flagClick = async(id, name) => {
         const dataAxios = await axios
         .get(baseURL + 'v1/match/team/' + id, {
@@ -17,9 +18,9 @@ function MatchCountryCard(props) {
         props.setState(dataAxios.data)
         props.selectedCard(name)
         console.log(props);
+        props.setScroll(true)
     }
-    const data = {}
-
+    // fromating -------------------------------------------
     props.data.map((elem) => {
         if (data[elem[0]]) {
             data[elem[0]].push(elem.slice(1))
@@ -27,15 +28,15 @@ function MatchCountryCard(props) {
             data[elem[0]] = [elem.slice(1)]
         }
     })
-    
+    // return country list ---------------------------------
     return (
         <Container>
             {Object.keys(data).map((elem, index) => {
                 return(
                     <GroupContainer key={index}>
-                        <CountryContainer>
-                            <h1>{elem}조</h1>
-                        </CountryContainer>
+                        <GroupName>
+                            {elem}조
+                        </GroupName>
                         {data[elem].map((country, index) => {
                             return (
                                 <CountryContainer
@@ -66,24 +67,28 @@ const Container = styled.div`
     flex-direction: column;
     justify-content: space-between;
     align-items: center;
-
-    border: 1px solid black;
 `
 
 const GroupContainer = styled.div`
     width: 95%;
     height: 100%;
+    background-color: #760D27;
+    border-radius: 10px;
+    padding: 5px 2px;
 
     display: flex;
     flex-direction: row;
     justify-content: space-between;
     align-items: center;
 
-    border: 1px solid black;
+    margin-bottom: 2%;
 `
 
 const CountryContainer = styled.div`
-    width: 19%;
+    p {
+        font-size: 100%;
+    }
+    width: 22%;
     height: 100%;
 
     display: flex;
@@ -91,23 +96,39 @@ const CountryContainer = styled.div`
     justify-content: space-between;
     align-items: center;
 
-    border: 1px solid black;
+    color: white;
+
 
 `
 
 const StyledFlag = styled.img`
+    &:hover {
+        background-color: #914154;
+    }
+
     width: 100%;
     height: 100%;
 
-    border: 1px solid black;
+
 `
 
 const StyledName = styled.div`
+    p {
+        font-size: 1px;
+    }
     width: 100%;
     height: 5%;
-    font-size: 5%;
-
+    color: white;
     text-align: center;
 
-    border: 1px solid black;
+`
+
+const GroupName = styled.p`
+    width:9%;
+    height: 100%;
+    color: white;
+    text-align: center;
+    font-weight: bold;
+    margin-left: 2%;
+    margin-right: 2%;
 `

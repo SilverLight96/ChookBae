@@ -1,39 +1,36 @@
-import React, { useRef, useState, useMemo } from "react";
+import React from "react";
 import styled from "styled-components";
-import { Route, Link, useLocation } from 'react-router-dom';
 
 const MatchDeatilTable = (props) => {
     const propData = Object.values(props.data)
     console.log(propData)
     return (
-        <>
         <StyledTable>
             <tbody>
                 <StyledTr>
-                    <StyledTh>순위</StyledTh>
-                    <StyledTh>국가</StyledTh>
-                    <StyledTh>승</StyledTh>
-                    <StyledTh>무</StyledTh>
-                    <StyledTh>패</StyledTh>
-                    <StyledTh>승점</StyledTh>
-                    <StyledTh>골득실</StyledTh>
+                    <StyledTh><p>순위</p></StyledTh>
+                    <StyledTh><p>국가</p></StyledTh>
+                    <StyledTh><p>승</p></StyledTh>
+                    <StyledTh><p>무</p></StyledTh>
+                    <StyledTh><p>패</p></StyledTh>
+                    <StyledTh><p>승점</p></StyledTh>
+                    <StyledTh><p>골득실</p></StyledTh>
                 </StyledTr>
                 {propData.map((data, index) => {
                     return(
                         <StyledTr key={index}>
-                            <StyledTh>{data[0]}</StyledTh>
-                            <StyledTh>{data[1]}</StyledTh>
-                            <StyledTh>{data[2]}</StyledTh>
-                            <StyledTh>{data[3]}</StyledTh>
-                            <StyledTh>{data[4]}</StyledTh>
-                            <StyledTh>{data[5]}</StyledTh>
-                            <StyledTh>{data[6]}</StyledTh>
+                            <StyledTh><p>{data[0]}</p></StyledTh>
+                            <StyledTh><p>{data[1]}</p></StyledTh>
+                            <StyledTh><p>{data[2]}</p></StyledTh>
+                            <StyledTh><p>{data[3]}</p></StyledTh>
+                            <StyledTh><p>{data[4]}</p></StyledTh>
+                            <StyledTh><p>{data[5]}</p></StyledTh>
+                            <StyledTh><p>{data[6]}</p></StyledTh>
                         </StyledTr>
                     )
                 })}
             </tbody>
         </StyledTable>
-        </>
     )
 }
 
@@ -42,14 +39,20 @@ export default MatchDeatilTable
 const StyledTable = styled.table`
     height: 20%;
     width: 100%;
+
+    background-color: #760D27;
+    border-radius: 10px;
     /* border: 1px solid black; */
 `
 
 const StyledTr = styled.tr`
-
+    text-align: center;
 `
 
 const StyledTh = styled.th`
-    font-size: 5%;
-    border: 1px solid black;
+    p {
+        font-size: 1em;
+        margin: 2% 0;
+    }
+    color: white;
 `

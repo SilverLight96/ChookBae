@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef, useCallback } from "react";
 import styled from "styled-components";
 import MatchCard from "../Components/MatchPage/MatchCard"
 import MatchCountryCard from "../Components/MatchPage/MatchCountryCard"
@@ -10,9 +10,18 @@ import axios from "axios"
 
 
 function MatchPage() {
-    const baseURL = "https://k7a202.p.ssafy.io/"
+    // state ----------------------------------------------------
     const [groupData, setGroupData] = useState([])
-
+    const [value, onChange] = useState(new Date());
+    const [dataDate, setDataDate] = useState([])
+    const [cardState, setCardState] = useState([])
+    const [selectCard, setSelectCard] = useState()
+    const [type, setType] = useState('country')
+    const [scroll, setScroll] = useState(false)
+    // value ----------------------------------------------------
+    const baseURL = "https://k7a202.p.ssafy.io/"
+    const valueMoment = moment(value).format("YYYY-MM-DD")
+    // useEffect - get prepare data countries with group --------
     useEffect(() => {
         const axiosGetGroup = async() => {
             const dataAxios = await axios
@@ -28,6 +37,17 @@ function MatchPage() {
         axiosGetGroup()
     }, [])
 
+    useEffect(() => {
+        if (scroll && type==='country') {
+            scrollRef.current.scrollIntoView({behavior: 'smooth', block: 'start', inline: 'nearest'})
+        }
+        setScroll(false)
+    }, [scroll])
+
+    // useRef - move scroll
+    const scrollRef = useRef()
+
+    // axios - get data countries with date-----------------------
     const axiosGet = async(subUrl) => {
         const dataAxios = await axios
         .get(baseURL + 'v1/' + subUrl, {
@@ -37,128 +57,93 @@ function MatchPage() {
             })
         await setDataDate(dataAxios.data)
         }
-
     const getDataDate = (date) => {
         const convertedDate = date.split('-').join('')
         return axiosGet('match/date/' + convertedDate)
     }
-    const thStyle={
-        width: '100em',
-        height: 'auto',
-    }
-
-    const btnDivStyle={
-        marginTop: '3%',
-        marginBottom: '3%',
-        display: 'flex',
-        justifyContent: 'space-evenly'
-    }
-
-    const btnStyle={
-        width: '10em',
-        height: '5em',
-    }
-
-    const calendarStyle={
-        width: '100%',
-    }
-
-    const header = [
-        'id',
-        'pk',
-        'match_name',
-        'match_type',
-        'team1_pk',
-        'team2_pk',
-        'start_time',
-        'venue_pk',
-        'team1_score',
-        'team2_score',
-    ]
-    const [value, onChange] = useState(new Date());
-
-    const [dataDate, setDataDate] = useState([])
-    const [cardState, setCardState] = useState([])
-
+    // calender --------------------------------------------------
     const onChangeTemp = (e) => {
         const valueMoment = moment(e).format("YYYY-MM-DD")
         getDataDate(valueMoment)
         onChange(e)
         console.log(dataDate)
+        setScroll(true)
         }
-
-    const valueMoment = moment(value).format("YYYY-MM-DD")
-
-    const [selectCard, setSelectCard] = useState()
-
+    // top position two button ----------------------------------- 
     const Tableheader = () => {
         return(
             <>
-                <div style={btnDivStyle}>
-                    <button style={btnStyle} onClick={changeCountry}>국가별</button>
-                    <button style={btnStyle} onClick={changeDate}>날짜별</button>
-                </div>
+                <BtnContainer>
+                    <CountrydButton
+                    onClick={changeCountry}
+                    backColor={type === 'date'? '#760D27' : 'none' }
+                    background={type === 'date'? 'none' : 'linear-gradient(#141e30, #243b55)'}
+                    fw={type === 'country'? 'bold' : 'normal' }>국가별</CountrydButton>
+                    <DateButton 
+                    onClick={changeDate}
+                    backColor={type === 'country'? '#760D27' : 'none' }
+                    background={type === 'country'? 'none' : 'linear-gradient(#141e30, #243b55)'}
+                    fw={type === 'date'? 'bold' : 'normal' }>날짜별</DateButton>
+                </BtnContainer>
             </>
     )}
-    const [type, setType] = useState(
-        'country'
-        )
     const changeCountry = () => {
         setType('country')
     }
     const changeDate = () => {
         setType('date')
     }
-
-    console.log(cardState);
+    // click country button -----------------------------------------
     if (type ==='country'){
         return (
-            <>
-            <div>
+            <Container>
             <Tableheader />
                 <hr />
-                <MatchCountryCard 
+                <MatchCountryCard
+                setScroll={setScroll}
                 data={groupData}
                 setState={setCardState}
                 selectedCard={setSelectCard}
                 />
-                <hr />
-                <h1>{selectCard}</h1>
+                <StyledHr />
+                <SelectedCard
+                ref={scrollRef}>{selectCard}</SelectedCard>
 
-                <div>
-                    {cardState.map((match, index) => {
-                        return (
-                            <MatchCard
-                                key={index + 'key'}
-                                match_id={match[0]}
-                                start_date={match[1]}
-                                start_time={match[2]}
-                                venue_name={match[3]}
-                                venue_address={match[4]}
-                                team1_country={match[5]}
-                                team1_logo={match[6]}
-                                team1_group={match[7]}
-                                team2_country={match[8]}
-                                team2_logo={match[9]}
-                            />
-                            )
-                        }
-                    )}
-                </div>
-            </div>
-            <BlankDiv><br /><br /><br /></BlankDiv>
-            </>
+                {cardState.map((match, index) => {
+                    return (
+                        <MatchCard
+                            key={index + 'key'}
+                            match_id={match[0]}
+                            start_date={match[1]}
+                            start_time={match[2]}
+                            venue_name={match[3]}
+                            venue_address={match[4]}
+                            team1_country={match[5]}
+                            team1_logo={match[6]}
+                            team1_group={match[7]}
+                            team2_country={match[8]}
+                            team2_logo={match[9]}     
+                        />
+                        )
+                    }
+                )}
+            <BlankDiv height='100%'><br /><br /><br /></BlankDiv>
+            </Container>
         )
     }
+    // click date button ------------------------------------------
     else {
         return (
-            <>
-            <div>
+            <Container>
                 <Tableheader />
                 <StyledCalendarContainer>
-                    <Calendar onChange={onChangeTemp} value={value} />
+                    <StyledCalendar 
+                    onChange={onChangeTemp} 
+                    value={value} />
                 </StyledCalendarContainer>
+                <StyledHr />
                 <h1>{valueMoment}</h1>
+                {dataDate.length > 0 ? null : <BlankDiv height='30vh'></BlankDiv>}
                 {dataDate.map((match, index) => {
                     if (match[1] === valueMoment) {
                     return (
@@ -179,15 +164,14 @@ function MatchPage() {
                         </>
                     )
                 }})}
-            </div>
-            <BlankDiv><br /><br /><br /></BlankDiv>
-            </>
+            <BlankDiv height='100%'><br /><br /><br /></BlankDiv>
+            </Container>
         )
     }
 }
 
 export default MatchPage;
-
+// style --------------------------------------------------------
 const StyledCalendarContainer = styled.div`
     /* container styles */
     margin-left: auto;
@@ -199,9 +183,86 @@ const StyledCalendarContainer = styled.div`
 `
 
 const BlankDiv = styled.div`
-    height: 100%;
+    height: ${props => props.height};
+`
+const CountrydButton = styled.button`
+    width: 50%;
+    height: 50px;
+
+    color: white;
+    font-weight: ${props => props.fw};
+    font-size: 120%;
+
+    background: ${props => props.background};
+    background-color: ${props => props.backColor};
+`
+const DateButton = styled.button`
+    width: 50%;
+    height: 50px;
+
+    color: white;
+    font-weight: ${props => props.fw};
+    font-size: 120%;
+
+    background: ${props => props.background};
+    background-color: ${props => props.backColor};
 `
 
+const BtnContainer= styled.div`
+    width: 100%;
+    height: auto;
+    margin-bottom: 3%;
+    display: flex;
+    justify-content: space-evenly;
+`
 
+const SelectedCard = styled.p`
+    max-width: 550px;
+    display: inline-block;
 
+    align-self: center;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 0;
+    margin-bottom: 3%;
+    text-align: center;
+    color: white;
+
+    width: 90vw;
+    height: auto;
+
+    font-size: 3em;
+    background-color: #914154;
+
+    border-radius: 10px;
+`
+
+const Container = styled.div`
+    margin: 0 auto;
+    min-height: 100vh;
+    max-width: 600px;
+    width: 100%;
+    height: auto;
+    background: linear-gradient(#141e30, #243b55);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    color: white;
+
+    border-bottom: 10px solid black;
+`
+
+const StyledHr = styled.hr`
+    width: 90%;
+    height: 0;
+    background-color: #914154;
+    border: 1px solid #914154;
+`
+
+const StyledCalendar = styled(Calendar)`
+    background-color: white;
+    border-radius: 10px;
+    border: 5px solid #914154;
+    color: black;
+`
     // return axiosGet('match/date/' + convertedDate)

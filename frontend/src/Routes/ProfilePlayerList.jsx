@@ -5,7 +5,6 @@ import MyPlayerCardList from "../Components/Profile/MyPlayerCardList";
 function ProfilePlayerList() {
   return (
     <Wrapper>
-      선수 목록
       <MyPlayerCardList />
     </Wrapper>
   );
@@ -14,6 +13,6 @@ function ProfilePlayerList() {
 export default ProfilePlayerList;
 
 const Wrapper = styled.div`
-  max-width: 860px;
+  max-width: 600px;
   margin: auto;
 `;

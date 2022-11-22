@@ -1,41 +1,33 @@
-
-import React, { useState,useEffect } from 'react';
-import styled from 'styled-components';
+import React, {useState,useEffect} from "react";
+import styled from "styled-components";
 import { NavLink } from "react-router-dom";
+import PlayerRanking from "./PlayerRankingList";
+import { rankApis } from '../utils/apis/userApis';
 import { fetchData } from "../utils/apis/api";
 import { getCookie } from "../utils/functions/cookies";
 
-import UserRankList from '../Components/Rank/UserRankList';
-import { rankApis } from '../utils/apis/userApis';
+
+function PlayerRankingPage(props){
 
 
-function Ranking(props){
-  
-
-  
-
-  return(
-    <Wrapper>
-      {/* <ProfileCard props={profileInfo} /> */}
-      <ButtonContainer>
-        <NavStyle
-          className={(props) => {
+    return (
+      
+      <Wrapper>
+        <ButtonContainer>
+        <NavStyle to="/ranking">
+          유저별
+        </NavStyle>
+        <NavStyle className={(props) => {
             return `${props.isActive ? "isActive " : ""}iconContainer`;
           }}
           end
-          to=""
-        >
-          유저별
-        </NavStyle>
-        <NavStyle to="/playerRanking">선수별</NavStyle>
+          to="">선수별</NavStyle>
       </ButtonContainer>
-      <UserRankList/>
-      
-    </Wrapper>
- )
- 
-}
-export default Ranking;
+      <PlayerRanking />
+      </Wrapper>
+      );
+    }
+export default PlayerRankingPage;
 
 const Wrapper = styled.div`
   background-color: ${(props) => props.theme.colors.mainWhite};

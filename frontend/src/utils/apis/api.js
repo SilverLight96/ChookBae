@@ -15,8 +15,6 @@ export const instance = axios.create({
   },
 });
 
-
-
 export const fetchData = {
   get: async (url, option) => await instance.get(url, option),
   post: async (url, body, option) => await instance.post(url, body, option),

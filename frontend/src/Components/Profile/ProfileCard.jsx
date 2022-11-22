@@ -5,6 +5,9 @@ import { removeCookie } from "../../utils/functions/cookies";
 import { useRecoilState, useSetRecoilState } from "recoil";
 import { loggedinState, myInformation } from "../../atoms";
 
+
+
+
 function ProfileCard() {
   const profileInfo = useRecoilState(myInformation);
 
@@ -15,7 +18,7 @@ function ProfileCard() {
     removeCookie("token");
     navigate("/");
   };
-
+  console.log(profileInfo[0]);
   return (
     <Wrapper>
       <ButtonConatiner>
@@ -28,12 +31,13 @@ function ProfileCard() {
       </ButtonConatiner>
       <ProfileImgContainer>
         <ProfileImg>
-          <img src={profileInfo[0].photo} alt="프로필 이미지" />
+          <img src={profileInfo[0].profile} alt="프로필 이미지" />
         </ProfileImg>
       </ProfileImgContainer>
       <ProfileMain>
         <NickName>{profileInfo[0].nickname} </NickName>
-        <p>포인트 : {profileInfo[0].point} 점</p>
+        <p>총 선수가치 {profileInfo[0].total_value}</p>
+        <p>포인트 {profileInfo[0].point}</p>
       </ProfileMain>
     </Wrapper>
   );
@@ -41,9 +45,10 @@ function ProfileCard() {
 export default ProfileCard;
 
 const Wrapper = styled.div`
+  background-color: white;
   position: relative;
   margin: auto;
-  max-width: 860px;
+  max-width: 600px;
   width: 100%;
   height: 160px;
   display: flex;
@@ -72,16 +77,20 @@ const ProfileImg = styled.main`
 const ProfileMain = styled.main`
   display: flex;
   flex-direction: column;
-  margin-left: 30px;
+  margin-left: 5%;
   width: 70%;
   > p {
-    font-size: 20px;
+    font-size: 1rem;
     font-weight: bold;
+    text-align: right;
+    padding-right: 1rem;
   }
 `;
 
 const NickName = styled.h2`
-  font-size: 26px;
+  margin-top: 20%;
+  margin-bottom: 10px;
+  font-size: 2rem;
   font-weight: bold;
 `;
 
@@ -96,6 +105,7 @@ const ButtonConatiner = styled.div`
       margin-left: 5px;
       padding: 5px;
       color: ${(props) => props.theme.colors.white};
+      font-size: 12px;
       :hover {
         cursor: pointer;
       }

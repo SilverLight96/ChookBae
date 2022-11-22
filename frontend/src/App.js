@@ -1,9 +1,9 @@
 import React from "react";
-import styled from "styled-components";
 import { BrowserRouter,Route, Routes, Link } from "react-router-dom";
 import { CookiesProvider } from "react-cookie";
 import { loggedinState } from "./atoms";
 import { useRecoilValue } from "recoil";
+import GlobalStyles from "./styles/GlobalStyle";
 
 //routes
 import MainPage from './Routes/MainPage';
@@ -15,19 +15,23 @@ import MatchDetail from './Routes/MatchDetail'
 import ProfilePage from "./Routes/ProfilePage";
 import GachaPage from "./Routes/GachaPage";
 import NavBar from "./Components/common/NavBar";
-import PredictionPage from "./Routes/PredictionPage";
 import AccountPage from "./Routes/AccountPage";
 import ActivatePage from "./Routes/ActivatePage";
 import ProtectedRoute from "./Routes/ProtectedRoute";
 import MixPage from "./Routes/MixPage";
 import PredictList from "./Routes/PredictList"
 import PredictDetail from "./Routes/PredictDetail"
+import TeamInfo from "./Routes/TeamInfo"
+
+import RankPage from "./Routes/RankPage";
+import PlayerRanking from "./Routes/PlayerRanking";
 
 function App() {
   const loggedin = useRecoilValue(loggedinState);
   return (
     <CookiesProvider>
-      <BrowserRouter>    
+      <GlobalStyles/>
+      <BrowserRouter >    
       <NavBar/>
       <Routes>  
           <Route path="/login" element={<LoginPage/>}/>
@@ -43,7 +47,11 @@ function App() {
           <Route path="" element={<MainPage/>}/>
           <Route path="/Match" element={<MatchPage type='country'/>}/>
           <Route path="/Match/Detail" element={<MatchDetail/>}/>
+          <Route path="/TeamInfo" element={<TeamInfo/>}/>
           <Route path="/accounts/activate" element={<ActivatePage/>}/>
+
+          <Route path="/ranking" element={<RankPage/>}/>
+          <Route path="/playerRanking" element={<PlayerRanking/>}/>
       </Routes> 
     </BrowserRouter>
   </CookiesProvider>

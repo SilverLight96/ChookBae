@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useState } from "react";
 import styled from "styled-components";
 import Calendar from 'react-calendar';
 import moment from 'moment';
@@ -35,13 +35,11 @@ export default function PredictList () {
     return (
         <Container>
             <CalendarContainer>
-                <Calendar onChange={onChangeTemp} value={value} />
+                <StyledCalendar onChange={onChangeTemp} value={value} />
             </CalendarContainer>
-
-            <DateContainer>
-                <p>{valueMoment}</p>
-            </DateContainer>
-
+            <StyledHr/>
+            <h1>{valueMoment}</h1>
+            {predictList.length > 0 ? null : <BlankDiv height='60vh'></BlankDiv>}
             <ListContainer>
                 {predictList.map(elem => {
                     return (
@@ -51,51 +49,59 @@ export default function PredictList () {
                     )
                 })}
             </ListContainer>
+            <BlankDiv height="10vh"></BlankDiv>
         </Container>
     )
 }
 
 const Container = styled.div`
-    width: 90vw;
+    max-width: 600px;
+    min-height: 100vh;
+    width: 100%;
     height: auto;
     margin-left: auto;
     margin-right: auto;
+    background: linear-gradient(#141e30, #243b55);
 
     display: flex;
     flex-direction: column;
     justify-content: space-between;
     align-items: center;
-
-    border: 1px solid black;
+    color: white;
 `
 
 const CalendarContainer = styled.div`
-    width: auto;
+    width: 100%;
     height: auto;
+    margin-top: 3%;
 
-    border: 1px solid black;
-
+    display: flex;
+    justify-content: center;
 `
 
-const DateContainer = styled.div`
-    width: auto;
-    height: auto;
-
-    text-align: center;
-    font-size: 30%;
-
-    border: 1px solid black;
-
+const StyledCalendar = styled(Calendar)`
+    background-color: white;
+    border-radius: 10px;
+    border: 5px solid #914154;
+    color: black;
 `
 
 const ListContainer = styled.div`
     width: 100%;
     height: auto;
-
+    margin: 0 auto;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
     align-items: center;
+`
 
-    border: 1px solid black;
+const BlankDiv = styled.div`
+    height: ${props => props.height};
+`
+const StyledHr = styled.hr`
+    width: 90%;
+    height: 0;
+    background-color: #914154;
+    border: 1px solid #914154;
 `

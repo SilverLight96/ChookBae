@@ -1,37 +1,94 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import styled from "styled-components";
-import RankIcon from "../../assets/Rank_Icon.png";
+import { fetchData } from "../../utils/apis/api";
+import { rankApis } from "../../utils/apis/userApis";
+import { Link } from "react-router-dom";
+import "../../styles/LoginPageHeaderDesign.css";
 
 function UserRank() {
-  const rankings = [
-    { id: 1, username: "Kim", points: 1240000 },
-    { id: 2, username: "Im", points: 1130000 },
-    { id: 3, username: "Kang", points: 1040000 },
-    { id: 4, username: "Park", points: 940000 },
-    { id: 5, username: "Lee", points: 860000 },
-  ];
+  const [rankResult, setRankResult] = useState([]);
+
+  const getRank = async () => {
+    const response = await fetchData.get(rankApis.RANKTOP).then((res) => {
+      setRankResult(res.data);
+    });
+    return response;
+  };
+
+  console.log(rankResult);
+
+  useEffect(() => {
+    getRank();
+  }, []);
 
   return (
     <Wrapper>
-      <RankHeader>
-        Top Rank <img src={RankIcon} alt="랭크 아이콘" />
-      </RankHeader>
-      <RankMain>
-        <RankTH>
-          <div>Rank</div>
-          <div>UserName</div>
-          <div>Points</div>
-        </RankTH>
-        {rankings.map((rank, id) => {
-          return (
-            <RankBody key={id}>
-              <div>{rank.id}</div>
-              <div>{rank.username}</div>
-              <div>{rank.points}</div>
-            </RankBody>
-          );
-        })}
-      </RankMain>
+      <UserRankHeader>
+        <h3 contenteditable spellcheck="false">
+          유저 랭킹
+        </h3>
+      </UserRankHeader>
+      <LinkHeader>
+        <StyledLink to="/Ranking">더보기</StyledLink>
+      </LinkHeader>
+      <UserRankTable className="container">
+        <div class="table-responsive">
+          <table class="table">
+            <thead>
+              <tr>
+                <th scope="col">순위</th>
+                <th scope="col">이름</th>
+                <th scope="col">총 선수가치</th>
+              </tr>
+            </thead>
+            <tbody>
+              {rankResult.user_list?.map((rank, id) => {
+                return (
+                  <tr key={id}>
+                    <td class="noBorder">{rank.rank}</td>
+                    <td class="noBorder">{rank.nickname} </td>
+                    <td class="noBorder">{rank.value}</td>
+                  </tr>
+                );
+              })}
+            </tbody>
+          </table>
+        </div>
+      </UserRankTable>
+      <PlayerRankHeader>
+        <h3 contenteditable spellcheck="false">
+          선수 랭킹
+        </h3>
+      </PlayerRankHeader>
+      <LinkHeader>
+        <StyledLink to="/PlayerRanking">더보기</StyledLink>
+      </LinkHeader>
+      <PlayerRankTable>
+        <div class="table-responsive">
+          <table class="table">
+            <thead>
+              <tr>
+                <th scope="col">순위</th>
+                <th scope="col">이름</th>
+                <th scope="col">득점</th>
+                <th scope="col">가치</th>
+              </tr>
+            </thead>
+            <tbody>
+              {rankResult.player_list?.map((rank, id) => {
+                return (
+                  <tr key={id}>
+                    <td class="noBorder">{rank.rank}</td>
+                    <td class="noBorder">{rank.fullname}</td>
+                    <td class="noBorder">{rank.goal}</td>
+                    <td class="noBorder">{rank.value}</td>
+                  </tr>
+                );
+              })}
+            </tbody>
+          </table>
+        </div>
+      </PlayerRankTable>
     </Wrapper>
   );
 }
@@ -41,39 +98,145 @@ export default UserRank;
 const Wrapper = styled.div`
   width: 90%;
   margin: auto;
+  margin-bottom: 60px;
 `;
 
-const RankHeader = styled.header`
+const LinkHeader = styled.div`
   display: flex;
-  align-items: flex-end;
-  font-size: 36px;
-  > img {
-    margin-left: 10px;
+  justify-content: flex-end;
+`;
+
+const StyledLink = styled(Link)`
+  text-decoration: none;
+  color: #fff;
+  padding: 4px;
+
+  &:hover {
+    background-color: #fff;
+    color: #000;
+    border-radius: 5px;
+    padding: 4px;
   }
-  margin-bottom: 10px;
-  margin-top: 10px;
 `;
 
-const RankMain = styled.div`
-  font-size: 22px;
+const UserRankHeader = styled.div`
+  padding-bottom: 1vh;
+  h3 {
+    white-space: nowrap;
+    width: auto;
+    text-align: center;
+    font-size: 1.5rem;
+    font-style: italic;
+    color: #fff;
+    padding: 0.5rem 0.5rem 0.5rem;
+    border: 0.2rem solid #fff;
+    border-radius: 2rem;
+    text-transform: uppercase;
+    animation: flicker 0.1s infinite alternate;
+  }
+
+  h3::-moz-selection {
+    background-color: var(--neon-border-color);
+    color: var(--neon-text-color);
+  }
+
+  h3::selection {
+    background-color: var(--neon-border-color);
+    color: var(--neon-text-color);
+  }
+
+  h3:focus {
+    outline: none;
+  }
 `;
 
-const RankTH = styled.div`
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  grid-gap: 1rem;
-  margin-bottom: 1rem;
-  scroll-behavior: smooth;
+const UserRankTable = styled.div`
+  body {
+    background: #1e1930;
+    color: #d2d1d5;
+  }
+  tr:nth-child(even) {
+    white-space: nowrap;
+    text-align: center;
+    background-color: #2e2649;
+    color: #d2d1d5;
+  }
+  tr:nth-child(odd) {
+    white-space: nowrap;
+    text-align: center;
+    background-color: #2a3a4f;
+    color: #d2d1d5;
+  }
+  th {
+    white-space: nowrap;
+    background-color: #760d27;
+    color: white;
+    text-align: center;
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+  }
+  .noBorder {
+    border: none !important;
+  }
 `;
 
-const RankBody = styled.div`
-  font-size: 18px;
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  grid-gap: 0rem;
-  margin-bottom: 1rem;
-  scroll-behavior: smooth;
-  > div {
-    border: 1px solid white;
+const PlayerRankHeader = styled.div`
+  padding-bottom: 1vh;
+  h3 {
+    white-space: nowrap;
+    width: auto;
+    text-align: center;
+    font-size: 1.5rem;
+    font-style: italic;
+    color: #fff;
+    padding: 0.5rem 0.5rem 0.5rem;
+    border: 0.2rem solid #fff;
+    border-radius: 2rem;
+    text-transform: uppercase;
+    animation: flicker 0.1s infinite alternate;
+  }
+
+  h3::-moz-selection {
+    background-color: var(--neon-border-color);
+    color: var(--neon-text-color);
+  }
+
+  h3::selection {
+    background-color: var(--neon-border-color);
+    color: var(--neon-text-color);
+  }
+
+  h3:focus {
+    outline: none;
+  }
+`;
+
+const PlayerRankTable = styled.div`
+  body {
+    background: #1e1930;
+    color: #d2d1d5;
+  }
+  tr:nth-child(even) {
+    white-space: nowrap;
+    text-align: center;
+    background-color: #2e2649;
+    color: #d2d1d5;
+  }
+  tr:nth-child(odd) {
+    white-space: nowrap;
+    text-align: center;
+    background-color: #2a3a4f;
+    color: #d2d1d5;
+  }
+  th {
+    white-space: nowrap;
+    background-color: #760d27;
+    color: white;
+    text-align: center;
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+  }
+  .noBorder {
+    border: none !important;
   }
 `;
