@@ -9,5 +9,5 @@ def start():
     scheduler.add_job(playerValueUpdate, 'cron', minute='59', hour='11')             # 선수 시세
     scheduler.add_job(matchUpdate, 'cron', second='0', minute='0-59', hour='18-23')    # 경기 결과 및 실시간 스코어 정보
     scheduler.add_job(matchUpdate, 'cron', second='0', minute='0-59', hour='00-07')    # 경기 결과 및 실시간 스코어 정보
-    scheduler.add_job(matchUpdate, 'cron', second='0', minute='42', hour='16')    # 임시
+    scheduler.add_job(matchUpdate, 'cron', second='0', minute='44', hour='16')    # 임시
     scheduler.start()
