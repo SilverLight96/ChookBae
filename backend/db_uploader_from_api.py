@@ -292,9 +292,9 @@ for row in player_table:
         s_player.save()
         print("updated!")
     except:
-        # pass
-        Player.objects.create(id=id_t, fullname=fullname_t, homename=homename_t, player_image=player_image_t, number=number_t,
-                            birthday=birthday_t, weight=weight_t, height=height_t, team_id=team_id_pk, current_team=current_team_t,
-                            position=position_t, goal=goal_t, assist=assist_t, yellow_card=yellow_card_t, red_card=red_card_t,
-                            run_time=run_time_t, value=value_t)
-        print("created!")
+        pass
+        # Player.objects.create(id=id_t, fullname=fullname_t, homename=homename_t, player_image=player_image_t, number=number_t,
+        #                     birthday=birthday_t, weight=weight_t, height=height_t, team_id=team_id_pk, current_team=current_team_t,
+        #                     position=position_t, goal=goal_t, assist=assist_t, yellow_card=yellow_card_t, red_card=red_card_t,
+        #                     run_time=run_time_t, value=value_t)
+        # print("created!")
