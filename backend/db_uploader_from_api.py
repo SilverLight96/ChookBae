@@ -280,7 +280,7 @@ for row in player_table:
         s_player = Player.objects.get(id=id_t)
         s_player.fullname = fullname_t
         s_player.homename = homename_t
-        if s_player.team_id != 1235:                    # 한국(1235) 선수는 KFA 제공 이미지 사용
+        if s_player.team_id.id != 1235:                    # 한국(1235) 선수는 KFA 제공 이미지 사용
             s_player.player_image = player_image_t
         s_player.number = number_t
         s_player.birthday = birthday_t
@@ -292,9 +292,9 @@ for row in player_table:
         s_player.save()
         print("updated!")
     except:
-        pass
-        # Player.objects.create(id=id_t, fullname=fullname_t, homename=homename_t, player_image=player_image_t, number=number_t,
-        #                     birthday=birthday_t, weight=weight_t, height=height_t, team_id=team_id_pk, current_team=current_team_t,
-        #                     position=position_t, goal=goal_t, assist=assist_t, yellow_card=yellow_card_t, red_card=red_card_t,
-        #                     run_time=run_time_t, value=value_t)
-        # print("created!")
+        # pass
+        Player.objects.create(id=id_t, fullname=fullname_t, homename=homename_t, player_image=player_image_t, number=number_t,
+                            birthday=birthday_t, weight=weight_t, height=height_t, team_id=team_id_pk, current_team=current_team_t,
+                            position=position_t, goal=goal_t, assist=assist_t, yellow_card=yellow_card_t, red_card=red_card_t,
+                            run_time=run_time_t, value=value_t)
+        print("created!")
