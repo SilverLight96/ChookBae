@@ -653,7 +653,7 @@ def playerValueUpdate():
 
 # 경기 정보 자동 업데이트       >> KST 18시 ~ 익일 7시 동안 1분 주기로 자동 업데이트 (12시간 x 60회 = 720회 갱신)
 def matchUpdate():
-    pending_result = [37637]     # 경기 결과는 나왔지만 경기 상세 정보가 미제공인 경기들의 id 리스트
+    pending_result = []     # 경기 결과는 나왔지만 경기 상세 정보가 미제공인 경기들의 id 리스트
     
     # 실시간 경기 정보 API로 받아오기
     BASE_URL = 'https://api.statorium.com/api/v1/matches/live/'
