@@ -758,7 +758,10 @@ def matchUpdate():
             for p in data["match"]["homeParticipant"]["events"]:
                 if p['eventId'] == "1":     # 골
                     home_event.append([int(p["playerID"]), 1, 0, 0, 0])
-                    home_event.append([int(p["assist"][0]["playerID"]), 0, 1, 0, 0])
+                    try:
+                        home_event.append([int(p["assist"][0]["playerID"]), 0, 1, 0, 0])
+                    except:
+                        pass
                 elif p['eventId'] == "4":   # 페널티 골
                     home_event.append([int(p["playerID"]), 1, 0, 0, 0])
                 elif p['eventId'] == "5":   # 옐로우카드
@@ -796,7 +799,10 @@ def matchUpdate():
             for p in data["match"]["awayParticipant"]["events"]:
                 if p['eventId'] == "1":     # 골
                     away_event.append([int(p["playerID"]), 1, 0, 0, 0])
-                    away_event.append([int(p["assist"][0]["playerID"]), 0, 1, 0, 0])
+                    try:
+                        away_event.append([int(p["assist"][0]["playerID"]), 0, 1, 0, 0])
+                    except:
+                        pass
                 elif p['eventId'] == "4":   # 페널티 골
                     away_event.append([int(p["playerID"]), 1, 0, 0, 0])
                 elif p['eventId'] == "5":   # 옐로우카드
