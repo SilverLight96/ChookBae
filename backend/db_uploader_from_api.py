@@ -280,7 +280,7 @@ for row in player_table:
         s_player = Player.objects.get(id=id_t)
         s_player.fullname = fullname_t
         s_player.homename = homename_t
-        if s_player.team_id != 1235:                    # 한국(1235) 선수는 KFA 제공 이미지 사용
+        if s_player.team_id.id != 1235:                    # 한국(1235) 선수는 KFA 제공 이미지 사용
             s_player.player_image = player_image_t
         s_player.number = number_t
         s_player.birthday = birthday_t
