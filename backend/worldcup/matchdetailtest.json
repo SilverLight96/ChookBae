@@ -1,10 +1,10 @@
 {
-  "gmtUpdated": 1660291866,
+  "gmtUpdated": 1669053740,
   "match": {
-    "matchID": "37638",
+    "matchID": "37637",
     "matchdayID": "4102",
     "matchStatus": {
-      "statusID": "1"
+      "statusID": "-1"
     },
     "extraTime": {
       "is_extra": "0",
@@ -12,319 +12,785 @@
       "away_score": "0"
     },
     "matchDate": "2022-11-21",
-    "matchTime": "13:00",
+    "matchTime": "16:00",
     "matchVenue": {
-      "venueID": "1166",
-      "venueName": "Khalifa International Stadium"
+      "venueID": "1168",
+      "venueName": "Al Thumama Stadium"
     },
     "homeParticipant": {
-      "participantID": "381",
-      "score": "3",
-      "participantName": "England",
-      "logo": "https://api.statorium.com/media/bearleague/bl1577372003565.png",
+      "participantID": "1066",
+      "score": "0",
+      "participantName": "Senegal",
+      "logo": "https://dxl9rl52p7hhu.cloudfront.net/media/bearleague/bl1632402538827.png",
       "squad": {
         "lineup": [
           {
-            "playerID":"29",
-            "additionalInfo":{
-               "birthdate":"",
-               "height":"",
-               "weight":"",
-               "position":"1"
+            "playerID": "153",
+            "playerFullName": "Idrissa Gueye",
+            "additionalInfo": {
+              "birthdate": "1989-09-26",
+              "height": "174 cm",
+              "weight": "66 kg",
+              "position": "3"
             }
           },
           {
-            "playerID":"31",
-            "additionalInfo":{
-               "birthdate":"",
-               "height":"",
-               "weight":"",
-               "position":"2"
+            "playerID": "377",
+            "playerFullName": "Nampalys Mendy",
+            "additionalInfo": {
+              "birthdate": "1992-06-23",
+              "height": "167 cm",
+              "weight": "73 kg",
+              "position": "3"
             }
           },
           {
-            "playerID":"33",
-            "additionalInfo":{
-               "birthdate":"",
-               "height":"",
-               "weight":"",
-               "position":"2"
+            "playerID": "405",
+            "playerFullName": "Cheikhou Kouyaté",
+            "additionalInfo": {
+              "birthdate": "1989-12-21",
+              "height": "189 cm",
+              "weight": "83 kg",
+              "position": "2"
             }
           },
           {
-            "playerID":"37",
-            "additionalInfo":{
-               "birthdate":"",
-               "height":"",
-               "weight":"",
-               "position":"2"
+            "playerID": "1245",
+            "playerFullName": "Abdou Diallo",
+            "additionalInfo": {
+              "birthdate": "1996-05-04",
+              "height": "186 cm",
+              "weight": "79 kg",
+              "position": "2"
             }
           },
           {
-            "playerID":"34",
-            "additionalInfo":{
-               "birthdate":"",
-               "height":"",
-               "weight":"",
-               "position":"2"
+            "playerID": "2015",
+            "playerFullName": "Ismaïla Sarr",
+            "additionalInfo": {
+              "birthdate": "1998-02-25",
+              "height": "185 cm",
+              "weight": "76 kg",
+              "position": "4"
             }
           },
           {
-            "playerID":"39",
-            "additionalInfo":{
-               "birthdate":"",
-               "height":"",
-               "weight":"",
-               "position":"3"
+            "playerID": "2156",
+            "playerFullName": "Edouard Mendy",
+            "additionalInfo": {
+              "birthdate": "1992-03-01",
+              "height": "197 cm",
+              "weight": "86 kg",
+              "position": "1"
             }
           },
           {
-            "playerID":"40",
-            "additionalInfo":{
-               "birthdate":"",
-               "height":"",
-               "weight":"",
-               "position":"3"
+            "playerID": "2180",
+            "playerFullName": "Boulaye Dia",
+            "additionalInfo": {
+              "birthdate": "1996-11-16",
+              "height": "180 cm",
+              "weight": "75 kg",
+              "position": "4"
             }
           },
           {
-            "playerID":"45",
-            "additionalInfo":{
-               "birthdate":"",
-               "height":"",
-               "weight":"",
-               "position":"3"
+            "playerID": "2255",
+            "playerFullName": "Youssouf Sabaly",
+            "additionalInfo": {
+              "birthdate": "1993-03-05",
+              "height": "174 cm",
+              "weight": "67 kg",
+              "position": "2"
             }
           },
           {
-            "playerID":"48",
-            "additionalInfo":{
-               "birthdate":"",
-               "height":"",
-               "weight":"",
-               "position":"4"
+            "playerID": "3329",
+            "playerFullName": "Kalidou Koulibaly",
+            "additionalInfo": {
+              "birthdate": "1991-06-20",
+              "height": "187 cm",
+              "weight": "89 kg",
+              "position": "2"
             }
           },
           {
-            "playerID":"46",
-            "additionalInfo":{
-               "birthdate":"",
-               "height":"",
-               "weight":"",
-               "position":"4"
+            "playerID": "4609",
+            "playerFullName": "Krépin Diatta",
+            "additionalInfo": {
+              "birthdate": "1999-02-25",
+              "height": "173 cm",
+              "weight": "68 kg",
+              "position": "3"
             }
           },
           {
-            "playerID":"43",
-            "additionalInfo":{
-               "birthdate":"",
-               "height":"",
-               "weight":"",
-               "position":"4"
+            "playerID": "4621",
+            "playerFullName": "Pape Abou Cissé",
+            "additionalInfo": {
+              "birthdate": "1995-09-14",
+              "height": "197 cm",
+              "weight": "83 kg",
+              "position": "2"
             }
           }
         ],
         "bench": [
           {
-            "playerID":"50",
-            "additionalInfo":{
-               "birthdate":"",
-               "height":"",
-               "weight":"",
-               "position":"1"
+            "playerID": "2307",
+            "playerFullName": "Fodé Ballo-Touré",
+            "additionalInfo": {
+              "birthdate": "1997-01-03",
+              "height": "182 cm",
+              "weight": "61 kg",
+              "position": "2"
             }
           },
           {
-            "playerID":"32",
-            "additionalInfo":{
-               "birthdate":"",
-               "height":"",
-               "weight":"",
-               "position":"2"
+            "playerID": "3169",
+            "playerFullName": "Alfred Gomis",
+            "additionalInfo": {
+              "birthdate": "1993-09-05",
+              "height": "196 cm",
+              "weight": "83 kg",
+              "position": "1"
             }
           },
           {
-            "playerID":"49",
-            "additionalInfo":{
-               "birthdate":"",
-               "height":"",
-               "weight":"",
-               "position":"3"
+            "playerID": "5465",
+            "playerFullName": "Mamadou Loum",
+            "additionalInfo": {
+              "birthdate": "1996-12-30",
+              "height": "188 cm",
+              "weight": "70 kg",
+              "position": "3"
             }
           },
           {
-            "playerID":"51",
-            "additionalInfo":{
-               "birthdate":"",
-               "height":"",
-               "weight":"",
-               "position":"3"
+            "playerID": "6038",
+            "playerFullName": "Famara Diédhiou",
+            "additionalInfo": {
+              "birthdate": "1992-12-15",
+              "height": "189 cm",
+              "weight": "80 kg",
+              "position": "4"
             }
           },
           {
-            "playerID":"47",
-            "additionalInfo":{
-               "birthdate":"",
-               "height":"",
-               "weight":"",
-               "position":"4"
+            "playerID": "8421",
+            "playerFullName": "Ismail Jakobs",
+            "additionalInfo": {
+              "birthdate": "1999-08-17",
+              "height": "184 cm",
+              "weight": "79 kg",
+              "position": "2"
             }
-          }          
+          },
+          {
+            "playerID": "8947",
+            "playerFullName": "Pathé Ciss",
+            "additionalInfo": {
+              "birthdate": "1994-03-16",
+              "height": "186 cm",
+              "weight": "71 kg",
+              "position": "3"
+            }
+          },
+          {
+            "playerID": "17529",
+            "playerFullName": "Moustapha Name",
+            "additionalInfo": {
+              "birthdate": "1995-05-05",
+              "height": "185 cm",
+              "weight": "70 kg",
+              "position": "2"
+            }
+          },
+          {
+            "playerID": "17839",
+            "playerFullName": "Pape Gueye",
+            "additionalInfo": {
+              "birthdate": "1999-01-24",
+              "height": "189 cm",
+              "weight": "79 kg",
+              "position": "3"
+            }
+          },
+          {
+            "playerID": "19450",
+            "playerFullName": "Seny Dieng",
+            "additionalInfo": {
+              "birthdate": "1994-11-23",
+              "height": "193 cm",
+              "weight": "90 kg",
+              "position": "1"
+            }
+          },
+          {
+            "playerID": "20914",
+            "playerFullName": "Pape Matar Sarr",
+            "additionalInfo": {
+              "birthdate": "2002-09-14",
+              "height": "184 cm",
+              "weight": "74 kg",
+              "position": "3"
+            }
+          },
+          {
+            "playerID": "20936",
+            "playerFullName": "Nicolas Jackson",
+            "additionalInfo": {
+              "birthdate": "2001-06-20",
+              "height": "186 cm",
+              "weight": "78 kg",
+              "position": "4"
+            }
+          },
+          {
+            "playerID": "25460",
+            "playerFullName": "Iliman Ndiaye",
+            "additionalInfo": {
+              "birthdate": "2000-03-06",
+              "height": "180 cm",
+              "weight": "65 kg",
+              "position": "4"
+            }
+          },
+          {
+            "playerID": "25907",
+            "playerFullName": "Bamba Dieng",
+            "additionalInfo": {
+              "birthdate": "2000-03-23",
+              "height": "178 cm",
+              "weight": "78 kg",
+              "position": "4"
+            }
+          },
+          {
+            "playerID": "29753",
+            "playerFullName": "Formose Mendy",
+            "additionalInfo": {
+              "birthdate": "2001-01-02",
+              "height": "191 cm",
+              "weight": "75 kg",
+              "position": "2"
+            }
+          },
+          {
+            "playerID": "44792",
+            "playerFullName": "Moussa N'Diaye",
+            "additionalInfo": {
+              "birthdate": "2002-06-18",
+              "height": "181 cm",
+              "weight": "66 kg",
+              "position": "2"
+            }
+          }
         ],
         "subs": [
           {
-            "playerIN":"47",
-            "playerOUT":"43",
-            "minute":"75"
-         },
-         {
-            "playerIN":"51",
-            "playerOUT":"39",
-            "minute":"80"
-         },
-         {
-            "playerIN":"32",
-            "playerOUT":"34",
-            "minute":"88"
-         }
+            "playerIN": "8421",
+            "playerINFullName": "Ismail Jakobs",
+            "playerOUT": "1245",
+            "playerOUTFullName": "Abdou Diallo",
+            "minute": "62"
+          },
+          {
+            "playerIN": "25907",
+            "playerINFullName": "Bamba Dieng",
+            "playerOUT": "2180",
+            "playerOUTFullName": "Boulaye Dia",
+            "minute": "69"
+          },
+          {
+            "playerIN": "17839",
+            "playerINFullName": "Pape Gueye",
+            "playerOUT": "405",
+            "playerOUTFullName": "Cheikhou Kouyaté",
+            "minute": "73"
+          },
+          {
+            "playerIN": "20936",
+            "playerINFullName": "Nicolas Jackson",
+            "playerOUT": "4609",
+            "playerOUTFullName": "Krépin Diatta",
+            "minute": "74"
+          }
         ]
       },
       "events": [
         {
-          "rowId":"1037472",
-          "eventId":"1",
-          "eventName":"Goal",
-          "playerID":"48",
-          "minute":"3",
-          "stageID":"0",
-          "assist":[
-             {
-                "rowId":"1037473",
-                "eventId":"2",
-                "eventName":"Assist",
-                "playerID":"46",
-                "minute":"3"
-             }
-          ]
-       },
-       {
-          "rowId":"1037474",
-          "eventId":"1",
-          "eventName":"Goal",
-          "playerID":"48",
-          "minute":"15",
-          "stageID":"0",
-          "assist":[
-             {
-                "rowId":"1037475",
-                "eventId":"2",
-                "eventName":"Assist",
-                "playerID":"46",
-                "minute":"15"
-             }
-          ]
-       },
-       {
-          "rowId":"1037478",
-          "eventId":"5",
-          "eventName":"Yellow card",
-          "playerID":"31",
-          "minute":"53",
-          "stageID":"0"
-       },
-       {
-          "rowId":"1037479",
-          "eventId":"5",
-          "eventName":"Yellow card",
-          "playerID":"29",
-          "minute":"65",
-          "stageID":"0"
-       },
-       {
-          "rowId":"1037480",
-          "eventId":"1",
-          "eventName":"Goal",
-          "playerID":"47",
-          "minute":"89",
-          "stageID":"0",
-          "assist":[
-             {
-                "rowId":"1037481",
-                "eventId":"2",
-                "eventName":"Assist",
-                "playerID":"48",
-                "minute":"89"
-             }
-          ]
-       }
+          "rowId": "1810041",
+          "eventId": "5",
+          "eventName": "Yellow card",
+          "playerID": "377",
+          "playerFullName": "Nampalys Mendy",
+          "minute": "90+4",
+          "stageID": "0"
+        },
+        {
+          "rowId": "1810042",
+          "eventId": "5",
+          "eventName": "Yellow card",
+          "playerID": "153",
+          "playerFullName": "Idrissa Gueye",
+          "minute": "90+6",
+          "stageID": "0"
+        }
       ],
       "teamStats": [
         {
-          "rowId":"1037510",
-          "teamStatID":"11",
-          "teamStatName":"Possession",
-          "count":"58"
-       },
-       {
-          "rowId":"1037512",
-          "teamStatID":"9",
-          "teamStatName":"Total shots",
-          "count":"7"
-       },
-       {
-          "rowId":"1037514",
-          "teamStatID":"16",
-          "teamStatName":"Shots on target",
-          "count":"6"
-       },
-       {
-          "rowId":"1037516",
-          "teamStatID":"12",
-          "teamStatName":"Corners",
-          "count":"4"
-       },
-       {
-          "rowId":"1037519",
-          "teamStatID":"10",
-          "teamStatName":"Fouls",
-          "count":"7"
-       }
+          "rowId": "1810044",
+          "teamStatID": "11",
+          "teamStatName": "Possession",
+          "count": "46"
+        },
+        {
+          "rowId": "1810046",
+          "teamStatID": "9",
+          "teamStatName": "Total shots",
+          "count": "15"
+        },
+        {
+          "rowId": "1810048",
+          "teamStatID": "16",
+          "teamStatName": "Shots on target",
+          "count": "4"
+        },
+        {
+          "rowId": "1810050",
+          "teamStatID": "15",
+          "teamStatName": "Shots off target",
+          "count": "7"
+        },
+        {
+          "rowId": "1810052",
+          "teamStatID": "17",
+          "teamStatName": "Blocked shots",
+          "count": "4"
+        },
+        {
+          "rowId": "1810054",
+          "teamStatID": "12",
+          "teamStatName": "Corners",
+          "count": "6"
+        },
+        {
+          "rowId": "1810056",
+          "teamStatID": "14",
+          "teamStatName": "Offsides",
+          "count": "2"
+        },
+        {
+          "rowId": "1810058",
+          "teamStatID": "10",
+          "teamStatName": "Fouls",
+          "count": "13"
+        }
       ]
     },
     "awayParticipant": {
-      "participantID": "1227",
-      "score": "1",
-      "participantName": "Iran",
-      "logo": "https://api.statorium.com/media/bearleague/bl1643370435894.png",
+      "participantID": "385",
+      "score": "2",
+      "participantName": "Netherlands",
+      "logo": "https://dxl9rl52p7hhu.cloudfront.net/media/bearleague/bl15773721822574.png",
       "squad": {
         "lineup": [
-          
+          {
+            "playerID": "61",
+            "playerFullName": "Virgil van Dijk",
+            "additionalInfo": {
+              "birthdate": "1991-07-08",
+              "height": "193 cm",
+              "weight": "92 kg",
+              "position": "2"
+            }
+          },
+          {
+            "playerID": "421",
+            "playerFullName": "Nathan Aké",
+            "additionalInfo": {
+              "birthdate": "1995-02-18",
+              "height": "180 cm",
+              "weight": "71 kg",
+              "position": "2"
+            }
+          },
+          {
+            "playerID": "3677",
+            "playerFullName": "Vincent Janssen",
+            "additionalInfo": {
+              "birthdate": "1994-06-15",
+              "height": "183 cm",
+              "weight": "88 kg",
+              "position": "4"
+            }
+          },
+          {
+            "playerID": "4337",
+            "playerFullName": "Frenkie de Jong",
+            "additionalInfo": {
+              "birthdate": "1997-05-12",
+              "height": "181 cm",
+              "weight": "74 kg",
+              "position": "3"
+            }
+          },
+          {
+            "playerID": "4483",
+            "playerFullName": "Matthijs de Ligt",
+            "additionalInfo": {
+              "birthdate": "1999-08-12",
+              "height": "189 cm",
+              "weight": "89 kg",
+              "position": "2"
+            }
+          },
+          {
+            "playerID": "4896",
+            "playerFullName": "Daley Blind",
+            "additionalInfo": {
+              "birthdate": "1990-03-09",
+              "height": "180 cm",
+              "weight": "72 kg",
+              "position": "2"
+            }
+          },
+          {
+            "playerID": "5313",
+            "playerFullName": "Denzel Dumfries",
+            "additionalInfo": {
+              "birthdate": "1996-04-18",
+              "height": "189 cm",
+              "weight": "80 kg",
+              "position": "2"
+            }
+          },
+          {
+            "playerID": "5323",
+            "playerFullName": "Steven Bergwijn",
+            "additionalInfo": {
+              "birthdate": "1997-10-08",
+              "height": "178 cm",
+              "weight": "78 kg",
+              "position": "4"
+            }
+          },
+          {
+            "playerID": "5324",
+            "playerFullName": "Cody Gakpo",
+            "additionalInfo": {
+              "birthdate": "1999-05-07",
+              "height": "187 cm",
+              "weight": "76 kg",
+              "position": "4"
+            }
+          },
+          {
+            "playerID": "5545",
+            "playerFullName": "Steven Berghuis",
+            "additionalInfo": {
+              "birthdate": "1991-12-19",
+              "height": "182 cm",
+              "weight": "75 kg",
+              "position": "3"
+            }
+          },
+          {
+            "playerID": "29077",
+            "playerFullName": "Andries Noppert",
+            "additionalInfo": {
+              "birthdate": "1994-04-07",
+              "height": "203 cm",
+              "weight": "87 kg",
+              "position": "1"
+            }
+          }
         ],
         "bench": [
-          
+          {
+            "playerID": "1283",
+            "playerFullName": "Davy Klaassen",
+            "additionalInfo": {
+              "birthdate": "1993-02-21",
+              "height": "181 cm",
+              "weight": "77 kg",
+              "position": "3"
+            }
+          },
+          {
+            "playerID": "1446",
+            "playerFullName": "Wout Weghorst",
+            "additionalInfo": {
+              "birthdate": "1992-08-07",
+              "height": "197 cm",
+              "weight": "84 kg",
+              "position": "4"
+            }
+          },
+          {
+            "playerID": "1840",
+            "playerFullName": "Memphis Depay",
+            "additionalInfo": {
+              "birthdate": "1994-02-13",
+              "height": "176 cm",
+              "weight": "78 kg",
+              "position": "4"
+            }
+          },
+          {
+            "playerID": "3413",
+            "playerFullName": "Marten de Roon",
+            "additionalInfo": {
+              "birthdate": "1991-03-29",
+              "height": "185 cm",
+              "weight": "76 kg",
+              "position": "3"
+            }
+          },
+          {
+            "playerID": "3466",
+            "playerFullName": "Stefan de Vrij",
+            "additionalInfo": {
+              "birthdate": "1992-02-05",
+              "height": "190 cm",
+              "weight": "78 kg",
+              "position": "2"
+            }
+          },
+          {
+            "playerID": "4371",
+            "playerFullName": "Luuk de Jong",
+            "additionalInfo": {
+              "birthdate": "1990-08-27",
+              "height": "188 cm",
+              "weight": "86 kg",
+              "position": "4"
+            }
+          },
+          {
+            "playerID": "4913",
+            "playerFullName": "Noa Lang",
+            "additionalInfo": {
+              "birthdate": "1999-06-17",
+              "height": "179 cm",
+              "weight": "68 kg",
+              "position": "4"
+            }
+          },
+          {
+            "playerID": "5373",
+            "playerFullName": "Jeremie Frimpong",
+            "additionalInfo": {
+              "birthdate": "2000-12-10",
+              "height": "175 cm",
+              "weight": "70 kg",
+              "position": "2"
+            }
+          },
+          {
+            "playerID": "5524",
+            "playerFullName": "Justin Bijlow",
+            "additionalInfo": {
+              "birthdate": "1998-01-22",
+              "height": "188 cm",
+              "weight": "84 kg",
+              "position": "1"
+            }
+          },
+          {
+            "playerID": "5535",
+            "playerFullName": "Tyrell Malacia",
+            "additionalInfo": {
+              "birthdate": "1999-08-17",
+              "height": "169 cm",
+              "weight": "67 kg",
+              "position": "2"
+            }
+          },
+          {
+            "playerID": "5851",
+            "playerFullName": "Teun Koopmeiners",
+            "additionalInfo": {
+              "birthdate": "1998-02-28",
+              "height": "183 cm",
+              "weight": "77 kg",
+              "position": "3"
+            }
+          },
+          {
+            "playerID": "8078",
+            "playerFullName": "Remko Pasveer",
+            "additionalInfo": {
+              "birthdate": "1983-11-08",
+              "height": "187 cm",
+              "weight": "88 kg",
+              "position": "1"
+            }
+          },
+          {
+            "playerID": "9044",
+            "playerFullName": "Jurrien Timber",
+            "additionalInfo": {
+              "birthdate": "2001-06-17",
+              "height": "179 cm",
+              "weight": "75 kg",
+              "position": "2"
+            }
+          },
+          {
+            "playerID": "17875",
+            "playerFullName": "Xavi Simons",
+            "additionalInfo": {
+              "birthdate": "2003-04-21",
+              "height": "168 cm",
+              "weight": "58 kg",
+              "position": "3"
+            }
+          },
+          {
+            "playerID": "18735",
+            "playerFullName": "Kenneth Taylor",
+            "additionalInfo": {
+              "birthdate": "2002-05-16",
+              "height": "178 cm",
+              "weight": "66 kg",
+              "position": "3"
+            }
+          }
         ],
         "subs": [
-          
+          {
+            "playerIN": "1840",
+            "playerINFullName": "Memphis Depay",
+            "playerOUT": "3677",
+            "playerOUTFullName": "Vincent Janssen",
+            "minute": "62"
+          },
+          {
+            "playerIN": "5851",
+            "playerINFullName": "Teun Koopmeiners",
+            "playerOUT": "5545",
+            "playerOUTFullName": "Steven Berghuis",
+            "minute": "79"
+          },
+          {
+            "playerIN": "1283",
+            "playerINFullName": "Davy Klaassen",
+            "playerOUT": "5323",
+            "playerOUTFullName": "Steven Bergwijn",
+            "minute": "79"
+          },
+          {
+            "playerIN": "3413",
+            "playerINFullName": "Marten de Roon",
+            "playerOUT": "5324",
+            "playerOUTFullName": "Cody Gakpo",
+            "minute": "90"
+          }
         ]
       },
       "events": [
-        
+        {
+          "rowId": "1810038",
+          "eventId": "5",
+          "eventName": "Yellow card",
+          "playerID": "4483",
+          "playerFullName": "Matthijs de Ligt",
+          "minute": "56",
+          "stageID": "0"
+        },
+        {
+          "rowId": "1810039",
+          "eventId": "1",
+          "eventName": "Goal",
+          "playerID": "5324",
+          "playerFullName": "Cody Gakpo",
+          "minute": "84",
+          "stageID": "0",
+          "assist": [
+            {
+              "rowId": "1810040",
+              "eventId": "2",
+              "eventName": "Assist",
+              "playerID": "4337",
+              "playerFullName": "Frenkie de Jong",
+              "minute": "84"
+            }
+          ]
+        },
+        {
+          "rowId": "1810043",
+          "eventId": "1",
+          "eventName": "Goal",
+          "playerID": "1283",
+          "playerFullName": "Davy Klaassen",
+          "minute": "90+9",
+          "stageID": "0"
+        }
       ],
       "teamStats": [
-        
+        {
+          "rowId": "1810045",
+          "teamStatID": "11",
+          "teamStatName": "Possession",
+          "count": "54"
+        },
+        {
+          "rowId": "1810047",
+          "teamStatID": "9",
+          "teamStatName": "Total shots",
+          "count": "10"
+        },
+        {
+          "rowId": "1810049",
+          "teamStatID": "16",
+          "teamStatName": "Shots on target",
+          "count": "3"
+        },
+        {
+          "rowId": "1810051",
+          "teamStatID": "15",
+          "teamStatName": "Shots off target",
+          "count": "4"
+        },
+        {
+          "rowId": "1810053",
+          "teamStatID": "17",
+          "teamStatName": "Blocked shots",
+          "count": "3"
+        },
+        {
+          "rowId": "1810055",
+          "teamStatID": "12",
+          "teamStatName": "Corners",
+          "count": "7"
+        },
+        {
+          "rowId": "1810057",
+          "teamStatID": "14",
+          "teamStatName": "Offsides",
+          "count": "1"
+        },
+        {
+          "rowId": "1810059",
+          "teamStatID": "10",
+          "teamStatName": "Fouls",
+          "count": "13"
+        }
       ]
     },
-    "matchDuration": "90",
+    "matchDuration": 90,
     "matchTicker": "",
     "group": {
-      "groupID": "164",
-      "groupName": "Group B"
+      "groupID": "163",
+      "groupName": "Group A"
     },
     "additionalInfo": {
       "attendance": "",
-      "referee": null,
-      "referee_assitant": null,
-      "fourth_official": null
+      "referee": "0",
+      "referee_assitant": "0",
+      "fourth_official": "0"
     }
   },
   "stages": [
