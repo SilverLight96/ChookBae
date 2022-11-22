@@ -653,8 +653,8 @@ def playerValueUpdate():
 
 # 경기 정보 자동 업데이트       >> KST 18시 ~ 익일 7시 동안 1분 주기로 자동 업데이트 (12시간 x 60회 = 720회 갱신)
 def matchUpdate():
-    pending_result = []     # 경기 결과는 나왔지만 경기 상세 정보가 미제공인 경기들의 id 리스트
-    
+    pending_result = [37637]     # 경기 결과는 나왔지만 경기 상세 정보가 미제공인 경기들의 id 리스트
+    '''
     # 실시간 경기 정보 API로 받아오기
     BASE_URL = 'https://api.statorium.com/api/v1/matches/live/'
     params = {'apikey': API_KEY}
@@ -725,7 +725,7 @@ def matchUpdate():
                 team2.loss += 1
             team2.goal_diff += (t2_score - t1_score)
             team2.save()
-    
+    '''
     # 종료된 경기지만 상세 정보 미입력인 경우 API를 통해 상세정보 받아와서 선수 스탯 업데이트
     for match_id in pending_result:
         # 경기 상세 정보 API로 받아오기
@@ -758,7 +758,10 @@ def matchUpdate():
             for p in data["match"]["homeParticipant"]["events"]:
                 if p['eventId'] == "1":     # 골
                     home_event.append([int(p["playerID"]), 1, 0, 0, 0])
-                    home_event.append([int(p["assist"][0]["playerID"]), 0, 1, 0, 0])
+                    try:
+                        home_event.append([int(p["assist"][0]["playerID"]), 0, 1, 0, 0])
+                    except:
+                        pass
                 elif p['eventId'] == "4":   # 페널티 골
                     home_event.append([int(p["playerID"]), 1, 0, 0, 0])
                 elif p['eventId'] == "5":   # 옐로우카드
@@ -796,7 +799,10 @@ def matchUpdate():
             for p in data["match"]["awayParticipant"]["events"]:
                 if p['eventId'] == "1":     # 골
                     away_event.append([int(p["playerID"]), 1, 0, 0, 0])
-                    away_event.append([int(p["assist"][0]["playerID"]), 0, 1, 0, 0])
+                    try:
+                        away_event.append([int(p["assist"][0]["playerID"]), 0, 1, 0, 0])
+                    except:
+                        pass
                 elif p['eventId'] == "4":   # 페널티 골
                     away_event.append([int(p["playerID"]), 1, 0, 0, 0])
                 elif p['eventId'] == "5":   # 옐로우카드
