@@ -652,9 +652,8 @@ def playerValueUpdate():
 
 
 # 경기 정보 자동 업데이트       >> KST 18시 ~ 익일 7시 동안 1분 주기로 자동 업데이트 (12시간 x 60회 = 720회 갱신)
-pending_result = []     # 경기 결과는 나왔지만 경기 상세 정보가 미제공인 경기들의 id 리스트
 def matchUpdate():
-    global pending_result
+    pending_result = []     # 경기 결과는 나왔지만 경기 상세 정보가 미제공인 경기들의 id 리스트
     
     # 실시간 경기 정보 API로 받아오기
     BASE_URL = 'https://api.statorium.com/api/v1/matches/live/'
@@ -663,8 +662,8 @@ def matchUpdate():
     data = response.json()
 
     ##### 임시 데이터 (월드컵 live matches가 없을때 테스트용) #####
-    import json
-    data = json.load(open('worldcup/livematchtest.json'))
+    # import json
+    # data = json.load(open('worldcup/livematchtest.json'))
     ##### 임시 데이터 끝 ########################################
 
     # match list 구하기
@@ -736,8 +735,8 @@ def matchUpdate():
         data = response.json()
 
         ##### 임시 데이터 (종료된 월드컵 경기가 없을때 테스트용) #####
-        import json
-        data = json.load(open('worldcup/matchdetailtest.json'))
+        # import json
+        # data = json.load(open('worldcup/matchdetailtest.json'))
         ##### 임시 데이터 끝 ######################################
 
         if data["match"]["matchStatus"]["statusID"] == "1":
