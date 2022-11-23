@@ -116,7 +116,7 @@ def player_pos(num):
 def player_k(id):
     k_player = [
         {"id": 12, "fullNameKR": "데클란 라이스",},
-        {"id": 29, "fullNameKR": "휴고 요리스",},
+        {"id": 29, "fullNameKR": "위고 요리스",},
         {"id": 31, "fullNameKR": "토비 알더베이럴드",},
         {"id": 33, "fullNameKR": "벤 데이비스",},
         {"id": 36, "fullNameKR": "키런 트리피어",},
@@ -356,8 +356,8 @@ def player_k(id):
         {"id": 2158, "fullNameKR": "액셀 디사시",},
         {"id": 2180, "fullNameKR": "불레이 디아",},
         {"id": 2187, "fullNameKR": "알렉산더 지쿠",},
-        {"id": 2231, "fullNameKR": "마커스 서람",},
-        {"id": 2250, "fullNameKR": "쥘 쿤데",},
+        {"id": 2231, "fullNameKR": "마르쿠스 튀람",},
+        {"id": 2250, "fullNameKR": "질 쿤데",},
         {"id": 2255, "fullNameKR": "유수프 사발리",},
         {"id": 2258, "fullNameKR": "아우렐리안 츄아메니",},
         {"id": 2271, "fullNameKR": "안드레아스 코르넬리우스",},
@@ -951,6 +951,11 @@ def player_k(id):
         {"id": 9230, "fullNameKR": "아미르 아베자데",},
         {"id": 21021, "fullNameKR": "나와프 알-아베드",},
         {"id": 44792, "fullNameKR": "무사 은디아예",},
+        {"id": 1126, "fullNameKR": "앙헬 코레아",},
+        {"id": 28209, "fullNameKR": "티아고 알마다",},
+        {"id": 29118, "fullNameKR": "아나스 자루리",},
+        {"id": 1071, "fullNameKR": "알레한드로 발데",},
+        {"id": 41048, "fullNameKR": "마르코 틸리오",},
     ]
     for kp in k_player:
         if kp["id"] == id:
