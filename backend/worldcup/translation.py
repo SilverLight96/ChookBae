@@ -954,7 +954,7 @@ def player_k(id):
         {"id": 1126, "fullNameKR": "앙헬 코레아",},
         {"id": 28209, "fullNameKR": "티아고 알마다",},
         {"id": 29118, "fullNameKR": "아나스 자루리",},
-        {"id": 1071, "fullNameKR": "알레한드로 발데",},
+        {"id": 31620, "fullNameKR": "알레한드로 발데",},
         {"id": 41048, "fullNameKR": "마르코 틸리오",},
     ]
     for kp in k_player:
